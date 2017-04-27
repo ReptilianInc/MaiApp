@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MaiApp</string>
+    //navigation menu
+    <string name="menu_schedule">Расписание занятий</string>
+    <string name="menu_library">Библиотека</string>
+    <string name="menu_campus">Кампус</string>
+    <string name="menu_press_center">Пресс-центр</string>
+    <string name="menu_life">Жизнь</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_info">О программе</string>
+    //
+    <string name="menu_press_bottom_news">Новости</string>
+    <string name="menu_press_bottom_events">Мероприятия</string>
+    <string name="menu_press_bottom_announcements">Объявления</string>
+</resources>
