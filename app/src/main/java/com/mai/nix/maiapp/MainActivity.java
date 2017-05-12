@@ -47,6 +47,13 @@ public class MainActivity extends AppCompatActivity {
                                         .add(R.id.center_view, mFragment)
                                         .commit();
                                 break;
+                            case R.id.menu_campus:
+                                mToolbar.setTitle("Кампус");
+                                mFragment = new CampusFragment();
+                                mFragmentManager.beginTransaction()
+                                        .add(R.id.center_view, mFragment)
+                                        .commit();
+                                break;
                             default:
                                 mFragmentManager.beginTransaction()
                                         .detach(mFragment)

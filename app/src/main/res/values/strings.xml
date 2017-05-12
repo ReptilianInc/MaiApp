@@ -8,8 +8,10 @@
     <string name="menu_life">Жизнь</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_info">О программе</string>
-    //
+    //press menu
     <string name="menu_press_bottom_news">Новости</string>
     <string name="menu_press_bottom_events">Мероприятия</string>
     <string name="menu_press_bottom_announcements">Объявления</string>
+    //
+    <string name="menu_title">Menu</string>
 </resources>

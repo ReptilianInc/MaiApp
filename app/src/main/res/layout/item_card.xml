@@ -47,7 +47,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             tools:text="Юный конструктор: победитель Олимпиады МАИ и компании «Сухой» готовится к поступлению"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorTextSecondary"
             android:textSize="14sp"/>
     </LinearLayout>
 </RelativeLayout>
