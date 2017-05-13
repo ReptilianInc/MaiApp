@@ -1,45 +1,63 @@
 package com.mai.nix.maiapp;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 
 /**
  * Created by Nix on 13.05.2017.
  */
 
 public class CampusFragment extends Fragment {
-    private WebView mWebView;
+    private BottomNavigationView mBottomNavigationView;
+    private FragmentManager mFragmentManager;
+    private Fragment mFragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.campus_fragment_layout, container, false);
-        mWebView = (WebView) v.findViewById(R.id.campus_view);
-        mWebView.getSettings().setSupportZoom(true);
-        mWebView.getSettings().setBuiltInZoomControls(true);
-        mWebView.setPadding(0, 0, 0, 0);
-        mWebView.setScrollbarFadingEnabled(true);
-        mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        mWebView.loadUrl("file:///android_res/drawable/scheme_for_app.png");
+        View v = inflater.inflate(R.layout.campus_fragment_layout_new, container, false);
+        mFragmentManager = getFragmentManager();
+        mFragment = mFragmentManager.findFragmentById(R.id.fragment_container_campus);
+        mFragment = new MapFragment();
+        mFragmentManager.beginTransaction()
+                .add(R.id.fragment_container_campus, mFragment)
+                .commit();
+        mBottomNavigationView = (BottomNavigationView) v.findViewById(R.id.bottom_nav_campus);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.map:
+                        mFragmentManager.beginTransaction()
+                                .remove(mFragment)
+                                .commit();
+                        mFragment = new MapFragment();
+                        mFragmentManager.beginTransaction()
+                                .add(R.id.fragment_container_campus, mFragment)
+                                .commit();
+                        break;
+                    default:
+                        mFragmentManager.beginTransaction()
+                                .remove(mFragment)
+                                .commit();
+                        break;
+                }
+                return true;
+            }
+        });
         return v;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.actions_menu, menu);
     }
 }

@@ -12,6 +12,13 @@
     <string name="menu_press_bottom_news">Новости</string>
     <string name="menu_press_bottom_events">Мероприятия</string>
     <string name="menu_press_bottom_announcements">Объявления</string>
+    //campus menu
+    <string name="menu_campus_bottom_map">Карта</string>
+    <string name="menu_campus_bottom_barracks">Общежития</string>
+    <string name="menu_campus_bottom_library">Библиотека</string>
+    <string name="menu_campus_bottom_cafe">Столовые и кафе</string>
+    <string name="menu_campus_bottom_sport">Спорт. инфраструктура</string>
+    <string name="menu_campus_bottom_camps">Базы отдыха</string>
     //
     <string name="menu_title">Menu</string>
 </resources>

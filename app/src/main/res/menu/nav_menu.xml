@@ -6,11 +6,6 @@
         android:icon="@drawable/ic_schedule"
         />
     <item
-        android:id="@+id/menu_library"
-        android:title="@string/menu_library"
-        android:icon="@drawable/ic_library"
-        />
-    <item
         android:id="@+id/menu_campus"
         android:title="@string/menu_campus"
         android:icon="@drawable/ic_campus"

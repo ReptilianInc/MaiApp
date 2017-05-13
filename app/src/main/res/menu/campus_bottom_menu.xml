@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:id="@+id/map"
+    android:title="@string/menu_campus_bottom_map"
+    android:icon="@drawable/ic_map"/>
+    <item
+        android:id="@+id/barracks"
+        android:title="@string/menu_campus_bottom_barracks"
+        android:icon="@drawable/ic_barracks"/>
+    <item
+        android:id="@+id/lib"
+        android:title="@string/menu_campus_bottom_library"
+        android:icon="@drawable/ic_library_bottom"/>
+    <item
+        android:id="@+id/cafe"
+        android:title="@string/menu_campus_bottom_cafe"
+        android:icon="@drawable/ic_cafe"/>
+    <item
+        android:id="@+id/sport"
+        android:title="@string/menu_campus_bottom_sport"
+        android:icon="@drawable/ic_sport"/>
+</menu>
