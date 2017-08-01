@@ -24,7 +24,7 @@ import java.util.List;
  * Created by Nix on 23.04.2017.
  */
 
-public class PressItemFragment extends Fragment {
+public class NewsItemFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private MyAdapter mMyAdapter;
     private List<NewsModel> mNewsModels;
@@ -33,10 +33,10 @@ public class PressItemFragment extends Fragment {
     private String mLink;
     private static final String APP_FRAGMENT_ID = "fragment_id";
     public static final byte NEWS_CODE = 0, EVENTS_CODE = 1, ANNOUNCEMENTS_CODE = 2;
-    public static PressItemFragment newInstance(byte code){
+    public static NewsItemFragment newInstance(byte code){
         Bundle args = new Bundle();
         args.putSerializable(APP_FRAGMENT_ID, code);
-        PressItemFragment testFragment = new PressItemFragment();
+        NewsItemFragment testFragment = new NewsItemFragment();
         testFragment.setArguments(args);
         return  testFragment;
     }
@@ -109,7 +109,7 @@ public class PressItemFragment extends Fragment {
         }
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_card, parent, false);
             MyViewHolder vh = new MyViewHolder(v);
             return vh;
         }

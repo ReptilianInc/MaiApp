@@ -13,4 +13,5 @@
     //
     <string name="user_settings">Настройки</string>
     <string name="about">О программе</string>
+    <string name="what_to_do">Нажмите на кнопку с календарём, чтобы выбрать неделю</string>
 </resources>
