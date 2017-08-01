@@ -1,5 +1,6 @@
 package com.mai.nix.maiapp;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,11 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.mai.nix.maiapp.navigation_fragments.CampusFragment;
+import com.mai.nix.maiapp.navigation_fragments.LifeFragment;
+import com.mai.nix.maiapp.navigation_fragments.PressCenterFragment;
+import com.mai.nix.maiapp.navigation_fragments.ScheduleFragment;
+
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private FragmentManager mFragmentManager;
@@ -23,12 +29,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final Toolbar mToolbar = (Toolbar)findViewById(R.id.kek);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle(R.string.app_name);
+        getSupportActionBar().setTitle(R.string.menu_schedule);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mFragmentManager = getSupportFragmentManager();
         mFragment = mFragmentManager.findFragmentById(R.id.center_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name,
-                R.string.app_name);
+        mFragment = new ScheduleFragment();
+        mFragmentManager.beginTransaction()
+                .add(R.id.center_view, mFragment)
+                .commit();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.menu_schedule,
+                R.string.menu_schedule);
         mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
         final NavigationView navigationview = (NavigationView) findViewById(R.id.navigation);
@@ -40,24 +50,53 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         switch (item.getItemId()){
+                            case R.id.menu_sch:
+                                mFragmentManager.beginTransaction()
+                                        .remove(mFragment)
+                                        .commit();
+                                mToolbar.setTitle("Расписание");
+                                mFragment = new ScheduleFragment();
+                                mFragmentManager.beginTransaction()
+                                        .add(R.id.center_view, mFragment)
+                                        .commit();
+                                break;
                             case R.id.press:
+                                mFragmentManager.beginTransaction()
+                                        .remove(mFragment)
+                                        .commit();
                                 mToolbar.setTitle("Пресс-центр");
-                                mFragment = new PressFragment();
+                                mFragment = new PressCenterFragment();
                                 mFragmentManager.beginTransaction()
                                         .add(R.id.center_view, mFragment)
                                         .commit();
                                 break;
                             case R.id.menu_campus:
+                                mFragmentManager.beginTransaction()
+                                        .remove(mFragment)
+                                        .commit();
                                 mToolbar.setTitle("Кампус");
                                 mFragment = new CampusFragment();
                                 mFragmentManager.beginTransaction()
                                         .add(R.id.center_view, mFragment)
                                         .commit();
                                 break;
-                            default:
+                            case R.id.life:
                                 mFragmentManager.beginTransaction()
-                                        .detach(mFragment)
+                                        .remove(mFragment)
                                         .commit();
+                                mToolbar.setTitle("Жизнь");
+                                mFragment = new LifeFragment();
+                                mFragmentManager.beginTransaction()
+                                        .add(R.id.center_view, mFragment)
+                                        .commit();
+                                break;
+                            case R.id.menu_settings:
+                                Intent intentUserSettings = new Intent(MainActivity.this, UserSettingsActivity.class);
+                                startActivity(intentUserSettings);
+                                break;
+                            case R.id.menu_info:
+                                Intent intentAbout = new Intent(MainActivity.this, AboutAcivity.class);
+                                startActivity(intentAbout);
                         }
 
                     }
