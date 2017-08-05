@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.mai.nix.maiapp.model.ExamModel;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -36,17 +38,6 @@ public class ExamItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.news_layout, container, false);
         mExamModels = new ArrayList<>();
-        /*mExamModels.add(new ExamModel("01.06", "ЧТ", "09:00 – 10:30", "Стандартизация и сертификация программных продуктов",
-                "Молчанова Светлана Ивановна", "609 (Орш. А)"));
-        mExamModels.add(new ExamModel("05.06", "ПН", "09:00 – 10:30", "Архитектура ЭВМ и систем",
-                "Жарков Сергей Викторович", "624 (Орш. А) ИСТ"));
-        mExamModels.add(new ExamModel("09.06", "ПТ", "10:45 – 12:15", "Военная подготовка",
-                "Пидор И.И.", "Военная кафедра (Полбина,45)"));
-        mExamModels.add(new ExamModel("13.06", "ВТ", "13:00 – 14:30", "Философия",
-                "Сухно Алексей Андреевич", "414 (Орш. В)"));
-        mExamModels.add(new ExamModel("17.06", "СБ", "13:00 – 14:30", "Web-программирование",
-                "Коновалов Кирилл Андреевич", "624 (Орш. А) ИСТ"));*/
-
         mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

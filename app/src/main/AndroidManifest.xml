@@ -21,18 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".UserSettingsActivity"
-            android:label="@string/user_settings"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppThemeSecondary">
-        </activity>
-        <activity
-            android:name=".AboutAcivity"
-            android:label="@string/about"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppThemeSecondary">
-        </activity>
     </application>
 
 </manifest>

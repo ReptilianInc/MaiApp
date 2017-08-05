@@ -16,6 +16,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:textColor="@color/colorPrimary"
+        android:maxLength="5"
         tools:text="01.06"/>
     <TextView
         android:layout_width="wrap_content"
@@ -64,6 +65,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginLeft="12dp"
             android:layout_marginBottom="4dp"
+            android:layout_marginRight="12dp"
             android:id="@+id/subject_title"
             android:layout_below="@+id/subject_time"
             tools:text="Стандартизация и сертификация программных продуктов"

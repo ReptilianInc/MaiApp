@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp;
+package com.mai.nix.maiapp.model;
 
 /**
  * Created by Nix on 01.08.2017.

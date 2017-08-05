@@ -17,6 +17,7 @@ import com.mai.nix.maiapp.navigation_fragments.CampusFragment;
 import com.mai.nix.maiapp.navigation_fragments.LifeFragment;
 import com.mai.nix.maiapp.navigation_fragments.PressCenterFragment;
 import com.mai.nix.maiapp.navigation_fragments.ScheduleFragment;
+import com.mai.nix.maiapp.navigation_fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
@@ -91,12 +92,17 @@ public class MainActivity extends AppCompatActivity {
                                         .commit();
                                 break;
                             case R.id.menu_settings:
-                                Intent intentUserSettings = new Intent(MainActivity.this, UserSettingsActivity.class);
-                                startActivity(intentUserSettings);
+                                mFragmentManager.beginTransaction()
+                                        .remove(mFragment)
+                                        .commit();
+                                mToolbar.setTitle("Настройки");
+                                mFragment = new SettingsFragment();
+                                mFragmentManager.beginTransaction()
+                                        .add(R.id.center_view, mFragment)
+                                        .commit();
                                 break;
                             case R.id.menu_info:
-                                Intent intentAbout = new Intent(MainActivity.this, AboutAcivity.class);
-                                startActivity(intentAbout);
+                                break;
                         }
 
                     }
