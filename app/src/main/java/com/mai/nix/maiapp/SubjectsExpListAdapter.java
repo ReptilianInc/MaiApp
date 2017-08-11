@@ -6,20 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-
 import com.mai.nix.maiapp.model.SubjectHeaders;
-
 import java.util.ArrayList;
 
 /**
  * Created by Nix on 02.08.2017.
  */
 
-public class ExpListAdapter extends BaseExpandableListAdapter {
+public class SubjectsExpListAdapter extends BaseExpandableListAdapter {
     private ArrayList<SubjectHeaders> mGroups;
     private Context mContext;
 
-    public ExpListAdapter(Context context, ArrayList<SubjectHeaders> groups) {
+    public SubjectsExpListAdapter(Context context, ArrayList<SubjectHeaders> groups) {
         mContext = context;
         mGroups = groups;
     }
@@ -81,7 +79,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter {
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.child_view, null);
+            view = inflater.inflate(R.layout.child_view, viewGroup, false);
         }
 
         TextView textChild1 = (TextView) view.findViewById(R.id.subject_title);

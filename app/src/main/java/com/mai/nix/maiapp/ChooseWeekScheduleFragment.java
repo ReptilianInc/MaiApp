@@ -30,7 +30,7 @@ import java.util.ArrayList;
 public class ChooseWeekScheduleFragment extends Fragment {
     private ExpandableListView mListView;
     private ArrayList<SubjectHeaders> mGroups;
-    private ExpListAdapter mAdapter;
+    private SubjectsExpListAdapter mAdapter;
     private RelativeLayout mHolder;
     private ProgressBar mProgressBar;
     private SeekBar mSeekBar;
@@ -51,7 +51,7 @@ public class ChooseWeekScheduleFragment extends Fragment {
         mWeekView.setText("1 неделя");
         mGroups = new ArrayList<>();
         //Создаем адаптер и передаем context и список с данными
-        mAdapter = new ExpListAdapter(getContext(), mGroups);
+        mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
         mListView.addHeaderView(holder);
         mListView.setAdapter(mAdapter);
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

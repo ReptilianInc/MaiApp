@@ -14,6 +14,7 @@ public class SubjectHeaders {
     public SubjectHeaders(String date, String day) {
         this.date = date;
         this.day = day;
+        children = new ArrayList<>();
     }
 
     public String getDate() {

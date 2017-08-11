@@ -27,7 +27,7 @@ public class ThisWeekFragment extends Fragment {
     private ExpandableListView mListView;
     private ArrayList<SubjectHeaders> mGroups;
     private ProgressBar mProgressBar;
-    private ExpListAdapter mAdapter;
+    private SubjectsExpListAdapter mAdapter;
     private final String mLink = "http://mai.ru/education/schedule/detail.php?group=3ВТИ-3ДБ-006&week=2";
     @Nullable
     @Override
@@ -37,7 +37,7 @@ public class ThisWeekFragment extends Fragment {
         mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar_test);
         mGroups = new ArrayList<>();
         //Создаем адаптер и передаем context и список с данными
-        mAdapter = new ExpListAdapter(getContext(), mGroups);
+        mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
         new MyThread().execute();
         mListView.setAdapter(mAdapter);
         for(int i = 0; i < mGroups.size(); i++){
