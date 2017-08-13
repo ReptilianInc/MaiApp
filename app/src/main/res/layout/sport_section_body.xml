@@ -18,6 +18,7 @@
         android:id="@+id/owner"
         android:layout_below="@+id/title"
         tools:text="Виталий Михайлович Елисеев"
+        android:paddingTop="2dp"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"/>
     <TextView

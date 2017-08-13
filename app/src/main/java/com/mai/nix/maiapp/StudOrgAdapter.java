@@ -50,7 +50,12 @@ public class StudOrgAdapter extends BaseAdapter {
         text1.setText(mOrgModels.get(i).getTitle());
         text2.setText(mOrgModels.get(i).getLeader());
         text3.setText(mOrgModels.get(i).getAddress());
-        text4.setText(mOrgModels.get(i).getPhone());
+        if(mOrgModels.get(i).getPhone() != null){
+            text4.setText(mOrgModels.get(i).getPhone());
+        }else{
+            text4.setHeight(0);
+        }
+
         return view;
     }
 }

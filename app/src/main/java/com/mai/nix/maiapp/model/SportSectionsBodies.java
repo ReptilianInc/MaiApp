@@ -15,6 +15,11 @@ public class SportSectionsBodies {
         mPhoneEtc = phoneEtc;
     }
 
+    public SportSectionsBodies(String title, String owner){
+        mTitle = title;
+        mOwner = owner;
+    }
+
     public SportSectionsBodies() {
     }
 

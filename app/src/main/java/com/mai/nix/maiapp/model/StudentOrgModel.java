@@ -17,6 +17,12 @@ public class StudentOrgModel {
         mAddress = address;
     }
 
+    public StudentOrgModel(String title, String leader, String address){
+        mTitle = title;
+        mLeader = leader;
+        mAddress = address;
+    }
+
     public String getTitle() {
         return mTitle;
     }
