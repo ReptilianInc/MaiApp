@@ -15,7 +15,6 @@
     <string name="about">О программе</string>
     <string name="what_to_do">Нажмите на кнопку с календарём, чтобы выбрать дату</string>
     <string name="choose_date">Выбор даты</string>
-    <string name="about_app">More content for this application is coming soon&#8230;</string>
     <string name="go_to_MAI">Перейти на сайт МАИ</string>
     <string name="go_to_dev">Перейти на сайт разработчика</string>
 
@@ -30,9 +29,7 @@
     <string name="title_app">Неофициальное приложение МАИ</string>
     <string name="title_summary">Pre-alpha версия. Сборка от 17.08.2017</string>
     <string name="site_mai">Перейти на сайт МАИ</string>
-    <string name="site_mai_summary">http://mai.ru</string>
     <string name="site_dev">Перейти на сайт разработчика</string>
-    <string name="site_dev_summary">http://lox.ru</string>
     <string-array name="freg_array">
         <item>Каждый день</item>
         <item>Каждую неделю</item>
@@ -55,4 +52,45 @@
     <string name="common_cath">Общие</string>
     <string name="cache_cath">Кэш</string>
     <string name="about_cath">О программе</string>
+
+    <string-array name="spinner_items">
+        <item>Текущая неделя(кэш)</item>
+        <item>1 неделя</item>
+        <item>2 неделя</item>
+        <item>3 неделя</item>
+        <item>4 неделя</item>
+        <item>5 неделя</item>
+        <item>6 неделя</item>
+        <item>7 неделя</item>
+        <item>8 неделя</item>
+        <item>9 неделя</item>
+        <item>10 неделя</item>
+        <item>11 неделя</item>
+        <item>12 неделя</item>
+        <item>13 неделя</item>
+        <item>14 неделя</item>
+        <item>15 неделя</item>
+        <item>16 неделя</item>
+    </string-array>
+    <string name="choose_group_button">НАСТРОИТЬ</string>
+    <string name="choose_group_space">3ВТИ-3ДБ-006</string>
+    <string-array name="spinner_items_two">
+        <item>1 неделя</item>
+        <item>2 неделя</item>
+        <item>3 неделя</item>
+        <item>4 неделя</item>
+        <item>5 неделя</item>
+        <item>6 неделя</item>
+        <item>7 неделя</item>
+        <item>8 неделя</item>
+        <item>9 неделя</item>
+        <item>10 неделя</item>
+        <item>11 неделя</item>
+        <item>12 неделя</item>
+        <item>13 неделя</item>
+        <item>14 неделя</item>
+        <item>15 неделя</item>
+        <item>16 неделя</item>
+    </string-array>
+
 </resources>
