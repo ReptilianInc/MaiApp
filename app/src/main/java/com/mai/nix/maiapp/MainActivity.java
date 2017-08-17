@@ -1,6 +1,8 @@
 package com.mai.nix.maiapp;
 
+import android.content.Intent;
 import android.os.Handler;
+import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,7 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import com.mai.nix.maiapp.navigation_fragments.AboutFragment;
 import com.mai.nix.maiapp.navigation_fragments.CampusFragment;
+import com.mai.nix.maiapp.navigation_fragments.ExamScheduleFragment;
 import com.mai.nix.maiapp.navigation_fragments.LifeFragment;
 import com.mai.nix.maiapp.navigation_fragments.PressCenterFragment;
 import com.mai.nix.maiapp.navigation_fragments.ScheduleFragment;
@@ -53,8 +57,18 @@ public class MainActivity extends AppCompatActivity {
                                 mFragmentManager.beginTransaction()
                                         .remove(mFragment)
                                         .commit();
-                                mToolbar.setTitle("Расписание");
+                                mToolbar.setTitle("Расписание пар");
                                 mFragment = new ScheduleFragment();
+                                mFragmentManager.beginTransaction()
+                                        .add(R.id.center_view, mFragment)
+                                        .commit();
+                                break;
+                            case R.id.menu_sch_ex:
+                                mFragmentManager.beginTransaction()
+                                        .remove(mFragment)
+                                        .commit();
+                                mToolbar.setTitle("Расписание сессии");
+                                mFragment = new ExamScheduleFragment();
                                 mFragmentManager.beginTransaction()
                                         .add(R.id.center_view, mFragment)
                                         .commit();
@@ -90,16 +104,8 @@ public class MainActivity extends AppCompatActivity {
                                         .commit();
                                 break;
                             case R.id.menu_settings:
-                                mFragmentManager.beginTransaction()
-                                        .remove(mFragment)
-                                        .commit();
-                                mToolbar.setTitle("Настройки");
-                                mFragment = new SettingsFragment();
-                                mFragmentManager.beginTransaction()
-                                        .add(R.id.center_view, mFragment)
-                                        .commit();
-                                break;
-                            case R.id.menu_info:
+                                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                                startActivity(intent);
                                 break;
                         }
 

@@ -1,18 +1,58 @@
 <resources>
-    <string name="app_name">MaiApp</string>
-    //navigation menu
-    <string name="menu_schedule">Расписание</string>
+    <string name="app_name">MaiApp prealpha</string>
+    <!-- navigation menu -->
+    <string name="menu_schedule">Расписание пар</string>
+    <string name="exam_schedule">Расписание сессии</string>
     <string name="menu_library">Библиотека</string>
     <string name="menu_campus">Кампус</string>
     <string name="menu_press_center">Пресс-центр</string>
     <string name="menu_life">Жизнь</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_info">О программе</string>
-    //
     <string name="menu_title">Menu</string>
-    //
+    <!-- -->
     <string name="user_settings">Настройки</string>
     <string name="about">О программе</string>
     <string name="what_to_do">Нажмите на кнопку с календарём, чтобы выбрать дату</string>
     <string name="choose_date">Выбор даты</string>
+    <string name="about_app">More content for this application is coming soon&#8230;</string>
+    <string name="go_to_MAI">Перейти на сайт МАИ</string>
+    <string name="go_to_dev">Перейти на сайт разработчика</string>
+
+    <string name="title_activity_settings">Настройки</string>
+    <!-- Settings -->
+    <string name="pref_group">Группа</string>
+    <string name="pref_links">Просмотр ссылок</string>
+    <string name="pref_group_summary">Выберите группу</string>
+    <string name="clear_cache_sub">Очистить кэш расписания пар</string>
+    <string name="clear_cache_ex">Очистить кэш расписания экзаменов</string>
+    <string name="freg_cache">Обновление кэша расписания пар</string>
+    <string name="title_app">Неофициальное приложение МАИ</string>
+    <string name="title_summary">Pre-alpha версия. Сборка от 17.08.2017</string>
+    <string name="site_mai">Перейти на сайт МАИ</string>
+    <string name="site_mai_summary">http://mai.ru</string>
+    <string name="site_dev">Перейти на сайт разработчика</string>
+    <string name="site_dev_summary">http://lox.ru</string>
+    <string-array name="freg_array">
+        <item>Каждый день</item>
+        <item>Каждую неделю</item>
+        <item>Только принудительно</item>
+    </string-array>
+    <string-array name="freg_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="link_array">
+        <item>Через приложение</item>
+        <item>Через браузер</item>
+    </string-array>
+    <string-array name="link_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <!-- Settings Cathegories -->
+    <string name="common_cath">Общие</string>
+    <string name="cache_cath">Кэш</string>
+    <string name="about_cath">О программе</string>
 </resources>

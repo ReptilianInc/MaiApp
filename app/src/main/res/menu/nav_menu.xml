@@ -6,6 +6,11 @@
         android:icon="@drawable/ic_schedule"
         />
     <item
+        android:id="@+id/menu_sch_ex"
+        android:title="@string/exam_schedule"
+        android:icon="@drawable/ic_exam_schedule"
+        />
+    <item
         android:id="@+id/menu_campus"
         android:title="@string/menu_campus"
         android:icon="@drawable/ic_campus"
@@ -22,8 +27,4 @@
         android:id="@+id/menu_settings"
         android:title="@string/menu_settings"
         android:icon="@drawable/ic_settings"/>
-    <item
-        android:id="@+id/menu_info"
-        android:title="@string/menu_info"
-        android:icon="@drawable/ic_notifications_black"/>
 </menu>
