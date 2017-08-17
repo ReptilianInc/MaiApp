@@ -5,12 +5,12 @@ package com.mai.nix.maiapp.model;
  */
 
 public class ExamModel {
-    protected String mDate;
-    protected String mDay;
-    protected String mTime;
-    protected String mTitle;
-    protected String mTeacher;
-    protected String mRoom;
+    private String mDate;
+    private String mDay;
+    private String mTime;
+    private String mTitle;
+    private String mTeacher;
+    private String mRoom;
 
     public ExamModel(String date, String day, String time, String title, String teacher, String room) {
         mDate = date;

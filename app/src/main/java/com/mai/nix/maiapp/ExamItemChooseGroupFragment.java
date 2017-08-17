@@ -18,10 +18,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by Nix on 01.08.2017.
+ * Created by Nix on 17.08.2017.
  */
 
-public class ExamItemFragment extends Fragment {
+public class ExamItemChooseGroupFragment extends Fragment {
     private ListView mListView;
     private ArrayList<ExamModel> mExamModels;
     private ExamAdapter mAdapter;
@@ -31,15 +31,17 @@ public class ExamItemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.student_orgs_layout, container, false);
+        View header = inflater.inflate(R.layout.choose_group_ex_header, null);
         mExamModels = new ArrayList<>();
         mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
         mAdapter = new ExamAdapter(getContext(), mExamModels);
         new MyThread().execute();
+        mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);
         return v;
     }
-    private class MyThread extends AsyncTask<String, Void, String>{
+    private class MyThread extends AsyncTask<String, Void, String> {
         private Elements date, day, time, title, teacher, room;
         private Document doc;
         public MyThread() {
