@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MaiApp prealpha</string>
+    <string name="app_name">MAI App prealpha</string>
     <!-- navigation menu -->
     <string name="menu_schedule">Расписание пар</string>
     <string name="exam_schedule">Расписание сессии</string>
@@ -92,5 +92,4 @@
         <item>15 неделя</item>
         <item>16 неделя</item>
     </string-array>
-
 </resources>

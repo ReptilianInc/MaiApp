@@ -4,31 +4,26 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import com.bumptech.glide.Glide;
 import com.mai.nix.maiapp.model.NewsModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Nix on 23.04.2017.
  */
 
 public class NewsItemFragment extends Fragment {
-    private RecyclerView mRecyclerView;
-    private MyAdapter mMyAdapter;
-    private List<NewsModel> mNewsModels;
+    private ListView mListView;
+    private NewsAdapter mAdapter;
+    private ArrayList<NewsModel> mModels;
     private ProgressBar mProgressBar;
     private int mResult;
     private String mLink;
@@ -65,66 +60,14 @@ public class NewsItemFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.news_layout, container, false);
-        mNewsModels = new ArrayList<>();
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.list);
+        View v = inflater.inflate(R.layout.student_orgs_layout, container, false);
+        mModels = new ArrayList<>();
+        mListView = (ListView) v.findViewById(R.id.stud_org_listview);
         mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
         new MyThread().execute();
-        mMyAdapter = new MyAdapter(mNewsModels);
-        mRecyclerView.setAdapter(mMyAdapter);
+        mAdapter = new NewsAdapter(getContext(), mModels);
+        mListView.setAdapter(mAdapter);
         return v;
-    }
-
-    private class MyViewHolder extends RecyclerView.ViewHolder{
-        private TextView mDateTextView, mHeaderTextView;
-        private ImageView mImageView;
-        private NewsModel mModel;
-        public MyViewHolder(View view){
-            super(view);
-            mDateTextView = (TextView)view.findViewById(R.id.date_textview);
-            mHeaderTextView = (TextView)view.findViewById(R.id.header_textview);
-            mImageView = (ImageView)view.findViewById(R.id.image);
-        }
-        public void bindSunject(NewsModel model){
-            mModel = model;
-            mDateTextView.setText(mModel.getDate());
-            mHeaderTextView.setText(mModel.getText());
-            Glide.with(getContext())
-                    .load(model.getImagePath())
-                    .centerCrop()
-                    .placeholder(R.drawable.example)
-                    .crossFade()
-                    .into(mImageView);
-        }
-
-    }
-    private class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
-        private List<NewsModel> mNewsModelList;
-        public MyAdapter(List<NewsModel> models){
-            this.mNewsModelList = models;
-        }
-        public void setNewsModelList(List<NewsModel> models){
-            mNewsModelList = models;
-        }
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_card, parent, false);
-            MyViewHolder vh = new MyViewHolder(v);
-            return vh;
-        }
-
-        @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
-            NewsModel model = mNewsModelList.get(position);
-            holder.bindSunject(model);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mNewsModelList.size();
-        }
     }
 
     private class MyThread extends AsyncTask<String, Void, String>{
@@ -140,11 +83,11 @@ public class NewsItemFragment extends Fragment {
                 title2 = doc.select("div[class = col-md-9] > p[class = b-date]");
                 title3 = doc.select("img[class = img-responsive]");
                 imgsrc = title3.attr("src");
-                mNewsModels.clear();
+                mModels.clear();
 
                 int kek = title1.size();
                 for (int i = 0; i < kek; i++){
-                    mNewsModels.add(new NewsModel(title1.get(i).text(), title2.get(i).text(), "http://mai.ru"
+                    mModels.add(new NewsModel(title1.get(i).text(), title2.get(i).text(), "http://mai.ru"
                             + title3.get(i).attr("src")));
                 }
             }catch(IOException e){
@@ -160,7 +103,7 @@ public class NewsItemFragment extends Fragment {
             }else{
                 mMyAdapter.setNewsModelList(mNewsModels);
             }*/
-            mRecyclerView.setAdapter(mMyAdapter);
+            mListView.setAdapter(mAdapter);
             mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         }
     }
