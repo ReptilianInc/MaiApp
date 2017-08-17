@@ -1,5 +1,7 @@
 package com.mai.nix.maiapp.model;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Nix on 14.04.2017.
  */
@@ -8,10 +10,10 @@ public class NewsModel {
     private String mDate;
     private String mImagePath;
     private String mText;
-
-    public NewsModel(String text, String date, String imagePath) {
+    private Bitmap mBitmap;
+    public NewsModel(String text, String date, Bitmap bitmap) {
         mDate = date;
-        mImagePath = imagePath;
+        mBitmap = bitmap;
         mText = text;
     }
     public NewsModel(String text){
@@ -43,5 +45,13 @@ public class NewsModel {
 
     public void setText(String text) {
         mText = text;
+    }
+
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
     }
 }

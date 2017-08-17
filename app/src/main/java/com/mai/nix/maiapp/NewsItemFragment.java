@@ -1,5 +1,7 @@
 package com.mai.nix.maiapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +16,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -29,6 +34,7 @@ public class NewsItemFragment extends Fragment {
     private String mLink;
     private static final String APP_FRAGMENT_ID = "fragment_id";
     public static final byte NEWS_CODE = 0, EVENTS_CODE = 1, ANNOUNCEMENTS_CODE = 2;
+    private final String mLinkMain = "http://mai.ru";
     public static NewsItemFragment newInstance(byte code){
         Bundle args = new Bundle();
         args.putSerializable(APP_FRAGMENT_ID, code);
@@ -72,7 +78,6 @@ public class NewsItemFragment extends Fragment {
 
     private class MyThread extends AsyncTask<String, Void, String>{
         private Elements title1, title2, title3;
-        private String imgsrc;
         private Document doc;
 
         @Override
@@ -82,13 +87,16 @@ public class NewsItemFragment extends Fragment {
                 title1 = doc.select("div[class = col-md-9] > h5");
                 title2 = doc.select("div[class = col-md-9] > p[class = b-date]");
                 title3 = doc.select("img[class = img-responsive]");
-                imgsrc = title3.attr("src");
                 mModels.clear();
-
                 int kek = title1.size();
                 for (int i = 0; i < kek; i++){
-                    mModels.add(new NewsModel(title1.get(i).text(), title2.get(i).text(), "http://mai.ru"
-                            + title3.get(i).attr("src")));
+                    URL url = new URL(mLinkMain.concat(title3.get(i).attr("src")));
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setDoInput(true);
+                    connection.connect();
+                    InputStream inputStream = connection.getInputStream();
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    mModels.add(new NewsModel(title1.get(i).text(), title2.get(i).text(), bitmap));
                 }
             }catch(IOException e){
                 e.printStackTrace();

@@ -99,7 +99,6 @@ public class ThisWeekFragment extends Fragment {
                     Elements titles = prim.select("span[class=sc-title]");
                     Elements teachers = prim.select("div[class=sc-table-col sc-item-title]");
                     Elements rooms = prim.select("div[class=sc-table-col sc-item-location]");
-                    Log.d("date and titles", date + " " + Integer.toString(titles.size()));
                     for (int i = 0; i < times.size(); i++){
                         SubjectBodies body = new SubjectBodies(titles.get(i).text(),
                                 teachers.get(i).select("span[class=sc-lecturer]").text(),
