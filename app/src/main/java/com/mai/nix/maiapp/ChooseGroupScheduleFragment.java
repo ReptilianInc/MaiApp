@@ -11,12 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.mai.nix.maiapp.model.SubjectBodies;
 import com.mai.nix.maiapp.model.SubjectHeaders;
 import org.jsoup.Jsoup;
@@ -54,7 +52,7 @@ public class ChooseGroupScheduleFragment extends Fragment {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), ChooseGroupActivity.class);
+                Intent intent = ChooseGroupActivity.newIntent(getContext(), false);
                 startActivityForResult(intent, REQUEST_CODE_GROUP);
             }
         });

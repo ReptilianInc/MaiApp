@@ -11,8 +11,17 @@
             android:title="@string/pref_links"
             android:key="links"
             android:defaultValue="1"
+            android:summary="%s"
             android:entries="@array/link_array"
             android:entryValues="@array/link_values">
+        </ListPreference>
+        <ListPreference
+            android:title="@string/pref_language"
+            android:key="lang"
+            android:defaultValue="1"
+            android:summary="%s"
+            android:entries="@array/lang_array"
+            android:entryValues="@array/lang_values">
         </ListPreference>
     </PreferenceCategory>
     <PreferenceCategory
@@ -29,6 +38,7 @@
             android:title="@string/freg_cache"
             android:key="freg"
             android:defaultValue="1"
+            android:summary="%s"
             android:entries="@array/freg_array"
             android:entryValues="@array/freg_values">
         </ListPreference>
@@ -36,6 +46,7 @@
     <PreferenceCategory
         android:title="@string/about_cath">
         <Preference
+            android:key="about"
             android:title="@string/title_app"
             android:summary="@string/title_summary">
         </Preference>
@@ -43,6 +54,7 @@
             android:title="@string/site_dev">
         </Preference>
         <Preference
+            android:key="go_mai"
             android:title="@string/site_mai">
         </Preference>
     </PreferenceCategory>

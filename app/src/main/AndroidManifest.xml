@@ -15,20 +15,24 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppThemeSecondary">
         </activity>
-        <activity android:name=".ChooseGroupActivity"
-            android:theme="@style/AppThemeSecondary"
-            android:label="@string/choose_group_activity_title">
+        <activity
+            android:name=".ChooseGroupActivity"
+            android:label="@string/choose_group_activity_title"
+            android:theme="@style/AppThemeSecondary">
+        </activity>
+        <activity android:name=".HelloActivity"
+            android:theme="@style/AppThemeSecondary.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
     </application>
 

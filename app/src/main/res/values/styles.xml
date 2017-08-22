@@ -14,7 +14,10 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkSec</item>
         <item name="colorAccent">@color/colorAccentSec</item>
     </style>
-
+    <style name="AppThemeSecondary.NoActionBar" parent="AppThemeSecondary">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
     <style name="Widget.MyApp.Toolbar.Solid" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/colorPrimary</item>
     </style>

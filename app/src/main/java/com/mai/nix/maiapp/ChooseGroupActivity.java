@@ -38,17 +38,27 @@ public class ChooseGroupActivity extends AppCompatActivity{
     private Spinner mSpinnerFacs, mSpinnerStages;
     private String mCurrentGroup;
     public static final String EXTRA_GROUP = "com.mai.nix.group_result";
+    private static final String MODE = "com.mai.nix.maiapp.mode";
     private ProgressBar mProgressBar;
     private String[] FAC_CODES = {"150", "153", "157", "149", "155", "160", "154", "151",
             "152", "146", "161", "165", "164", "163", "162"};
     private final String LINK = "http://mai.ru/education/schedule/?department=";
     private final String PLUS_COURSE = "&course=";
     private int mCurrentFac = -1, mCurrentStage = -1;
+    private boolean isForSettings;
+
+    public static Intent newIntent(Context context, boolean mode){
+        Intent intent = new Intent(context, ChooseGroupActivity.class);
+        intent.putExtra(MODE, mode);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_group);
         mGroups = new ArrayList<>();
+        isForSettings = getIntent().getBooleanExtra(MODE, false);
         String[] mFacsArray = getResources().getStringArray(R.array.spinner_facs);
         String[] mStagesArray = getResources().getStringArray(R.array.spinner_stages);
         View header = View.inflate(this, R.layout.group_choosing_header, null);
@@ -201,8 +211,13 @@ public class ChooseGroupActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         //Toast.makeText(this, mCurrentGroup, Toast.LENGTH_SHORT).show();
         if(mCurrentGroup != null){
-            setGroupResult(mCurrentGroup);
-            this.finish();
+            if(isForSettings){
+                Intent i = new Intent(ChooseGroupActivity.this, MainActivity.class);
+                startActivity(i);
+            }else{
+                setGroupResult(mCurrentGroup);
+                this.finish();
+            }
         }else{
             Toast.makeText(this, R.string.exception_group_null, Toast.LENGTH_LONG).show();
         }
