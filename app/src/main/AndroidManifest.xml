@@ -21,9 +21,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".SettingsActivity"
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppThemeSecondary">
+        </activity>
+        <activity android:name=".ChooseGroupActivity"
             android:theme="@style/AppThemeSecondary"
-            android:label="@string/title_activity_settings">
+            android:label="@string/choose_group_activity_title">
         </activity>
     </application>
 

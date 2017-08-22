@@ -24,8 +24,8 @@
             android:text="@string/choose_group_button"
             android:textColor="@color/colorText"
             android:textStyle="bold"
-            android:layout_margin="16dp"
-            android:textSize="16sp"/>
+            android:padding="16dp"
+            android:background="@color/colorPrimary"/>
     </RelativeLayout>
     <View
         android:id="@+id/divider"

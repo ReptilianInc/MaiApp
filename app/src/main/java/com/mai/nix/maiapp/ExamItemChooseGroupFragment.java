@@ -1,5 +1,6 @@
 package com.mai.nix.maiapp;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,8 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.mai.nix.maiapp.model.ExamModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,12 +30,21 @@ public class ExamItemChooseGroupFragment extends Fragment {
     private ArrayList<ExamModel> mExamModels;
     private ExamAdapter mAdapter;
     private ProgressBar mProgressBar;
+    private TextView mButton;
     private final String mLink = "http://mai.ru/education/schedule/session.php?group=3ВТИ-3ДБ-006";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.student_orgs_layout, container, false);
         View header = inflater.inflate(R.layout.choose_group_ex_header, null);
+        mButton = (TextView) header.findViewById(R.id.choose_view);
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ChooseGroupActivity.class);
+                startActivity(intent);
+            }
+        });
         mExamModels = new ArrayList<>();
         mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);

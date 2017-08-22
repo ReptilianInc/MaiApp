@@ -1,5 +1,7 @@
 package com.mai.nix.maiapp;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,9 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.mai.nix.maiapp.model.SubjectBodies;
 import com.mai.nix.maiapp.model.SubjectHeaders;
@@ -32,23 +36,39 @@ public class ChooseGroupScheduleFragment extends Fragment {
     private SubjectsExpListAdapter mAdapter;
     private ProgressBar mProgressBar;
     private Spinner mSpinner;
-    private final String mLinkMain = "http://mai.ru/education/schedule/detail.php?group=3ВТИ-3ДБ-006&week=";
+    private TextView mButton;
+    private final String mLinkMain = "http://mai.ru/education/schedule/detail.php?group=";
     private String ChosenWeek = "1";
+    private final String PLUS_WEEK = "&week=";
+    private static final int REQUEST_CODE_GROUP = 0;
+    private String mSelectedGroup;
+    private TextView mChoosenGroupTextView;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.custom_week_schedule_layout, container, false);
         View header = inflater.inflate(R.layout.choose_group_header, null);
         mSpinner = (Spinner)header.findViewById(R.id.spinner);
+        mChoosenGroupTextView = (TextView)header.findViewById(R.id.group_view);
+        mButton = (TextView) header.findViewById(R.id.choose_view);
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ChooseGroupActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_GROUP);
+            }
+        });
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getContext(), "Position = " + i, Toast.LENGTH_SHORT).show();
-                mGroups.clear();
-                mAdapter.notifyDataSetChanged();
-                mProgressBar.setVisibility(ProgressBar.VISIBLE);
-                ChosenWeek = Integer.toString(i+1);
-                new MyThread().execute();
+                //Toast.makeText(getContext(), "Position = " + i, Toast.LENGTH_SHORT).show();
+                if(mSelectedGroup != null){
+                    ChosenWeek = Integer.toString(i+1);
+                    mGroups.clear();
+                    mAdapter.notifyDataSetChanged();
+                    mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                    new MyThread().execute();
+                }
             }
 
             @Override
@@ -76,7 +96,7 @@ public class ChooseGroupScheduleFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                doc = Jsoup.connect(mLinkMain.concat(ChosenWeek)).get();
+                doc = Jsoup.connect(mLinkMain.concat(mSelectedGroup).concat(PLUS_WEEK).concat(ChosenWeek)).get();
                 primaries = doc.select("div[class=sc-table sc-table-day]");
                 mGroups.clear();
                 for(Element prim : primaries){
@@ -115,4 +135,21 @@ public class ChooseGroupScheduleFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == REQUEST_CODE_GROUP) {
+            if (data == null) {
+                return;
+            }
+            mSelectedGroup = data.getStringExtra(ChooseGroupActivity.EXTRA_GROUP);
+            mChoosenGroupTextView.setText(mSelectedGroup);
+            mGroups.clear();
+            mAdapter.notifyDataSetChanged();
+            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            new MyThread().execute();
+        }
+    }
 }

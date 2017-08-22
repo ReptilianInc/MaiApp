@@ -27,7 +27,7 @@
     <string name="clear_cache_ex">Очистить кэш расписания экзаменов</string>
     <string name="freg_cache">Обновление кэша расписания пар</string>
     <string name="title_app">Неофициальное приложение МАИ</string>
-    <string name="title_summary">Pre-alpha версия. Сборка от 17.08.2017</string>
+    <string name="title_summary">Pre-alpha версия. Сборка от 20.08.2017</string>
     <string name="site_mai">Перейти на сайт МАИ</string>
     <string name="site_dev">Перейти на сайт разработчика</string>
     <string-array name="freg_array">
@@ -92,4 +92,35 @@
         <item>15 неделя</item>
         <item>16 неделя</item>
     </string-array>
+    <string name="choose_group_activity_title">Выбор группы</string>
+    <string name="spinner_fac_title">Выберите факультет</string>
+    <string name="spinner_stage_title">Выберите курс</string>
+    <string-array name="spinner_facs">
+        <item>Выберите факультет</item>
+        <item>Факультет 1</item>
+        <item>Факультет 2</item>
+        <item>Факультет 3</item>
+        <item>Факультет 4</item>
+        <item>ИНЖЭКИН</item>
+        <item>Факультет 6</item>
+        <item>Факультет 7</item>
+        <item>Факультет 8</item>
+        <item>Факультет 9</item>
+        <item>Факультет 10</item>
+        <item>ФИЯ</item>
+        <item>Институт №1</item>
+        <item>Институт №2</item>
+        <item>Институт №3</item>
+        <item>Институт №4</item>
+    </string-array>
+    <string-array name="spinner_stages">
+        <item>Выберите курс</item>
+        <item>1 курс</item>
+        <item>2 курс</item>
+        <item>3 курс</item>
+        <item>4 курс</item>
+        <item>5 курс</item>
+    </string-array>
+    <string name="choose_group_accept">ГОТОВО</string>
+    <string name="exception_group_null">Сначала выберите группу</string>
 </resources>
