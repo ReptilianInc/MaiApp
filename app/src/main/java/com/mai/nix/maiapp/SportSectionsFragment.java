@@ -4,11 +4,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.ProgressBar;
 import com.mai.nix.maiapp.model.SportSectionsBodies;
 import com.mai.nix.maiapp.model.SportSectionsHeaders;
 import org.jsoup.Jsoup;
@@ -24,9 +24,10 @@ import java.util.ArrayList;
 
 public class SportSectionsFragment extends Fragment {
     private ExpandableListView mExpandableListView;
-    private ProgressBar mProgressBar;
+    //private ProgressBar mProgressBar;
     private ArrayList<SportSectionsHeaders> mHeaders;
     private SportSectionsExpListAdapter mAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private final String mLink = "http://www.mai.ru/life/sport/sections.php";
 
     @Nullable
@@ -34,7 +35,9 @@ public class SportSectionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.exp_list_test, container, false);
         mExpandableListView = (ExpandableListView)v.findViewById(R.id.exp);
-        mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar_test);
+        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar_test);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout.setRefreshing(true);
         mHeaders = new ArrayList<>();
         mAdapter = new SportSectionsExpListAdapter(getContext(), mHeaders);
         new MyThread().execute();
@@ -42,6 +45,15 @@ public class SportSectionsFragment extends Fragment {
         for(int i = 0; i < mHeaders.size(); i++){
             mExpandableListView.expandGroup(i);
         }
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mHeaders.clear();
+                mAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(true);
+                new MyThread().execute();
+            }
+        });
         return v;
     }
     private class MyThread extends AsyncTask<String, Void, String> {
@@ -83,7 +95,8 @@ public class SportSectionsFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             mExpandableListView.setAdapter(mAdapter);
-            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
             for(int i = 0; i < mHeaders.size(); i++){
                 mExpandableListView.expandGroup(i);
             }

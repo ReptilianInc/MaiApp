@@ -1,8 +1,11 @@
 package com.mai.nix.maiapp;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -18,13 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -36,6 +37,8 @@ public class ChooseGroupActivity extends AppCompatActivity{
     private ArrayAdapter<String> mAdapter;
     private ArrayList<String> mGroups;
     private Spinner mSpinnerFacs, mSpinnerStages;
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
     private String mCurrentGroup;
     public static final String EXTRA_GROUP = "com.mai.nix.group_result";
     private static final String MODE = "com.mai.nix.maiapp.mode";
@@ -58,6 +61,7 @@ public class ChooseGroupActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_group);
         mGroups = new ArrayList<>();
+        mSharedPreferences = getSharedPreferences("suka", Context.MODE_PRIVATE);
         isForSettings = getIntent().getBooleanExtra(MODE, false);
         String[] mFacsArray = getResources().getStringArray(R.array.spinner_facs);
         String[] mStagesArray = getResources().getStringArray(R.array.spinner_stages);
@@ -212,6 +216,10 @@ public class ChooseGroupActivity extends AppCompatActivity{
         //Toast.makeText(this, mCurrentGroup, Toast.LENGTH_SHORT).show();
         if(mCurrentGroup != null){
             if(isForSettings){
+                mEditor = mSharedPreferences.edit();
+                mEditor.putString(getString(R.string.pref_group), mCurrentGroup);
+                mEditor.apply();
+                //switchLauncher();
                 Intent i = new Intent(ChooseGroupActivity.this, MainActivity.class);
                 startActivity(i);
             }else{
@@ -228,5 +236,13 @@ public class ChooseGroupActivity extends AppCompatActivity{
         Intent data = new Intent();
         data.putExtra(EXTRA_GROUP, group);
         setResult(RESULT_OK, data);
+    }
+    private void switchLauncher(){
+        String s = getApplicationContext().getPackageName();
+        ComponentName cm = new ComponentName(s, s+".AliasActivity");
+        ComponentName cm2 = new ComponentName(s, s+".ChooseGroupActivity");
+        PackageManager pm = this.getPackageManager();
+        pm.setComponentEnabledSetting(cm, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        pm.setComponentEnabledSetting(cm2, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 }

@@ -1,7 +1,9 @@
 package com.mai.nix.maiapp.navigation_fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -24,6 +26,8 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
     private Preference mClearExamsCache;
     private Preference mAbout;
     private Preference mMAI;
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
     private static final int REQUEST_CODE_GROUP = 0;
     private String mChoosenGroup;
     @Override
@@ -34,7 +38,9 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mSharedPreferences = getActivity().getSharedPreferences("suka", Context.MODE_PRIVATE);
         mGroupPreference = getPreferenceManager().findPreference("pref_group");
+        mGroupPreference.setSummary(mSharedPreferences.getString(getString(R.string.pref_group), getString(R.string.pref_group_summary)));
         mClearSubjectsCache = getPreferenceScreen().findPreference("clear_cache_subj");
         mClearExamsCache = getPreferenceScreen().findPreference("clear_cache_ex");
         mAbout = getPreferenceScreen().findPreference("about");
@@ -82,6 +88,9 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
                 return;
             }
             mChoosenGroup = data.getStringExtra(ChooseGroupActivity.EXTRA_GROUP);
+            mEditor = mSharedPreferences.edit();
+            mEditor.putString(getString(R.string.pref_group), mChoosenGroup);
+            mEditor.apply();
             mGroupPreference.setSummary(mChoosenGroup);
         }
     }

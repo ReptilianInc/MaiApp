@@ -1,6 +1,8 @@
 package com.mai.nix.maiapp;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //switchLauncher();
         final Toolbar mToolbar = (Toolbar)findViewById(R.id.kek);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(R.string.menu_schedule);
@@ -111,5 +114,13 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+    private void switchLauncher(){
+        String s = getApplicationContext().getPackageName();
+        ComponentName cm = new ComponentName(s, s+".AliasActivity");
+        ComponentName cm2 = new ComponentName(s, s+".ChooseGroupActivity");
+        PackageManager pm = this.getPackageManager();
+        pm.setComponentEnabledSetting(cm, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        pm.setComponentEnabledSetting(cm2, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 }

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,8 @@ public class NewsItemFragment extends Fragment {
     private ListView mListView;
     private NewsAdapter mAdapter;
     private ArrayList<NewsModel> mModels;
-    private ProgressBar mProgressBar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    //private ProgressBar mProgressBar;
     private int mResult;
     private String mLink;
     private static final String APP_FRAGMENT_ID = "fragment_id";
@@ -67,12 +69,23 @@ public class NewsItemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.student_orgs_layout, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout.setRefreshing(true);
         mModels = new ArrayList<>();
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
-        mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
+        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         new MyThread().execute();
         mAdapter = new NewsAdapter(getContext(), mModels);
         mListView.setAdapter(mAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mModels.clear();
+                mAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(true);
+                new MyThread().execute();
+            }
+        });
         return v;
     }
 
@@ -111,8 +124,9 @@ public class NewsItemFragment extends Fragment {
             }else{
                 mMyAdapter.setNewsModelList(mNewsModels);
             }*/
+            mSwipeRefreshLayout.setRefreshing(false);
             mListView.setAdapter(mAdapter);
-            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         }
     }
 }

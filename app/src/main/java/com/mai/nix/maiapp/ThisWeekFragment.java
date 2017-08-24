@@ -1,19 +1,19 @@
 package com.mai.nix.maiapp;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 import com.mai.nix.maiapp.model.SubjectBodies;
 import com.mai.nix.maiapp.model.SubjectHeaders;
 import org.jsoup.Jsoup;
@@ -30,24 +30,32 @@ import java.util.ArrayList;
 public class ThisWeekFragment extends Fragment {
     private ExpandableListView mListView;
     private ArrayList<SubjectHeaders> mGroups;
-    private ProgressBar mProgressBar;
     private SubjectsExpListAdapter mAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SharedPreferences mSharedPreferences;
     private Spinner mSpinner;
-    private final String mLink = "http://mai.ru/education/schedule/detail.php?group=3ВТИ-3ДБ-006&week=";
+    private String mCurrentGroup;
+    private final String mLink = "http://mai.ru/education/schedule/detail.php?group=";
     private String mWeek = "1";
+    private final String PLUS_WEEK = "&week=";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.exp_list_test, container, false);
+        View v = inflater.inflate(R.layout.shedule_subjects_layout, container, false);
         View header = inflater.inflate(R.layout.spinner_header, null);
+        mSharedPreferences = getActivity().getSharedPreferences("suka", Context.MODE_PRIVATE);
+        mCurrentGroup = mSharedPreferences.getString(getString(R.string.pref_group), "");
+        //Toast.makeText(getContext(), mCurrentGroup, Toast.LENGTH_SHORT).show();
         mSpinner = (Spinner)header.findViewById(R.id.spinner);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i != 0){
                     mGroups.clear();
                     mAdapter.notifyDataSetChanged();
-                    mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                    //mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                    mSwipeRefreshLayout.setRefreshing(true);
                     mWeek = Integer.toString(i);
                     new MyThread().execute();
                 }else{
@@ -63,7 +71,7 @@ public class ThisWeekFragment extends Fragment {
         });
 
         mListView = (ExpandableListView)v.findViewById(R.id.exp);
-        mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar_test);
+        mSwipeRefreshLayout.setRefreshing(true);
         mGroups = new ArrayList<>();
         //Создаем адаптер и передаем context и список с данными
         mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
@@ -73,6 +81,15 @@ public class ThisWeekFragment extends Fragment {
         for(int i = 0; i < mGroups.size(); i++){
             mListView.expandGroup(i);
         }
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mGroups.clear();
+                mAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(true);
+                new MyThread().execute();
+            }
+        });
         return v;
     }
     private class MyThread extends AsyncTask<String, Void, String> {
@@ -85,7 +102,7 @@ public class ThisWeekFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                doc = Jsoup.connect(mLink.concat(mWeek)).get();
+                doc = Jsoup.connect(mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek)).get();
                 primaries = doc.select("div[class=sc-table sc-table-day]");
                 mGroups.clear();
                 for(Element prim : primaries){
@@ -116,10 +133,16 @@ public class ThisWeekFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             mListView.setAdapter(mAdapter);
-            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
             for(int i = 0; i < mGroups.size(); i++){
                 mListView.expandGroup(i);
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mCurrentGroup = mSharedPreferences.getString(getString(R.string.pref_group), "");
     }
 }

@@ -4,12 +4,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import com.mai.nix.maiapp.model.StudentOrgModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,20 +23,32 @@ import java.util.ArrayList;
 
 public class StudentOrgsFragment extends Fragment {
     private ListView mListView;
-    private ProgressBar mProgressBar;
+    //private ProgressBar mProgressBar;
     private ArrayList<StudentOrgModel> mOrgs;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private StudOrgAdapter mAdapter;
     private final String mLink = "http://www.mai.ru/life/join/index.php";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.student_orgs_layout, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout.setRefreshing(true);
         mListView = (ListView)v.findViewById(R.id.stud_org_listview);
-        mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
+        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         mOrgs = new ArrayList<>();
         mAdapter = new StudOrgAdapter(getContext(), mOrgs);
         new MyThread().execute();
         mListView.setAdapter(mAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mOrgs.clear();
+                mAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(true);
+                new MyThread().execute();
+            }
+        });
         return v;
     }
 
@@ -72,7 +83,8 @@ public class StudentOrgsFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             mListView.setAdapter(mAdapter);
-            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 

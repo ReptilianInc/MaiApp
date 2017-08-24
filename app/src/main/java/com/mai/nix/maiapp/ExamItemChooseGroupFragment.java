@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +29,9 @@ public class ExamItemChooseGroupFragment extends Fragment {
     private ListView mListView;
     private ArrayList<ExamModel> mExamModels;
     private ExamAdapter mAdapter;
-    private ProgressBar mProgressBar;
+    //private ProgressBar mProgressBar;
     private TextView mButton;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private static final int REQUEST_CODE_GROUP = 0;
     private final String mLink = "http://mai.ru/education/schedule/session.php?group=";
     private String mSelectedGroup;
@@ -37,9 +39,10 @@ public class ExamItemChooseGroupFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.student_orgs_layout, container, false);
+        View v = inflater.inflate(R.layout.shedule_exams_layout, container, false);
         View header = inflater.inflate(R.layout.choose_group_ex_header, null);
         mButton = (TextView) header.findViewById(R.id.choose_view);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
         mChoosenGroupTextView = (TextView)header.findViewById(R.id.group_view) ;
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,13 +52,24 @@ public class ExamItemChooseGroupFragment extends Fragment {
             }
         });
         mExamModels = new ArrayList<>();
-        mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
+        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
         mAdapter = new ExamAdapter(getContext(), mExamModels);
         //new MyThread().execute();
-        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(!mSelectedGroup.isEmpty()){
+                    mExamModels.clear();
+                    mAdapter.notifyDataSetChanged();
+                    mSwipeRefreshLayout.setRefreshing(true);
+                    new MyThread().execute();
+                }
+            }
+        });
         return v;
     }
     private class MyThread extends AsyncTask<String, Void, String> {
@@ -91,7 +105,8 @@ public class ExamItemChooseGroupFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             mListView.setAdapter(mAdapter);
-            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -108,7 +123,8 @@ public class ExamItemChooseGroupFragment extends Fragment {
             mChoosenGroupTextView.setText(mSelectedGroup);
             mExamModels.clear();
             mAdapter.notifyDataSetChanged();
-            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            //mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            mSwipeRefreshLayout.setRefreshing(true);
             new MyThread().execute();
         }
     }

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +24,9 @@ import java.util.ArrayList;
 
 public class WorkersAndGradsOrgsFragment extends Fragment {
     private ListView mListView;
-    private ProgressBar mProgressBar;
+    //private ProgressBar mProgressBar;
     private ArrayList<StudentOrgModel> mOrgs;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private StudOrgAdapter mAdapter;
     private final String mLink = "http://www.mai.ru/life/associations/";
     @Nullable
@@ -32,11 +34,22 @@ public class WorkersAndGradsOrgsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.student_orgs_layout, container, false);
         mListView = (ListView)v.findViewById(R.id.stud_org_listview);
-        mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout.setRefreshing(true);
+        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         mOrgs = new ArrayList<>();
         mAdapter = new StudOrgAdapter(getContext(), mOrgs);
         new MyThread().execute();
         mListView.setAdapter(mAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mOrgs.clear();
+                mAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(true);
+                new MyThread().execute();
+            }
+        });
         return v;
     }
 
@@ -72,7 +85,8 @@ public class WorkersAndGradsOrgsFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             mListView.setAdapter(mAdapter);
-            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 }

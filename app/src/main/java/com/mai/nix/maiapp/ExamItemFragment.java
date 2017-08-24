@@ -1,15 +1,17 @@
 package com.mai.nix.maiapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import com.mai.nix.maiapp.model.ExamModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,18 +27,34 @@ public class ExamItemFragment extends Fragment {
     private ListView mListView;
     private ArrayList<ExamModel> mExamModels;
     private ExamAdapter mAdapter;
-    private ProgressBar mProgressBar;
-    private final String mLink = "http://mai.ru/education/schedule/session.php?group=3ВТИ-3ДБ-006";
+    private SharedPreferences mSharedPreferences;
+    //private ProgressBar mProgressBar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private final String mLink = "http://mai.ru/education/schedule/session.php?group=";
+    private String mCurrentGroup;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.student_orgs_layout, container, false);
+        View v = inflater.inflate(R.layout.shedule_exams_layout, container, false);
+        mSharedPreferences = getActivity().getSharedPreferences("suka", Context.MODE_PRIVATE);
+        mCurrentGroup = mSharedPreferences.getString(getString(R.string.pref_group), "");
+        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout.setRefreshing(true);
         mExamModels = new ArrayList<>();
-        mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
+        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
         mAdapter = new ExamAdapter(getContext(), mExamModels);
         new MyThread().execute();
         mListView.setAdapter(mAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mExamModels.clear();
+                mAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(true);
+                new MyThread().execute();
+            }
+        });
         return v;
     }
     private class MyThread extends AsyncTask<String, Void, String>{
@@ -49,7 +67,7 @@ public class ExamItemFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                doc = Jsoup.connect(mLink).get();
+                doc = Jsoup.connect(mLink.concat(mCurrentGroup)).get();
                 date = doc.select("div[class=sc-table-col sc-day-header sc-gray]");
                 day = doc.select("span[class=sc-day]");
                 time = doc.select("div[class=sc-table-col sc-item-time]");
@@ -72,7 +90,13 @@ public class ExamItemFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             mListView.setAdapter(mAdapter);
-            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
+            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        mCurrentGroup = mSharedPreferences.getString(getString(R.string.pref_group), "");
     }
 }

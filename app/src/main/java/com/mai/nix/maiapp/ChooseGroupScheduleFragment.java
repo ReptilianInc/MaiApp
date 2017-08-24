@@ -6,13 +6,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.mai.nix.maiapp.model.SubjectBodies;
@@ -32,7 +32,8 @@ public class ChooseGroupScheduleFragment extends Fragment {
     private ExpandableListView mListView;
     private ArrayList<SubjectHeaders> mGroups;
     private SubjectsExpListAdapter mAdapter;
-    private ProgressBar mProgressBar;
+    //private ProgressBar mProgressBar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private Spinner mSpinner;
     private TextView mButton;
     private final String mLinkMain = "http://mai.ru/education/schedule/detail.php?group=";
@@ -44,9 +45,10 @@ public class ChooseGroupScheduleFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.custom_week_schedule_layout, container, false);
+        View v = inflater.inflate(R.layout.shedule_subjects_layout, container, false);
         View header = inflater.inflate(R.layout.choose_group_header, null);
         mSpinner = (Spinner)header.findViewById(R.id.spinner);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
         mChoosenGroupTextView = (TextView)header.findViewById(R.id.group_view);
         mButton = (TextView) header.findViewById(R.id.choose_view);
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +66,8 @@ public class ChooseGroupScheduleFragment extends Fragment {
                     ChosenWeek = Integer.toString(i+1);
                     mGroups.clear();
                     mAdapter.notifyDataSetChanged();
-                    mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                    //mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                    mSwipeRefreshLayout.setRefreshing(true);
                     new MyThread().execute();
                 }
             }
@@ -74,13 +77,22 @@ public class ChooseGroupScheduleFragment extends Fragment {
 
             }
         });
-        mListView = (ExpandableListView)v.findViewById(R.id.listview_chosen_week);
-        mProgressBar = (ProgressBar)v.findViewById(R.id.chosen_week_progressbar);
+        mListView = (ExpandableListView)v.findViewById(R.id.exp);
+        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar_test);
         mGroups = new ArrayList<>();
         //Создаем адаптер и передаем context и список с данными
         mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
         mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mGroups.clear();
+                mAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(true);
+                new MyThread().execute();
+            }
+        });
         return v;
     }
 
@@ -126,7 +138,8 @@ public class ChooseGroupScheduleFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             mListView.setAdapter(mAdapter);
-            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
             for(int i = 0; i < mGroups.size(); i++){
                 mListView.expandGroup(i);
             }
@@ -146,7 +159,8 @@ public class ChooseGroupScheduleFragment extends Fragment {
             mChoosenGroupTextView.setText(mSelectedGroup);
             mGroups.clear();
             mAdapter.notifyDataSetChanged();
-            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            //mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            mSwipeRefreshLayout.setRefreshing(true);
             new MyThread().execute();
         }
     }
