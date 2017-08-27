@@ -143,4 +143,6 @@
     <string name="clear_cache_subj_toast">Кеш раписания пар очищен</string>
     <string name="clear_cache_exams_toast">Кеш раписания экзаменов очищен</string>
     <string name="author">Автор: Никита Карпунин</string>
+    <!-- PlaceHolders for NewsActivity -->
+    <string name="place_holder">&#8230;</string>
 </resources>

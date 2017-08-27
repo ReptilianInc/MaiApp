@@ -11,10 +11,17 @@ public class NewsModel {
     private String mImagePath;
     private String mText;
     private Bitmap mBitmap;
+    private String mLink;
     public NewsModel(String text, String date, Bitmap bitmap) {
         mDate = date;
         mBitmap = bitmap;
         mText = text;
+    }
+    public NewsModel(String text, String date, Bitmap bitmap, String link) {
+        mDate = date;
+        mBitmap = bitmap;
+        mText = text;
+        mLink = link;
     }
     public NewsModel(String text){
         mText = text;
@@ -53,5 +60,13 @@ public class NewsModel {
 
     public void setBitmap(Bitmap bitmap) {
         mBitmap = bitmap;
+    }
+
+    public String getLink() {
+        return mLink;
+    }
+
+    public void setLink(String link) {
+        mLink = link;
     }
 }

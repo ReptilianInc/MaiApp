@@ -1,5 +1,6 @@
 package com.mai.nix.maiapp;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -7,11 +8,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import com.mai.nix.maiapp.model.NewsModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
  * Created by Nix on 23.04.2017.
  */
 
-public class NewsItemFragment extends Fragment {
+public class NewsFragment extends Fragment {
     private ListView mListView;
     private NewsAdapter mAdapter;
     private ArrayList<NewsModel> mModels;
@@ -34,13 +36,14 @@ public class NewsItemFragment extends Fragment {
     //private ProgressBar mProgressBar;
     private int mResult;
     private String mLink;
+    private String mTypeForActivity;
     private static final String APP_FRAGMENT_ID = "fragment_id";
     public static final byte NEWS_CODE = 0, EVENTS_CODE = 1, ANNOUNCEMENTS_CODE = 2;
     private final String mLinkMain = "http://mai.ru";
-    public static NewsItemFragment newInstance(byte code){
+    public static NewsFragment newInstance(byte code){
         Bundle args = new Bundle();
         args.putSerializable(APP_FRAGMENT_ID, code);
-        NewsItemFragment testFragment = new NewsItemFragment();
+        NewsFragment testFragment = new NewsFragment();
         testFragment.setArguments(args);
         return  testFragment;
     }
@@ -52,15 +55,19 @@ public class NewsItemFragment extends Fragment {
         switch (mResult){
             case NEWS_CODE:
                 mLink = "http://mai.ru/press/news/";
+                mTypeForActivity = "news/";
                 break;
             case EVENTS_CODE:
                 mLink = "http://mai.ru/press/events/";
+                mTypeForActivity = "";
                 break;
             case ANNOUNCEMENTS_CODE:
                 mLink = "http://mai.ru/press/board/";
+                mTypeForActivity = "board/";
                 break;
             default:
                 mLink = "http://mai.ru/press/news/";
+                mTypeForActivity = "news/";
                 break;
         }
     }
@@ -86,11 +93,18 @@ public class NewsItemFragment extends Fragment {
                 new MyThread().execute();
             }
         });
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent n = NewsItemActivity.newIntent(getContext(), mTypeForActivity, mModels.get(i).getLink());
+                startActivity(n);
+            }
+        });
         return v;
     }
 
     private class MyThread extends AsyncTask<String, Void, String>{
-        private Elements title1, title2, title3;
+        private Elements title1, title2, title3, links;
         private Document doc;
 
         @Override
@@ -98,6 +112,7 @@ public class NewsItemFragment extends Fragment {
             try{
                 doc = Jsoup.connect(mLink).get();
                 title1 = doc.select("div[class = col-md-9] > h5");
+                links = doc.select("div[class = col-md-9] > h5 > a");
                 title2 = doc.select("div[class = col-md-9] > p[class = b-date]");
                 title3 = doc.select("img[class = img-responsive]");
                 mModels.clear();
@@ -109,7 +124,8 @@ public class NewsItemFragment extends Fragment {
                     connection.connect();
                     InputStream inputStream = connection.getInputStream();
                     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    mModels.add(new NewsModel(title1.get(i).text(), title2.get(i).text(), bitmap));
+                    mModels.add(new NewsModel(title1.get(i).text(), title2.get(i).text(), bitmap, links.get(i).attr("href")));
+                    Log.d("Link = ", links.get(i).attr("href"));
                 }
             }catch(IOException e){
                 e.printStackTrace();

@@ -1,7 +1,7 @@
 package com.mai.nix.maiapp.navigation_fragments;
 
 import android.support.v4.view.ViewPager;
-import com.mai.nix.maiapp.NewsItemFragment;
+import com.mai.nix.maiapp.NewsFragment;
 import com.mai.nix.maiapp.TabsFragment;
 import com.mai.nix.maiapp.ViewPagerAdapter;
 
@@ -13,9 +13,9 @@ public class PressCenterFragment extends TabsFragment {
     @Override
     protected void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(NewsItemFragment.newInstance(NewsItemFragment.NEWS_CODE), "Новости");
-        adapter.addFragment(NewsItemFragment.newInstance(NewsItemFragment.EVENTS_CODE), "Мероприятия");
-        adapter.addFragment(NewsItemFragment.newInstance(NewsItemFragment.ANNOUNCEMENTS_CODE), "Объявления");
+        adapter.addFragment(NewsFragment.newInstance(NewsFragment.NEWS_CODE), "Новости");
+        adapter.addFragment(NewsFragment.newInstance(NewsFragment.EVENTS_CODE), "Мероприятия");
+        adapter.addFragment(NewsFragment.newInstance(NewsFragment.ANNOUNCEMENTS_CODE), "Объявления");
         viewPager.setAdapter(adapter);
     }
 }
