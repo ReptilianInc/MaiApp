@@ -91,7 +91,14 @@ public class ThisWeekFragment extends Fragment {
                 //mGroups.clear();
                 //mAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(true);
-                new MyThread(mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek), false).execute();
+
+                if(mSpinner.getSelectedItemPosition() != 0){
+                    mWeek = Integer.toString(mSpinner.getSelectedItemPosition());
+                    new MyThread(mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek), false).execute();
+                }else{
+                    new MyThread(mLink.concat(mCurrentGroup), true).execute();
+                }
+
             }
         });
         return v;
@@ -118,6 +125,9 @@ public class ThisWeekFragment extends Fragment {
                 mGroups.clear();
                 for(Element prim : primaries){
                     String date = prim.select("div[class=sc-table-col sc-day-header sc-gray]").text();
+                    if(date.isEmpty()){
+                        date = prim.select("div[class=sc-table-col sc-day-header sc-blue]").text();
+                    }
                     String day = prim.select("span[class=sc-day]").text();
                     SubjectHeaders header = new SubjectHeaders(date, day);
                     ArrayList<SubjectBodies> bodies = new ArrayList<>();
