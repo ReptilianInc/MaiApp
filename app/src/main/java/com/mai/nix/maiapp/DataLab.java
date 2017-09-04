@@ -60,6 +60,10 @@ public class DataLab {
             mDatabase.insert(BodiesTable.NAME, null, c);
         }
     }
+    public void addBody(SubjectBody model){
+        ContentValues contentValues = getBodiesContentValues(model);
+        mDatabase.insert(BodiesTable.NAME, null, contentValues);
+    }
     public void clearExamsCache(){
         mDatabase.delete(ExamTable.NAME, null, null);
     }
@@ -77,12 +81,12 @@ public class DataLab {
                 cursor.moveToNext();
             }
         }finally {
-            cursor.close();
+            //cursor.close();
         }
         return models;
     }
     public boolean isSubjectsTablesEmpty(){
-        List<SubjectHeader> models = new ArrayList<>();
+        /*List<SubjectHeader> models = new ArrayList<>();
         DatabaseCursorWrapper cursor = queryHeaders(null, null);
         try{
             cursor.moveToFirst();
@@ -94,6 +98,16 @@ public class DataLab {
             cursor.close();
         }
         if(models.size() > 0){
+            return false;
+        }else{
+            return true;
+        }*/
+
+        String countQuery = "SELECT  * FROM headers";
+        Cursor cursor = mDatabase.rawQuery(countQuery, null);
+        int count = cursor.getCount();
+        //cursor.close();
+        if(count > 0){
             return false;
         }else{
             return true;
@@ -109,7 +123,7 @@ public class DataLab {
                 cursor.moveToNext();
             }
         }finally {
-            cursor.close();
+            //cursor.close();
         }
         if(models.size() > 0){
             return false;
@@ -127,7 +141,7 @@ public class DataLab {
                 cursor.moveToNext();
             }
         }finally {
-            cursor.close();
+            //cursor.close();
         }
         return models;
     }
@@ -141,7 +155,7 @@ public class DataLab {
                 cursor.moveToNext();
             }
         }finally {
-            cursor.close();
+            //cursor.close();
         }
         return models;
     }
@@ -151,17 +165,16 @@ public class DataLab {
         try{
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                if(cursor.getBody().getUuid() == id){
+                UUID uu = cursor.getBody().getUuid();
+                if(cursor.getBody().getUuid().equals(id)){
                     models.add(cursor.getBody());
                     cursor.moveToNext();
                 }else{
                     cursor.moveToNext();
                 }
-                models.add(cursor.getBody());
-                cursor.moveToNext();
             }
         }finally {
-            cursor.close();
+            //cursor.close();
         }
         return models;
     }
@@ -202,7 +215,7 @@ public class DataLab {
                 null,
                 null
         );
-        cursor.close();
+        //cursor.close();
         return new DatabaseCursorWrapper(cursor);
     }
     private DatabaseCursorWrapper queryHeaders(String whereClause, String[] whereArgs){
@@ -228,7 +241,7 @@ public class DataLab {
                 null,
                 null
         );
-        cursor.close();
+        //cursor.close();
         return new DatabaseCursorWrapper(cursor);
     }
 }

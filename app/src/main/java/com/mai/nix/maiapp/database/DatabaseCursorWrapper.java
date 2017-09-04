@@ -2,13 +2,10 @@ package com.mai.nix.maiapp.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
-
 import com.mai.nix.maiapp.model.ExamModel;
 import com.mai.nix.maiapp.model.SubjectBody;
 import com.mai.nix.maiapp.model.SubjectHeader;
-
 import java.util.UUID;
-
 import static com.mai.nix.maiapp.database.ExamDbSchema.*;
 import static com.mai.nix.maiapp.database.SubjectsDbSchema.*;
 
@@ -31,7 +28,7 @@ public class DatabaseCursorWrapper extends CursorWrapper {
         return examModel;
     }
     public SubjectHeader getHeader(){
-        SubjectHeader header = new SubjectHeader();
+        SubjectHeader header = new SubjectHeader(UUID.fromString(getString(getColumnIndex(HeadersTable.Cols.UUID))));
         header.setDate(getString(getColumnIndex(HeadersTable.Cols.DATE)));
         header.setDay(getString(getColumnIndex(HeadersTable.Cols.DAY)));
         return header;

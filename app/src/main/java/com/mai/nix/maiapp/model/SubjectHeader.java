@@ -14,15 +14,18 @@ public class SubjectHeader {
     // ArrayList to store child objects
     private ArrayList<SubjectBody> children;
     public SubjectHeader(String date, String day) {
+        this(UUID.randomUUID());
         this.date = date;
         this.day = day;
         children = new ArrayList<>();
     }
     public SubjectHeader(){
         this(UUID.randomUUID());
+        children = new ArrayList<>();
     }
     public SubjectHeader(UUID id){
         uuid = id;
+        children = new ArrayList<>();
     }
     public String getDate() {
         return date;

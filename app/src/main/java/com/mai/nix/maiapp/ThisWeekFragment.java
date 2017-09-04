@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 import com.mai.nix.maiapp.model.SubjectBody;
 import com.mai.nix.maiapp.model.SubjectHeader;
 import org.jsoup.Jsoup;
@@ -27,13 +28,15 @@ import java.util.ArrayList;
  * Created by Nix on 02.08.2017.
  */
 
-public class ThisWeekFragment extends Fragment {
+public class
+ThisWeekFragment extends Fragment {
     private ExpandableListView mListView;
     private ArrayList<SubjectHeader> mGroups;
     private SubjectsExpListAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private SharedPreferences mSharedPreferences;
     private Spinner mSpinner;
+    private DataLab mDataLab;
     private String mCurrentGroup;
     private final String mLink = "https://mai.ru/education/schedule/detail.php?group=";
     private String mWeek = "1";
@@ -44,6 +47,7 @@ public class ThisWeekFragment extends Fragment {
         View v = inflater.inflate(R.layout.shedule_subjects_layout, container, false);
         View header = inflater.inflate(R.layout.spinner_header, null);
         mSharedPreferences = getActivity().getSharedPreferences("suka", Context.MODE_PRIVATE);
+        mDataLab = DataLab.get(getContext());
         mGroups = new ArrayList<>();
         //Создаем адаптер и передаем context и список с данными
         mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
@@ -55,16 +59,25 @@ public class ThisWeekFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i != 0){
-                    //mGroups.clear();
-                    //mAdapter.notifyDataSetChanged();
-                    //mProgressBar.setVisibility(ProgressBar.VISIBLE);
                     mSwipeRefreshLayout.setRefreshing(true);
                     mWeek = Integer.toString(i);
                     new MyThread(mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek), false).execute();
+                }else if(mDataLab.isSubjectsTablesEmpty()){
+                    new MyThread(mLink.concat(mCurrentGroup), true).execute();
                 }else{
-                    /*mGroups.clear();
-                    mAdapter.notifyDataSetChanged();*/
-                    new MyThread(mLink.concat(mCurrentGroup), false).execute();
+                    //new MyThread(mLink.concat(mCurrentGroup), false).execute();
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    mGroups.clear();
+                    ArrayList<SubjectHeader> headers = new ArrayList<>();
+                    headers.addAll(mDataLab.getHeaders());
+                    for(SubjectHeader header : headers){
+                        header.setChildren(mDataLab.getBodies(header.getUuid()));
+                    }
+                    mGroups.addAll(headers);
+                    for(int j = 0; j < mGroups.size(); j++){
+                        mListView.expandGroup(j);
+                    }
+                    mAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -93,7 +106,8 @@ public class ThisWeekFragment extends Fragment {
                 if(mSpinner.getSelectedItemPosition() != 0){
                     mWeek = Integer.toString(mSpinner.getSelectedItemPosition());
                     new MyThread(mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek), false).execute();
-                }else{
+                }else {
+                    mDataLab.clearSubjectsCache();
                     new MyThread(mLink.concat(mCurrentGroup), true).execute();
                 }
 
@@ -138,10 +152,15 @@ public class ThisWeekFragment extends Fragment {
                         SubjectBody body = new SubjectBody(titles.get(i).text(),
                                 teachers.get(i).select("span[class=sc-lecturer]").text(),
                                 types.get(i).text(), times.get(i).text(), rooms.get(i).text());
+                        body.setUuid(header.getUuid());
                         bodies.add(body);
                     }
                     header.setChildren(bodies);
                     mGroups.add(header);
+                    if (isCaching){
+                        mDataLab.addBodies(bodies);
+                        mDataLab.addHeader(header);
+                    }
                 }
             }catch (IOException e){
                 e.printStackTrace();
@@ -156,6 +175,7 @@ public class ThisWeekFragment extends Fragment {
             for(int i = 0; i < mGroups.size(); i++){
                 mListView.expandGroup(i);
             }
+            if(isCaching)Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
         }
     }
 
