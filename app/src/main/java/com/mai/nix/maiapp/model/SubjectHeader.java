@@ -1,22 +1,29 @@
 package com.mai.nix.maiapp.model;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by Nix on 02.08.2017.
  */
 
-public class SubjectHeaders {
+public class SubjectHeader {
     private String date;
     private String day;
+    private UUID uuid;
     // ArrayList to store child objects
-    private ArrayList<SubjectBodies> children;
-    public SubjectHeaders(String date, String day) {
+    private ArrayList<SubjectBody> children;
+    public SubjectHeader(String date, String day) {
         this.date = date;
         this.day = day;
         children = new ArrayList<>();
     }
-
+    public SubjectHeader(){
+        this(UUID.randomUUID());
+    }
+    public SubjectHeader(UUID id){
+        uuid = id;
+    }
     public String getDate() {
         return date;
     }
@@ -33,11 +40,19 @@ public class SubjectHeaders {
         this.day = day;
     }
 
-    public ArrayList<SubjectBodies> getChildren() {
+    public ArrayList<SubjectBody> getChildren() {
         return children;
     }
 
-    public void setChildren(ArrayList<SubjectBodies> children) {
+    public void setChildren(ArrayList<SubjectBody> children) {
         this.children = children;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }

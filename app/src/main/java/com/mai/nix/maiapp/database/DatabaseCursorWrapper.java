@@ -4,8 +4,8 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 
 import com.mai.nix.maiapp.model.ExamModel;
-import com.mai.nix.maiapp.model.SubjectBodies;
-import com.mai.nix.maiapp.model.SubjectHeaders;
+import com.mai.nix.maiapp.model.SubjectBody;
+import com.mai.nix.maiapp.model.SubjectHeader;
 
 import java.util.UUID;
 
@@ -30,20 +30,20 @@ public class DatabaseCursorWrapper extends CursorWrapper {
         examModel.setRoom(getString(getColumnIndex(ExamTable.Cols.ROOM)));
         return examModel;
     }
-    /*public SubjectHeaders getHeader(){
-        SubjectHeaders header = new SubjectHeaders("", "");
+    public SubjectHeader getHeader(){
+        SubjectHeader header = new SubjectHeader();
         header.setDate(getString(getColumnIndex(HeadersTable.Cols.DATE)));
         header.setDay(getString(getColumnIndex(HeadersTable.Cols.DAY)));
         return header;
     }
-    public SubjectBodies getBody(){
-        SubjectBodies body = new SubjectBodies();
-        //body.setUUID(UUID.fromString(getString(getColumnIndex(BodiesTable.Cols.HEADER_UUID))));
+    public SubjectBody getBody(){
+        SubjectBody body = new SubjectBody();
+        body.setUuid(UUID.fromString(getString(getColumnIndex(BodiesTable.Cols.HEADER_UUID))));
         body.setTime(getString(getColumnIndex(BodiesTable.Cols.TIME)));
         body.setType(getString(getColumnIndex(BodiesTable.Cols.TYPE)));
         body.setTitle(getString(getColumnIndex(BodiesTable.Cols.TITLE)));
         body.setTeacher(getString(getColumnIndex(BodiesTable.Cols.TEACHER)));
         body.setRoom(getString(getColumnIndex(BodiesTable.Cols.ROOM)));
         return body;
-    }*/
+    }
 }

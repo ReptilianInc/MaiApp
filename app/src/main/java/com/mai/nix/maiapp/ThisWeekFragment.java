@@ -13,16 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import com.mai.nix.maiapp.model.SubjectBodies;
-import com.mai.nix.maiapp.model.SubjectHeaders;
+import com.mai.nix.maiapp.model.SubjectBody;
+import com.mai.nix.maiapp.model.SubjectHeader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -31,7 +29,7 @@ import java.util.ArrayList;
 
 public class ThisWeekFragment extends Fragment {
     private ExpandableListView mListView;
-    private ArrayList<SubjectHeaders> mGroups;
+    private ArrayList<SubjectHeader> mGroups;
     private SubjectsExpListAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private SharedPreferences mSharedPreferences;
@@ -129,15 +127,15 @@ public class ThisWeekFragment extends Fragment {
                         date = prim.select("div[class=sc-table-col sc-day-header sc-blue]").text();
                     }
                     String day = prim.select("span[class=sc-day]").text();
-                    SubjectHeaders header = new SubjectHeaders(date, day);
-                    ArrayList<SubjectBodies> bodies = new ArrayList<>();
+                    SubjectHeader header = new SubjectHeader(date, day);
+                    ArrayList<SubjectBody> bodies = new ArrayList<>();
                     Elements times = prim.select("div[class=sc-table-col sc-item-time]");
                     Elements types = prim.select("div[class=sc-table-col sc-item-type]");
                     Elements titles = prim.select("span[class=sc-title]");
                     Elements teachers = prim.select("div[class=sc-table-col sc-item-title]");
                     Elements rooms = prim.select("div[class=sc-table-col sc-item-location]");
                     for (int i = 0; i < times.size(); i++){
-                        SubjectBodies body = new SubjectBodies(titles.get(i).text(),
+                        SubjectBody body = new SubjectBody(titles.get(i).text(),
                                 teachers.get(i).select("span[class=sc-lecturer]").text(),
                                 types.get(i).text(), times.get(i).text(), rooms.get(i).text());
                         bodies.add(body);

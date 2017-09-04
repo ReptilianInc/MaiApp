@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-import com.mai.nix.maiapp.model.SubjectHeaders;
+import com.mai.nix.maiapp.model.SubjectHeader;
 import java.util.ArrayList;
 
 /**
@@ -14,10 +14,10 @@ import java.util.ArrayList;
  */
 
 public class SubjectsExpListAdapter extends BaseExpandableListAdapter {
-    private ArrayList<SubjectHeaders> mGroups;
+    private ArrayList<SubjectHeader> mGroups;
     private Context mContext;
 
-    public SubjectsExpListAdapter(Context context, ArrayList<SubjectHeaders> groups) {
+    public SubjectsExpListAdapter(Context context, ArrayList<SubjectHeader> groups) {
         mContext = context;
         mGroups = groups;
     }

@@ -8,13 +8,11 @@ import com.mai.nix.maiapp.database.CacheBaseHelper;
 import com.mai.nix.maiapp.database.DatabaseCursorWrapper;
 import com.mai.nix.maiapp.database.ExamDbSchema.ExamTable;
 import com.mai.nix.maiapp.model.ExamModel;
-import com.mai.nix.maiapp.model.SubjectBodies;
-import com.mai.nix.maiapp.model.SubjectHeaders;
-
+import com.mai.nix.maiapp.model.SubjectBody;
+import com.mai.nix.maiapp.model.SubjectHeader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import static com.mai.nix.maiapp.database.SubjectsDbSchema.*;
 
 /**
@@ -46,22 +44,22 @@ public class DataLab {
             mDatabase.insert(ExamTable.NAME, null, c);
         }
     }
-    /*public void addHeaders(List<SubjectHeaders> models){
-        for(SubjectHeaders header : models){
+    public void addHeaders(List<SubjectHeader> models){
+        for(SubjectHeader header : models){
             ContentValues c = getHeadersContentValues(header);
             mDatabase.insert(HeadersTable.NAME, null, c);
         }
-    }*/
-    /*public void addHeader(SubjectHeaders model){
+    }
+    public void addHeader(SubjectHeader model){
         ContentValues contentValues = getHeadersContentValues(model);
         mDatabase.insert(HeadersTable.NAME, null, contentValues);
-    }*/
-    /*public void addBodies(List<SubjectBodies> models){
-        for(SubjectBodies body : models){
+    }
+    public void addBodies(List<SubjectBody> models){
+        for(SubjectBody body : models){
             ContentValues c = getBodiesContentValues(body);
             mDatabase.insert(BodiesTable.NAME, null, c);
         }
-    }*/
+    }
     public void clearExamsCache(){
         mDatabase.delete(ExamTable.NAME, null, null);
     }
@@ -83,8 +81,8 @@ public class DataLab {
         }
         return models;
     }
-    /*public boolean isSubjectsTablesEmpty(){
-        List<SubjectHeaders> models = new ArrayList<>();
+    public boolean isSubjectsTablesEmpty(){
+        List<SubjectHeader> models = new ArrayList<>();
         DatabaseCursorWrapper cursor = queryHeaders(null, null);
         try{
             cursor.moveToFirst();
@@ -100,7 +98,7 @@ public class DataLab {
         }else{
             return true;
         }
-    }*/
+    }
     public boolean isExamsTableEmpty(){
         List<ExamModel> models = new ArrayList<>();
         DatabaseCursorWrapper cursor = queryExams(null, null);
@@ -119,7 +117,7 @@ public class DataLab {
             return true;
         }
     }
-    /*public ArrayList<SubjectHeaders> getHeaders(){
+    public ArrayList<SubjectHeader> getHeaders(){
         ArrayList<SubjectHeader> models = new ArrayList<>();
         DatabaseCursorWrapper cursor = queryHeaders(null, null);
         try{
@@ -132,8 +130,8 @@ public class DataLab {
             cursor.close();
         }
         return models;
-    }*/
-   /* public ArrayList<SubjectBody> getBodies(){
+    }
+    public ArrayList<SubjectBody> getBodies(){
         ArrayList<SubjectBody> models = new ArrayList<>();
         DatabaseCursorWrapper cursor = queryBodies(null, null);
         try{
@@ -146,27 +144,27 @@ public class DataLab {
             cursor.close();
         }
         return models;
-    }*/
-    /*public ArrayList<SubjectBody> getBodies(UUID id){
+    }
+    public ArrayList<SubjectBody> getBodies(UUID id){
         ArrayList<SubjectBody> models = new ArrayList<>();
         DatabaseCursorWrapper cursor = queryBodies(null, null);
         try{
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                if(cursor.getBody().getUUID() == id){
+                if(cursor.getBody().getUuid() == id){
                     models.add(cursor.getBody());
                     cursor.moveToNext();
                 }else{
                     cursor.moveToNext();
                 }
-                /*models.add(cursor.getBody());
+                models.add(cursor.getBody());
                 cursor.moveToNext();
             }
         }finally {
             cursor.close();
         }
         return models;
-    }*/
+    }
     private static ContentValues getExamContentValues(ExamModel model){
         ContentValues contentValues = new ContentValues();
         contentValues.put(ExamTable.Cols.DATE, model.getDate());
@@ -177,23 +175,23 @@ public class DataLab {
         contentValues.put(ExamTable.Cols.ROOM, model.getRoom());
         return contentValues;
     }
-    /*private static ContentValues getHeadersContentValues(SubjectHeader header){
+    private static ContentValues getHeadersContentValues(SubjectHeader header){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(HeadersTable.Cols.UUID, header.getUUID().toString());
+        contentValues.put(HeadersTable.Cols.UUID, header.getUuid().toString());
         contentValues.put(HeadersTable.Cols.DATE, header.getDate());
         contentValues.put(HeadersTable.Cols.DAY, header.getDay());
         return contentValues;
-    }*/
-   /* private static ContentValues getBodiesContentValues(SubjectBody body){
+    }
+   private static ContentValues getBodiesContentValues(SubjectBody body){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(BodiesTable.Cols.HEADER_UUID, body.getUUID().toString());
+        contentValues.put(BodiesTable.Cols.HEADER_UUID, body.getUuid().toString());
         contentValues.put(BodiesTable.Cols.TIME, body.getTime());
         contentValues.put(BodiesTable.Cols.TYPE, body.getType());
         contentValues.put(BodiesTable.Cols.TITLE, body.getTitle());
         contentValues.put(BodiesTable.Cols.TEACHER, body.getTeacher());
         contentValues.put(BodiesTable.Cols.ROOM, body.getRoom());
         return contentValues;
-    }*/
+    }
     private DatabaseCursorWrapper queryExams(String whereClause, String[] whereArgs){
         Cursor cursor = mDatabase.query(
                 ExamTable.NAME,
