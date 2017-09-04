@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -35,7 +37,7 @@ public class ThisWeekFragment extends Fragment {
     private SharedPreferences mSharedPreferences;
     private Spinner mSpinner;
     private String mCurrentGroup;
-    private final String mLink = "http://mai.ru/education/schedule/detail.php?group=";
+    private final String mLink = "https://mai.ru/education/schedule/detail.php?group=";
     private String mWeek = "1";
     private final String PLUS_WEEK = "&week=";
     @Nullable
@@ -44,6 +46,9 @@ public class ThisWeekFragment extends Fragment {
         View v = inflater.inflate(R.layout.shedule_subjects_layout, container, false);
         View header = inflater.inflate(R.layout.spinner_header, null);
         mSharedPreferences = getActivity().getSharedPreferences("suka", Context.MODE_PRIVATE);
+        mGroups = new ArrayList<>();
+        //Создаем адаптер и передаем context и список с данными
+        mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
         mCurrentGroup = mSharedPreferences.getString(getString(R.string.pref_group), "");
         //Toast.makeText(getContext(), mCurrentGroup, Toast.LENGTH_SHORT).show();
         mSpinner = (Spinner)header.findViewById(R.id.spinner);
@@ -52,15 +57,16 @@ public class ThisWeekFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i != 0){
-                    mGroups.clear();
-                    mAdapter.notifyDataSetChanged();
+                    //mGroups.clear();
+                    //mAdapter.notifyDataSetChanged();
                     //mProgressBar.setVisibility(ProgressBar.VISIBLE);
                     mSwipeRefreshLayout.setRefreshing(true);
                     mWeek = Integer.toString(i);
-                    new MyThread().execute();
+                    new MyThread(mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek), false).execute();
                 }else{
-                    mGroups.clear();
-                    mAdapter.notifyDataSetChanged();
+                    /*mGroups.clear();
+                    mAdapter.notifyDataSetChanged();*/
+                    new MyThread(mLink.concat(mCurrentGroup), false).execute();
                 }
             }
 
@@ -72,10 +78,8 @@ public class ThisWeekFragment extends Fragment {
 
         mListView = (ExpandableListView)v.findViewById(R.id.exp);
         mSwipeRefreshLayout.setRefreshing(true);
-        mGroups = new ArrayList<>();
-        //Создаем адаптер и передаем context и список с данными
-        mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
-        new MyThread().execute();
+
+        //new MyThread().execute();
         mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);
         for(int i = 0; i < mGroups.size(); i++){
@@ -84,10 +88,10 @@ public class ThisWeekFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mGroups.clear();
-                mAdapter.notifyDataSetChanged();
+                //mGroups.clear();
+                //mAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(true);
-                new MyThread().execute();
+                new MyThread(mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek), false).execute();
             }
         });
         return v;
@@ -95,15 +99,22 @@ public class ThisWeekFragment extends Fragment {
     private class MyThread extends AsyncTask<String, Void, String> {
         private Document doc;
         private Elements primaries;
+        private String final_link;
+        private boolean isCaching;
         public MyThread() {
             super();
         }
-
+        public MyThread(String link, boolean cache){
+            final_link = link;
+            isCaching = cache;
+        }
         @Override
         protected String doInBackground(String... strings) {
             try {
-                doc = Jsoup.connect(mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek)).get();
+                //String group = URLEncoder.encode(mCurrentGroup, "UTF-8");
+                doc = Jsoup.connect(final_link).get();
                 primaries = doc.select("div[class=sc-table sc-table-day]");
+                Log.d("link", final_link);
                 mGroups.clear();
                 for(Element prim : primaries){
                     String date = prim.select("div[class=sc-table-col sc-day-header sc-gray]").text();

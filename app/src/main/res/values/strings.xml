@@ -28,7 +28,7 @@
     <string name="clear_cache_ex">Очистить кэш расписания экзаменов</string>
     <string name="freg_cache">Обновление кэша расписания пар</string>
     <string name="title_app">Неофициальное приложение МАИ</string>
-    <string name="title_summary">Pre-alpha версия. Сборка от 23.08.2017</string>
+    <string name="title_summary">Pre-alpha версия. Сборка от 30.08.2017</string>
     <string name="site_mai">Перейти на сайт МАИ</string>
     <string name="site_dev">Перейти на сайт разработчика</string>
 
@@ -123,8 +123,6 @@
         <item>ФИЯ</item>
         <item>Институт №1</item>
         <item>Институт №2</item>
-        <item>Институт №3</item>
-        <item>Институт №4</item>
     </string-array>
     <string-array name="spinner_stages">
         <item>Выберите курс</item>
@@ -133,6 +131,7 @@
         <item>3 курс</item>
         <item>4 курс</item>
         <item>5 курс</item>
+        <item>6 курс</item>
     </string-array>
     <string name="choose_group_accept">ГОТОВО</string>
     <string name="exception_group_null">Сначала выберите группу</string>
@@ -143,6 +142,8 @@
     <string name="clear_cache_subj_toast">Кеш раписания пар очищен</string>
     <string name="clear_cache_exams_toast">Кеш раписания экзаменов очищен</string>
     <string name="author">Автор: Никита Карпунин</string>
+    <string name="not_now">Сайт в разработке XD</string>
     <!-- PlaceHolders for NewsActivity -->
     <string name="place_holder">&#8230;</string>
+    <string name="cache_updated_message">Кэш обновлён</string>
 </resources>
