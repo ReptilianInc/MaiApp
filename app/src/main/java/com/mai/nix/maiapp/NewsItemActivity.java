@@ -2,11 +2,16 @@ package com.mai.nix.maiapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -19,8 +24,12 @@ import java.io.IOException;
 
 public class NewsItemActivity extends AppCompatActivity {
     private static final String ID = "com.mai.nix.maiapp.id";
+    private static final String DATE = "com.mai.nix.maiapp.date";
+    private static final String TITLE = "com.mai.nix.maiapp.title";
+    private static final String BITMAP = "com.mai.nix.maiapp.bitmap";
     private final String ULTRA_LINK = "https://mai.ru";
-    private String mId;
+    private String mId, mTitleGet, mDateGet;
+    private byte[] mBitmapGet;
     private TextView mTitleView, mLongRead, mAuthorView;
     private ImageView mImageView;
     private ProgressBar mProgressBar;
@@ -33,77 +42,75 @@ public class NewsItemActivity extends AppCompatActivity {
         intent.putExtra(ID, id);
         return intent;
     }
+    public static Intent newIntent(Context context, String id, String date, String title, byte[] bytes){
+        Intent intent = new Intent(context, NewsItemActivity.class);
+        //intent.putExtra(TYPE, type);
+        intent.putExtra(ID, id);
+        intent.putExtra(DATE, date);
+        intent.putExtra(TITLE, title);
+        intent.putExtra(BITMAP, bytes);
+        return intent;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_item);
         mId = getIntent().getStringExtra(ID);
+        mDateGet = getIntent().getStringExtra(DATE);
+        mTitleGet = getIntent().getStringExtra(TITLE);
+        mBitmapGet = getIntent().getByteArrayExtra(BITMAP);
         mTitleView = (TextView)findViewById(R.id.title_view);
         mLongRead = (TextView)findViewById(R.id.news_text);
         mAuthorView = (TextView)findViewById(R.id.author_view);
         mImageView = (ImageView)findViewById(R.id.image_view);
         mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
-        mProgressBar.setMax(100);
-        mProgressBar.setProgress(mProgressStatus);
-        mProgressBar.setIndeterminate(false);
         mToolbar = (Toolbar)findViewById(R.id.news_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mTitleView.setText(mTitleGet);
+        getSupportActionBar().setTitle(mDateGet);
+        if(mBitmapGet.length != 0){
+            Bitmap bmp = BitmapFactory.decodeByteArray(mBitmapGet, 0, mBitmapGet.length);
+            mImageView.setImageBitmap(bmp);
+        }
         new MyThread().execute();
 
     }
     private class MyThread extends AsyncTask<String, Integer, String>{
-        private Element date, title, text, author;
+        private Element /*date, title, */text, author;
         private Document doc;
         private String image;
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            mProgressBar.setProgress(values[0]);
-            mProgressBar.invalidate();
-        }
-
-        @Override
         protected void onPostExecute(String s) {
-            mTitleView.setText(mTitle);
             mLongRead.setText(mText);
             mAuthorView.setText(mAuthor);
-            mToolbar.setTitle(mDate);
-            Glide
-                    .with(getApplicationContext())
-                    .load(ULTRA_LINK.concat(image))
-                    .into(mImageView);
+            if(mBitmapGet.length == 0){
+                Glide
+                        .with(getApplicationContext())
+                        .load(ULTRA_LINK.concat(image))
+                        .into(mImageView);
+            }
             mProgressBar.setVisibility(View.GONE);
         }
         @Override
         protected String doInBackground(String... strings) {
             try{
-                mProgressStatus += 10;
-                publishProgress(mProgressStatus);
                 doc = Jsoup.connect(mId).get();
-                title = doc.select("div[class = col-md-12] > h3").first();
-                mProgressStatus += 10;
-                publishProgress(mProgressStatus);
-                date = doc.select("div[class = b-date]").first();
-                mProgressStatus += 10;
-                publishProgress(mProgressStatus);
+                //title = doc.select("div[class = col-md-12] > h3").first();
+                //date = doc.select("div[class = b-date]").first();
                 text = doc.select("div[class = text text-lg]").first();
-                mProgressStatus += 10;
-                publishProgress(mProgressStatus);
-                author = doc.select("td[class = j-padd-bottom-xs]").first();
-                mProgressStatus += 10;
-                publishProgress(mProgressStatus);
+                author = doc.select("td[class = j-padd-bottom-xs]").first();;
                 image = doc.select("img[class = img-responsive hidden-xs pull-left j-marg-right-lg j-marg-bottom]")
                         .attr("src");
 
-                mTitle = title.text();
+                /*mTitle = title.text();
                 if(date != null){
                     mDate = date.text();
                 }else{
                     mDate = getResources().getString(R.string.place_holder);
-                }
+                }*/
 
                 mText = text.text();
                 if(author != null){
@@ -111,12 +118,32 @@ public class NewsItemActivity extends AppCompatActivity {
                 }else{
                     mAuthor = getResources().getString(R.string.place_holder);
                 }
-                mProgressStatus += 50;
-                publishProgress(mProgressStatus);
             }catch (IOException e){
                 e.printStackTrace();
             }
             return null;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.go_web_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.go_web_in_frags:
+                Uri uri = Uri.parse(mId);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

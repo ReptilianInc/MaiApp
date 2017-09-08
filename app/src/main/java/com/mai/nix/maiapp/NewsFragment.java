@@ -3,6 +3,7 @@ package com.mai.nix.maiapp;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,11 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import com.mai.nix.maiapp.model.NewsModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -96,7 +100,14 @@ public class NewsFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent n = NewsItemActivity.newIntent(getContext(), mModels.get(i).getId());
+
+                final ImageView imageView = (ImageView) view.findViewById(R.id.image);
+
+                Intent n = NewsItemActivity.newIntent(getContext(),
+                        mModels.get(i).getId(),
+                        mModels.get(i).getDate(),
+                        mModels.get(i).getText(),
+                        getByteArrayFromImageView(imageView));
                 startActivity(n);
             }
         });
@@ -140,4 +151,22 @@ public class NewsFragment extends Fragment {
             //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         }
     }
+
+    public static  byte[] getByteArrayFromImageView(ImageView imageView)
+    {
+        BitmapDrawable bitmapDrawable = ((BitmapDrawable) imageView.getDrawable());
+        Bitmap bitmap;
+        if(bitmapDrawable==null){
+            imageView.buildDrawingCache();
+            bitmap = imageView.getDrawingCache();
+            imageView.buildDrawingCache(false);
+        }else
+        {
+            bitmap = bitmapDrawable .getBitmap();
+        }
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        return stream.toByteArray();
+    }
+
 }

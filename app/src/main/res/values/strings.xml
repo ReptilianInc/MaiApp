@@ -134,6 +134,7 @@
         <item>6 курс</item>
     </string-array>
     <string name="choose_group_accept">ГОТОВО</string>
+    <string name="go_web_accept">Посмотреть на сайте</string>
     <string name="exception_group_null">Сначала выберите группу</string>
     <string name="go_button">Далее</string>
     <string name="hello_text">Добро пожаловать в неофициальное приложение Московского Авиационного Института.</string>

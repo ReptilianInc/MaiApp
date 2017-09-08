@@ -1,6 +1,7 @@
 package com.mai.nix.maiapp;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,6 @@ public class NewsAdapter extends BaseAdapter {
                 .with(mContext)
                 .load(url)
                 .into(imageView);
-
         return view;
     }
 }
