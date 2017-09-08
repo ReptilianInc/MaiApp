@@ -15,14 +15,6 @@
             android:entries="@array/link_array"
             android:entryValues="@array/link_values">
         </ListPreference>
-        <ListPreference
-            android:title="@string/pref_language"
-            android:key="lang"
-            android:defaultValue="1"
-            android:summary="%s"
-            android:entries="@array/lang_array"
-            android:entryValues="@array/lang_values">
-        </ListPreference>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/cache_cath">
@@ -37,6 +29,14 @@
         <ListPreference
             android:title="@string/freg_cache"
             android:key="freg"
+            android:defaultValue="1"
+            android:summary="%s"
+            android:entries="@array/freg_array"
+            android:entryValues="@array/freg_values">
+        </ListPreference>
+        <ListPreference
+            android:title="@string/freg_cache_exams"
+            android:key="freg_ex"
             android:defaultValue="1"
             android:summary="%s"
             android:entries="@array/freg_array"

@@ -1,11 +1,10 @@
 package com.mai.nix.maiapp.navigation_fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
@@ -15,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.mai.nix.maiapp.ChooseGroupActivity;
 import com.mai.nix.maiapp.R;
+import com.mai.nix.maiapp.UserSettings;
 
 /**
  * Created by Nix on 03.08.2017.
@@ -24,11 +24,12 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
     private Preference mGroupPreference;
     private Preference mClearSubjectsCache;
     private Preference mClearExamsCache;
+    private ListPreference mFregSubjects;
+    private ListPreference mFregExams;
+    private ListPreference mLinks;
     private Preference mAbout;
     private Preference mMAI;
     private Preference mDev;
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mEditor;
     private static final int REQUEST_CODE_GROUP = 0;
     private String mChoosenGroup;
     @Override
@@ -39,11 +40,19 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mSharedPreferences = getActivity().getSharedPreferences("suka", Context.MODE_PRIVATE);
+        UserSettings.initialize(getActivity());
         mGroupPreference = getPreferenceManager().findPreference("pref_group");
-        mGroupPreference.setSummary(mSharedPreferences.getString(getString(R.string.pref_group), getString(R.string.pref_group_summary)));
         mClearSubjectsCache = getPreferenceScreen().findPreference("clear_cache_subj");
         mClearExamsCache = getPreferenceScreen().findPreference("clear_cache_ex");
+        mFregSubjects = (ListPreference)getPreferenceScreen().findPreference("freg");
+        mFregExams = (ListPreference)getPreferenceScreen().findPreference("freg_ex");
+        mLinks = (ListPreference) getPreferenceScreen().findPreference("links");
+
+        mLinks.setValue(UserSettings.getLinksPreference(getActivity()));
+        mGroupPreference.setSummary(UserSettings.getGroup(getActivity()));
+        mFregSubjects.setValue(UserSettings.getSubjectsUpdateFrequency(getActivity()));
+        mFregExams.setValue(UserSettings.getExamsUpdateFrequency(getActivity()));
+
         mAbout = getPreferenceScreen().findPreference("about");
         mMAI = getPreferenceScreen().findPreference("go_mai");
         mDev = getPreferenceScreen().findPreference("go_dev");
@@ -53,6 +62,9 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
         mAbout.setOnPreferenceClickListener(this);
         mMAI.setOnPreferenceClickListener(this);
         mDev.setOnPreferenceClickListener(this);
+        mFregSubjects.setOnPreferenceClickListener(this);
+        mFregExams.setOnPreferenceClickListener(this);
+        mLinks.setOnPreferenceClickListener(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -94,10 +106,16 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
                 return;
             }
             mChoosenGroup = data.getStringExtra(ChooseGroupActivity.EXTRA_GROUP);
-            mEditor = mSharedPreferences.edit();
-            mEditor.putString(getString(R.string.pref_group), mChoosenGroup);
-            mEditor.apply();
+            UserSettings.setGroup(getActivity(), mChoosenGroup);
             mGroupPreference.setSummary(mChoosenGroup);
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        UserSettings.setLinksPreference(getActivity(), mLinks.getValue());
+        UserSettings.setSubjectsUpdateFrequency(getActivity(), mFregSubjects.getValue());
+        UserSettings.setExamsUpdateFrequency(getActivity(), mFregExams.getValue());
     }
 }

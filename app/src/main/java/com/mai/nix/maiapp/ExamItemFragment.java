@@ -1,6 +1,5 @@
 package com.mai.nix.maiapp;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.mai.nix.maiapp.model.ExamModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,7 +27,6 @@ public class ExamItemFragment extends Fragment {
     private ListView mListView;
     private ArrayList<ExamModel> mExamModels;
     private ExamAdapter mAdapter;
-    private SharedPreferences mSharedPreferences;
     //private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private final String mLink = "http://mai.ru/education/schedule/session.php?group=";
@@ -39,8 +36,8 @@ public class ExamItemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.shedule_exams_layout, container, false);
-        mSharedPreferences = getActivity().getSharedPreferences("suka", Context.MODE_PRIVATE);
-        mCurrentGroup = mSharedPreferences.getString(getString(R.string.pref_group), "");
+        UserSettings.initialize(getContext());
+        mCurrentGroup = UserSettings.getGroup(getContext());
         mDataLab = DataLab.get(getContext());
         mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setRefreshing(true);
@@ -116,6 +113,6 @@ public class ExamItemFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mCurrentGroup = mSharedPreferences.getString(getString(R.string.pref_group), "");
+        mCurrentGroup = UserSettings.getGroup(getContext());
     }
 }

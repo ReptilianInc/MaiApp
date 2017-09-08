@@ -1,7 +1,5 @@
 package com.mai.nix.maiapp;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,13 +26,11 @@ import java.util.ArrayList;
  * Created by Nix on 02.08.2017.
  */
 
-public class
-ThisWeekFragment extends Fragment {
+public class ThisWeekFragment extends Fragment {
     private ExpandableListView mListView;
     private ArrayList<SubjectHeader> mGroups;
     private SubjectsExpListAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private SharedPreferences mSharedPreferences;
     private Spinner mSpinner;
     private DataLab mDataLab;
     private String mCurrentGroup;
@@ -46,12 +42,12 @@ ThisWeekFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.shedule_subjects_layout, container, false);
         View header = inflater.inflate(R.layout.spinner_header, null);
-        mSharedPreferences = getActivity().getSharedPreferences("suka", Context.MODE_PRIVATE);
+        UserSettings.initialize(getContext());
         mDataLab = DataLab.get(getContext());
         mGroups = new ArrayList<>();
         //Создаем адаптер и передаем context и список с данными
         mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
-        mCurrentGroup = mSharedPreferences.getString(getString(R.string.pref_group), "");
+        mCurrentGroup = UserSettings.getGroup(getContext());
         //Toast.makeText(getContext(), mCurrentGroup, Toast.LENGTH_SHORT).show();
         mSpinner = (Spinner)header.findViewById(R.id.spinner);
         mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
@@ -59,14 +55,14 @@ ThisWeekFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i != 0){
-                    mSwipeRefreshLayout.setRefreshing(true);
+                    //mSwipeRefreshLayout.setRefreshing(true);
                     mWeek = Integer.toString(i);
                     new MyThread(mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek), false).execute();
                 }else if(mDataLab.isSubjectsTablesEmpty()){
                     new MyThread(mLink.concat(mCurrentGroup), true).execute();
                 }else{
                     //new MyThread(mLink.concat(mCurrentGroup), false).execute();
-                    mSwipeRefreshLayout.setRefreshing(false);
+                    //mSwipeRefreshLayout.setRefreshing(false);
                     mGroups.clear();
                     ArrayList<SubjectHeader> headers = new ArrayList<>();
                     headers.addAll(mDataLab.getHeaders());
@@ -88,7 +84,7 @@ ThisWeekFragment extends Fragment {
         });
 
         mListView = (ExpandableListView)v.findViewById(R.id.exp);
-        mSwipeRefreshLayout.setRefreshing(true);
+        //mSwipeRefreshLayout.setRefreshing(true);
 
         //new MyThread().execute();
         mListView.addHeaderView(header);
@@ -127,6 +123,12 @@ ThisWeekFragment extends Fragment {
             final_link = link;
             isCaching = cache;
         }
+
+        @Override
+        protected void onPreExecute() {
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+
         @Override
         protected String doInBackground(String... strings) {
             try {
@@ -182,6 +184,6 @@ ThisWeekFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mCurrentGroup = mSharedPreferences.getString(getString(R.string.pref_group), "");
+        mCurrentGroup = UserSettings.getGroup(getContext());
     }
 }

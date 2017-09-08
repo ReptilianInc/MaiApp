@@ -34,17 +34,9 @@ public class NewsItemActivity extends AppCompatActivity {
     private ImageView mImageView;
     private ProgressBar mProgressBar;
     private Toolbar mToolbar;
-    private int mProgressStatus = 0;
-    private String mDate, mTitle, mText, mAuthor;
-    public static Intent newIntent(Context context, String id){
-        Intent intent = new Intent(context, NewsItemActivity.class);
-        //intent.putExtra(TYPE, type);
-        intent.putExtra(ID, id);
-        return intent;
-    }
+    private String mText, mAuthor;
     public static Intent newIntent(Context context, String id, String date, String title, byte[] bytes){
         Intent intent = new Intent(context, NewsItemActivity.class);
-        //intent.putExtra(TYPE, type);
         intent.putExtra(ID, id);
         intent.putExtra(DATE, date);
         intent.putExtra(TITLE, title);
@@ -78,7 +70,7 @@ public class NewsItemActivity extends AppCompatActivity {
 
     }
     private class MyThread extends AsyncTask<String, Integer, String>{
-        private Element /*date, title, */text, author;
+        private Element text, author;
         private Document doc;
         private String image;
 
@@ -98,20 +90,10 @@ public class NewsItemActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             try{
                 doc = Jsoup.connect(mId).get();
-                //title = doc.select("div[class = col-md-12] > h3").first();
-                //date = doc.select("div[class = b-date]").first();
                 text = doc.select("div[class = text text-lg]").first();
                 author = doc.select("td[class = j-padd-bottom-xs]").first();;
                 image = doc.select("img[class = img-responsive hidden-xs pull-left j-marg-right-lg j-marg-bottom]")
                         .attr("src");
-
-                /*mTitle = title.text();
-                if(date != null){
-                    mDate = date.text();
-                }else{
-                    mDate = getResources().getString(R.string.place_holder);
-                }*/
-
                 mText = text.text();
                 if(author != null){
                     mAuthor = author.text();
