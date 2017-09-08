@@ -8,27 +8,27 @@ import android.graphics.Bitmap;
 
 public class NewsModel {
     private String mDate;
-    private String mImagePath;
+    private String mId;
     private String mText;
-    private Bitmap mBitmap;
     private String mLink;
-    public NewsModel(String text, String date, Bitmap bitmap) {
+    private Bitmap mBitmap;
+    public NewsModel(String text, String date) {
         mDate = date;
-        mBitmap = bitmap;
         mText = text;
     }
-    public NewsModel(String text, String date, Bitmap bitmap, String link) {
+    public NewsModel(String text, String date, String link) {
         mDate = date;
-        mBitmap = bitmap;
         mText = text;
         mLink = link;
     }
+    public NewsModel(String text, String date, String link, String id) {
+        mDate = date;
+        mText = text;
+        mLink = link;
+        mId = id;
+    }
     public NewsModel(String text){
         mText = text;
-    }
-    public NewsModel(String text, String sec_text){
-        mText = text;
-        mDate = sec_text;
     }
     public String getDate() {
         return mDate;
@@ -38,12 +38,12 @@ public class NewsModel {
         mDate = date;
     }
 
-    public String getImagePath() {
-        return mImagePath;
+    public String getId() {
+        return mId;
     }
 
-    public void setImagePath(String imagePath) {
-        mImagePath = imagePath;
+    public void setId(String id) {
+        mId = id;
     }
 
     public String getText() {
@@ -54,19 +54,19 @@ public class NewsModel {
         mText = text;
     }
 
-    public Bitmap getBitmap() {
-        return mBitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        mBitmap = bitmap;
-    }
-
     public String getLink() {
         return mLink;
     }
 
     public void setLink(String link) {
         mLink = link;
+    }
+
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
     }
 }

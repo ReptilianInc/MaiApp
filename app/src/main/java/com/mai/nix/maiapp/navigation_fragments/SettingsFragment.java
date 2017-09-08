@@ -26,6 +26,7 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
     private Preference mClearExamsCache;
     private Preference mAbout;
     private Preference mMAI;
+    private Preference mDev;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     private static final int REQUEST_CODE_GROUP = 0;
@@ -45,11 +46,13 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
         mClearExamsCache = getPreferenceScreen().findPreference("clear_cache_ex");
         mAbout = getPreferenceScreen().findPreference("about");
         mMAI = getPreferenceScreen().findPreference("go_mai");
+        mDev = getPreferenceScreen().findPreference("go_dev");
         mGroupPreference.setOnPreferenceClickListener(this);
         mClearSubjectsCache.setOnPreferenceClickListener(this);
         mClearExamsCache.setOnPreferenceClickListener(this);
         mAbout.setOnPreferenceClickListener(this);
         mMAI.setOnPreferenceClickListener(this);
+        mDev.setOnPreferenceClickListener(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -60,12 +63,12 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
                 Intent i = ChooseGroupActivity.newIntent(getActivity(), false);
                 startActivityForResult(i, REQUEST_CODE_GROUP);
                 break;
-            /*case "clear_cache_subj":
+            case "clear_cache_subj":
                 Toast.makeText(getActivity(), R.string.clear_cache_subj_toast, Toast.LENGTH_SHORT).show();
                 break;
-            /*case "clear_cache_ex":
+            case "clear_cache_ex":
                 Toast.makeText(getActivity(), R.string.clear_cache_exams_toast, Toast.LENGTH_SHORT).show();
-                break;*/
+                break;
             case "about":
                 Toast.makeText(getActivity(), R.string.author, Toast.LENGTH_SHORT).show();
                 break;
@@ -73,6 +76,9 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
                 Uri uri = Uri.parse("http://mai.ru/");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
+                break;
+            case "go_dev":
+                Toast.makeText(getActivity(), R.string.not_now, Toast.LENGTH_SHORT).show();
                 break;
         }
         return true;

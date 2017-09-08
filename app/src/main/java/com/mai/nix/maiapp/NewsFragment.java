@@ -39,7 +39,7 @@ public class NewsFragment extends Fragment {
     private String mTypeForActivity;
     private static final String APP_FRAGMENT_ID = "fragment_id";
     public static final byte NEWS_CODE = 0, EVENTS_CODE = 1, ANNOUNCEMENTS_CODE = 2;
-    private final String mLinkMain = "http://mai.ru";
+    private final String mLinkMain = "https://mai.ru";
     public static NewsFragment newInstance(byte code){
         Bundle args = new Bundle();
         args.putSerializable(APP_FRAGMENT_ID, code);
@@ -96,7 +96,7 @@ public class NewsFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent n = NewsItemActivity.newIntent(getContext(), mTypeForActivity, mModels.get(i).getLink());
+                Intent n = NewsItemActivity.newIntent(getContext(), mModels.get(i).getId());
                 startActivity(n);
             }
         });
@@ -112,20 +112,15 @@ public class NewsFragment extends Fragment {
             try{
                 doc = Jsoup.connect(mLink).get();
                 title1 = doc.select("div[class = col-md-9] > h5");
-                links = doc.select("div[class = col-md-9] > h5 > a");
+                links = doc.select("div[class = b-thumbnail]").select("a");
                 title2 = doc.select("div[class = col-md-9] > p[class = b-date]");
                 title3 = doc.select("img[class = img-responsive]");
                 mModels.clear();
                 int kek = title1.size();
                 for (int i = 0; i < kek; i++){
-                    URL url = new URL(mLinkMain.concat(title3.get(i).attr("src")));
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setDoInput(true);
-                    connection.connect();
-                    InputStream inputStream = connection.getInputStream();
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    mModels.add(new NewsModel(title1.get(i).text(), title2.get(i).text(), bitmap, links.get(i).attr("href")));
-                    Log.d("Link = ", links.get(i).attr("href"));
+                    mModels.add(new NewsModel(title1.get(i).text(), title2.get(i).text(),
+                            mLinkMain.concat(title3.get(i).attr("src")), links.get(i).attr("abs:href")));
+                    Log.d("suka blyat = ", links.get(i).attr("a[href]"));
                 }
             }catch(IOException e){
                 e.printStackTrace();

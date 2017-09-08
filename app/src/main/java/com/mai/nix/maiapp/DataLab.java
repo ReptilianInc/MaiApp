@@ -114,7 +114,7 @@ public class DataLab {
         }
     }
     public boolean isExamsTableEmpty(){
-        List<ExamModel> models = new ArrayList<>();
+        /*List<ExamModel> models = new ArrayList<>();
         DatabaseCursorWrapper cursor = queryExams(null, null);
         try{
             cursor.moveToFirst();
@@ -126,6 +126,15 @@ public class DataLab {
             //cursor.close();
         }
         if(models.size() > 0){
+            return false;
+        }else{
+            return true;
+        }*/
+        String countQuery = "SELECT  * FROM exams";
+        Cursor cursor = mDatabase.rawQuery(countQuery, null);
+        int count = cursor.getCount();
+        //cursor.close();
+        if(count > 0){
             return false;
         }else{
             return true;

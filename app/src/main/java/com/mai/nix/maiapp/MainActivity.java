@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //switchLauncher();
         final Toolbar mToolbar = (Toolbar)findViewById(R.id.kek);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(R.string.menu_schedule);

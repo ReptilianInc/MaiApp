@@ -52,10 +52,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
             android:id="@+id/exam_title"
             tools:text="Стандартизация и сертификация программных продуктов"
-            android:textSize="22sp"/>
+            android:textSize="24sp"
+            android:textStyle="bold"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,12 +73,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/exam_room"
-            android:layout_below="@+id/exam_title"
+            android:layout_below="@+id/exam_teacher"
             tools:text="609 (Орш. А)"
-            android:layout_marginEnd="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginBottom="8dp"/>
     </RelativeLayout>
 </RelativeLayout>

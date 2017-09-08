@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.mai.nix.maiapp.model.ExamModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -32,27 +34,37 @@ public class ExamItemFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private final String mLink = "http://mai.ru/education/schedule/session.php?group=";
     private String mCurrentGroup;
+    private DataLab mDataLab;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.shedule_exams_layout, container, false);
         mSharedPreferences = getActivity().getSharedPreferences("suka", Context.MODE_PRIVATE);
         mCurrentGroup = mSharedPreferences.getString(getString(R.string.pref_group), "");
+        mDataLab = DataLab.get(getContext());
         mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setRefreshing(true);
         mExamModels = new ArrayList<>();
         //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
         mAdapter = new ExamAdapter(getContext(), mExamModels);
-        new MyThread().execute();
+        if(mDataLab.isExamsTableEmpty()){
+            new MyThread(true).execute();
+        }else{
+            mExamModels.addAll(mDataLab.getExams());
+            mAdapter.notifyDataSetChanged();
+
+        }
+        //new MyThread().execute();
         mListView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mExamModels.clear();
-                mAdapter.notifyDataSetChanged();
+                //mExamModels.clear();
+                //mAdapter.notifyDataSetChanged();
+                mDataLab.clearExamsCache();
                 mSwipeRefreshLayout.setRefreshing(true);
-                new MyThread().execute();
+                new MyThread(true).execute();
             }
         });
         return v;
@@ -60,10 +72,14 @@ public class ExamItemFragment extends Fragment {
     private class MyThread extends AsyncTask<String, Void, String>{
         private Elements date, day, time, title, teacher, room;
         private Document doc;
+        private boolean isCaching;
         public MyThread() {
             super();
         }
-
+        public MyThread(boolean cache) {
+            super();
+            isCaching = cache;
+        }
         @Override
         protected String doInBackground(String... strings) {
             try {
@@ -78,8 +94,10 @@ public class ExamItemFragment extends Fragment {
                 int kek = teacher.size();
                 Log.d("teacher.size = ", Integer.toString(kek));
                 for (int i = 0; i < kek; i++){
-                    mExamModels.add(new ExamModel(date.get(i).text(), day.get(i).text(), time.get(i).text(), title.get(i).text(),
-                            teacher.get(i).select("span[class=sc-lecturer]").text(), room.get(i).text()));
+                    ExamModel model = new ExamModel(date.get(i).text(), day.get(i).text(), time.get(i).text(), title.get(i).text(),
+                            teacher.get(i).select("span[class=sc-lecturer]").text(), room.get(i).text());
+                    mExamModels.add(model);
+                    if(isCaching)mDataLab.addExam(model);
                 }
             }catch (IOException e){
                 e.printStackTrace();
@@ -91,6 +109,7 @@ public class ExamItemFragment extends Fragment {
         protected void onPostExecute(String s) {
             mListView.setAdapter(mAdapter);
             mSwipeRefreshLayout.setRefreshing(false);
+            if (isCaching) Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
             //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         }
     }
