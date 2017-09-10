@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.mai.nix.maiapp.ChooseGroupActivity;
 import com.mai.nix.maiapp.R;
 import com.mai.nix.maiapp.UserSettings;
+import com.mai.nix.maiapp.WebViewActivity;
 
 /**
  * Created by Nix on 03.08.2017.
@@ -86,8 +87,13 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
                 break;
             case "go_mai":
                 Uri uri = Uri.parse("http://mai.ru/");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+                if(UserSettings.getLinksPreference(getActivity()).equals(UserSettings.ONLY_BROWSER)){
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }else{
+                    Intent intent = WebViewActivity.newInstance(getActivity(), uri);
+                    startActivity(intent);
+                }
                 break;
             case "go_dev":
                 Toast.makeText(getActivity(), R.string.not_now, Toast.LENGTH_SHORT).show();

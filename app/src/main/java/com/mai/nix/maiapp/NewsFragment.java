@@ -2,7 +2,6 @@ package com.mai.nix.maiapp;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,12 +19,8 @@ import com.mai.nix.maiapp.model.NewsModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -37,10 +32,8 @@ public class NewsFragment extends Fragment {
     private NewsAdapter mAdapter;
     private ArrayList<NewsModel> mModels;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    //private ProgressBar mProgressBar;
     private int mResult;
     private String mLink;
-    private String mTypeForActivity;
     private static final String APP_FRAGMENT_ID = "fragment_id";
     public static final byte NEWS_CODE = 0, EVENTS_CODE = 1, ANNOUNCEMENTS_CODE = 2;
     private final String mLinkMain = "https://mai.ru";
@@ -59,19 +52,15 @@ public class NewsFragment extends Fragment {
         switch (mResult){
             case NEWS_CODE:
                 mLink = "http://mai.ru/press/news/";
-                mTypeForActivity = "news/";
                 break;
             case EVENTS_CODE:
                 mLink = "http://mai.ru/press/events/";
-                mTypeForActivity = "";
                 break;
             case ANNOUNCEMENTS_CODE:
                 mLink = "http://mai.ru/press/board/";
-                mTypeForActivity = "board/";
                 break;
             default:
                 mLink = "http://mai.ru/press/news/";
-                mTypeForActivity = "news/";
                 break;
         }
     }
@@ -84,7 +73,6 @@ public class NewsFragment extends Fragment {
         mSwipeRefreshLayout.setRefreshing(true);
         mModels = new ArrayList<>();
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
-        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         new MyThread().execute();
         mAdapter = new NewsAdapter(getContext(), mModels);
         mListView.setAdapter(mAdapter);
@@ -141,14 +129,8 @@ public class NewsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            /*if(mMyAdapter == null){
-                mMyAdapter = new MyAdapter(mNewsModels);
-            }else{
-                mMyAdapter.setNewsModelList(mNewsModels);
-            }*/
             mSwipeRefreshLayout.setRefreshing(false);
             mListView.setAdapter(mAdapter);
-            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         }
     }
 

@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import com.mai.nix.maiapp.model.StudentOrgModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

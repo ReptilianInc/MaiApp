@@ -221,9 +221,15 @@ public class ThisWeekFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.go_web_in_frags) {
-                Uri uri = Uri.parse(mCurrentLink);
+            Uri uri = Uri.parse(mCurrentLink);
+            if(UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)){
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
+            }else{
+                Intent intent = WebViewActivity.newInstance(getContext(), uri);
+                startActivity(intent);
+            }
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -14,22 +14,22 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
-            android:theme="@style/AppThemeTest.NoActionBar"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+            android:theme="@style/AppThemeTest.NoActionBar">
         </activity>
         <activity
             android:name=".SettingsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppThemeSecondary"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+            android:theme="@style/AppThemeSecondary">
         </activity>
         <activity
             android:name=".ChooseGroupActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/choose_group_activity_title"
             android:noHistory="true"
-            android:theme="@style/AppThemeSecondary"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+            android:theme="@style/AppThemeSecondary">
         </activity>
         <activity
             android:name=".SplashActivity"
@@ -43,9 +43,14 @@
         </activity>
         <activity
             android:name=".NewsItemActivity"
-            android:theme="@style/AppThemeTest"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/place_holder"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+            android:theme="@style/AppThemeTest">
+        </activity>
+        <activity android:name=".WebViewActivity"
+                  android:configChanges="orientation|screenSize|keyboardHidden"
+                  android:label="@string/place_holder"
+                  android:theme="@style/AppThemeTest">
         </activity>
     </application>
 
