@@ -12,6 +12,7 @@ import com.mai.nix.maiapp.ViewPagerAdapter;
 public class PressCenterFragment extends TabsFragment {
     @Override
     protected void setupViewPager(ViewPager viewPager) {
+        setHasOptionsMenu(false);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(NewsFragment.newInstance(NewsFragment.NEWS_CODE), "Новости");
         adapter.addFragment(NewsFragment.newInstance(NewsFragment.EVENTS_CODE), "Мероприятия");

@@ -16,6 +16,7 @@ import com.mai.nix.maiapp.WorkersAndGradsOrgsFragment;
 public class LifeFragment extends TabsFragment {
     @Override
     protected void setupViewPager(ViewPager viewPager) {
+        setHasOptionsMenu(false);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new StudentOrgsFragment(), "Студенческие объединения");
         adapter.addFragment(new SportSectionsFragment(), "Спортивные секции");

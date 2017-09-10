@@ -1,6 +1,7 @@
 package com.mai.nix.maiapp;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -18,6 +22,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Nix on 01.08.2017.
@@ -27,38 +33,51 @@ public class ExamItemFragment extends Fragment {
     private ListView mListView;
     private ArrayList<ExamModel> mExamModels;
     private ExamAdapter mAdapter;
-    //private ProgressBar mProgressBar;
+    private int mCurrentDay, mCurrentWeek;
+    private Calendar mCalendar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private final String mLink = "http://mai.ru/education/schedule/session.php?group=";
-    private String mCurrentGroup;
+    private String mCurrentGroup, mCurrentLink;
     private DataLab mDataLab;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.shedule_exams_layout, container, false);
+        mCalendar = new GregorianCalendar();
+        mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+        mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH);
         UserSettings.initialize(getContext());
         mCurrentGroup = UserSettings.getGroup(getContext());
+        mCurrentLink = mLink.concat(mCurrentGroup);
         mDataLab = DataLab.get(getContext());
         mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setRefreshing(true);
         mExamModels = new ArrayList<>();
-        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
         mAdapter = new ExamAdapter(getContext(), mExamModels);
         if(mDataLab.isExamsTableEmpty()){
             new MyThread(true).execute();
+        }else if(UserSettings.getExamsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
+                UserSettings.getDay(getContext()) != mCurrentDay){
+            new MyThread(true).execute();
+        }else if(UserSettings.getExamsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
+                UserSettings.getWeek(getContext()) != mCurrentWeek){
+            new MyThread(true).execute();
         }else{
             mExamModels.addAll(mDataLab.getExams());
             mAdapter.notifyDataSetChanged();
-
         }
-        //new MyThread().execute();
         mListView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //mExamModels.clear();
-                //mAdapter.notifyDataSetChanged();
                 mDataLab.clearExamsCache();
                 mSwipeRefreshLayout.setRefreshing(true);
                 new MyThread(true).execute();
@@ -80,7 +99,7 @@ public class ExamItemFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                doc = Jsoup.connect(mLink.concat(mCurrentGroup)).get();
+                doc = Jsoup.connect(mCurrentLink).get();
                 date = doc.select("div[class=sc-table-col sc-day-header sc-gray]");
                 day = doc.select("span[class=sc-day]");
                 time = doc.select("div[class=sc-table-col sc-item-time]");
@@ -107,12 +126,27 @@ public class ExamItemFragment extends Fragment {
             mListView.setAdapter(mAdapter);
             mSwipeRefreshLayout.setRefreshing(false);
             if (isCaching) Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
-            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         }
     }
     @Override
     public void onResume() {
         super.onResume();
         mCurrentGroup = UserSettings.getGroup(getContext());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.go_web_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.go_web_in_frags) {
+            Uri uri = Uri.parse(mCurrentLink);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

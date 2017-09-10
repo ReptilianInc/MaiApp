@@ -17,6 +17,13 @@ public abstract class TabsFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     protected abstract void setupViewPager(ViewPager viewPager);
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

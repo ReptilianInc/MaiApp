@@ -148,4 +148,6 @@
     <!-- PlaceHolders for NewsActivity -->
     <string name="place_holder">&#8230;</string>
     <string name="cache_updated_message">Кэш обновлён</string>
+    <string name="day_pref">День</string>
+    <string name="week_pref">Неделя</string>
 </resources>

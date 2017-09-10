@@ -1,5 +1,7 @@
 package com.mai.nix.maiapp;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +9,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,6 +26,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Nix on 02.08.2017.
@@ -33,37 +40,59 @@ public class ThisWeekFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Spinner mSpinner;
     private DataLab mDataLab;
-    private String mCurrentGroup;
+    private String mCurrentGroup, mCurrentLink;
+    private int mCurrentDay, mCurrentWeek;
+    private Calendar mCalendar;
     private final String mLink = "https://mai.ru/education/schedule/detail.php?group=";
     private String mWeek = "1";
     private final String PLUS_WEEK = "&week=";
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.shedule_subjects_layout, container, false);
         View header = inflater.inflate(R.layout.spinner_header, null);
+        mCalendar = new GregorianCalendar();
+        mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+        mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH);
         UserSettings.initialize(getContext());
         mDataLab = DataLab.get(getContext());
         mGroups = new ArrayList<>();
-        //Создаем адаптер и передаем context и список с данными
         mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
         mCurrentGroup = UserSettings.getGroup(getContext());
-        //Toast.makeText(getContext(), mCurrentGroup, Toast.LENGTH_SHORT).show();
         mSpinner = (Spinner)header.findViewById(R.id.spinner);
         mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i != 0){
-                    //mSwipeRefreshLayout.setRefreshing(true);
                     mWeek = Integer.toString(i);
-                    new MyThread(mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek), false).execute();
+                    mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
+                    new MyThread(mCurrentLink, false).execute();
                 }else if(mDataLab.isSubjectsTablesEmpty()){
-                    new MyThread(mLink.concat(mCurrentGroup), true).execute();
+                    mCurrentLink = mLink.concat(mCurrentGroup);
+                    new MyThread(mCurrentLink, true).execute();
+                }else if(UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
+                        UserSettings.getDay(getContext()) != mCurrentDay){
+                    UserSettings.setDay(getContext(), mCurrentDay);
+                    mDataLab.clearSubjectsCache();
+                    mCurrentLink = mLink.concat(mCurrentGroup);
+                    new MyThread(mCurrentLink, true).execute();
+                }else if(UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
+                        UserSettings.getWeek(getContext()) != mCurrentWeek){
+                    UserSettings.setWeek(getContext(), mCurrentWeek);
+                    mDataLab.clearSubjectsCache();
+                    mCurrentLink = mLink.concat(mCurrentGroup);
+                    new MyThread(mCurrentLink, true).execute();
                 }else{
-                    //new MyThread(mLink.concat(mCurrentGroup), false).execute();
-                    //mSwipeRefreshLayout.setRefreshing(false);
                     mGroups.clear();
+                    mCurrentLink = mLink.concat(mCurrentGroup);
                     ArrayList<SubjectHeader> headers = new ArrayList<>();
                     headers.addAll(mDataLab.getHeaders());
                     for(SubjectHeader header : headers){
@@ -84,9 +113,6 @@ public class ThisWeekFragment extends Fragment {
         });
 
         mListView = (ExpandableListView)v.findViewById(R.id.exp);
-        //mSwipeRefreshLayout.setRefreshing(true);
-
-        //new MyThread().execute();
         mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);
         for(int i = 0; i < mGroups.size(); i++){
@@ -95,16 +121,16 @@ public class ThisWeekFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //mGroups.clear();
-                //mAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(true);
 
                 if(mSpinner.getSelectedItemPosition() != 0){
                     mWeek = Integer.toString(mSpinner.getSelectedItemPosition());
-                    new MyThread(mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek), false).execute();
+                    mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
+                    new MyThread(mCurrentLink, false).execute();
                 }else {
                     mDataLab.clearSubjectsCache();
-                    new MyThread(mLink.concat(mCurrentGroup), true).execute();
+                    mCurrentLink = mLink.concat(mCurrentGroup);
+                    new MyThread(mCurrentLink, true).execute();
                 }
 
             }
@@ -132,7 +158,6 @@ public class ThisWeekFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                //String group = URLEncoder.encode(mCurrentGroup, "UTF-8");
                 doc = Jsoup.connect(final_link).get();
                 primaries = doc.select("div[class=sc-table sc-table-day]");
                 Log.d("link", final_link);
@@ -185,5 +210,21 @@ public class ThisWeekFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mCurrentGroup = UserSettings.getGroup(getContext());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.go_web_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.go_web_in_frags) {
+                Uri uri = Uri.parse(mCurrentLink);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
