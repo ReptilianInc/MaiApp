@@ -23,7 +23,7 @@ public class UserSettings {
     }
     public static String getGroup(Context context){
         return sSharedPreferences.getString(context.getString(R.string.pref_group),
-                context.getString(R.string.pref_group_summary));
+                null);
     }
     public static void setGroup(Context context, String group){
         sEditor = sSharedPreferences.edit();
