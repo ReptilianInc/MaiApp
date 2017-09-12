@@ -57,8 +57,6 @@ public class ExamItemChooseGroupFragment extends Fragment {
             @Override
             public void onRefresh() {
                 if(!mSelectedGroup.isEmpty()){
-                    mExamModels.clear();
-                    mAdapter.notifyDataSetChanged();
                     mSwipeRefreshLayout.setRefreshing(true);
                     new MyThread().execute();
                 }

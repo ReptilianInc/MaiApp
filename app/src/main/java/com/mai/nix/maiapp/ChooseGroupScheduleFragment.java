@@ -63,8 +63,6 @@ public class ChooseGroupScheduleFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(mSelectedGroup != null){
                     ChosenWeek = Integer.toString(i+1);
-                    mGroups.clear();
-                    mAdapter.notifyDataSetChanged();
                     mSwipeRefreshLayout.setRefreshing(true);
                     new MyThread().execute();
                 }
@@ -83,8 +81,6 @@ public class ChooseGroupScheduleFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mGroups.clear();
-                mAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(true);
                 new MyThread().execute();
             }
