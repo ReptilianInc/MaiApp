@@ -8,54 +8,45 @@ import java.util.UUID;
  */
 
 public class SubjectHeader {
-    private String date;
-    private String day;
-    private UUID uuid;
-    // ArrayList to store child objects
-    private ArrayList<SubjectBody> children;
+    private String mDate;
+    private String mDay;
+    private UUID mUuid;
+    private ArrayList<SubjectBody> mChildren;
     public SubjectHeader(String date, String day) {
         this(UUID.randomUUID());
-        this.date = date;
-        this.day = day;
-        children = new ArrayList<>();
-    }
-    public SubjectHeader(){
-        this(UUID.randomUUID());
-        children = new ArrayList<>();
+        mDate = date;
+        mDay = day;
+        mChildren = new ArrayList<>();
     }
     public SubjectHeader(UUID id){
-        uuid = id;
-        children = new ArrayList<>();
+        mUuid = id;
+        mChildren = new ArrayList<>();
     }
     public String getDate() {
-        return date;
+        return mDate;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        mDate = date;
     }
 
     public String getDay() {
-        return day;
+        return mDay;
     }
 
     public void setDay(String day) {
-        this.day = day;
+        mDay = day;
     }
 
     public ArrayList<SubjectBody> getChildren() {
-        return children;
+        return mChildren;
     }
 
     public void setChildren(ArrayList<SubjectBody> children) {
-        this.children = children;
+        mChildren = children;
     }
 
     public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+        return mUuid;
     }
 }

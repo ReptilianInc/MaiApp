@@ -4,7 +4,7 @@ import android.support.v4.view.ViewPager;
 
 import com.mai.nix.maiapp.ChooseGroupScheduleFragment;
 import com.mai.nix.maiapp.TabsFragment;
-import com.mai.nix.maiapp.ThisWeekFragment;
+import com.mai.nix.maiapp.MyGroupScheduleSubjectsFragment;
 import com.mai.nix.maiapp.ViewPagerAdapter;
 
 /**
@@ -15,7 +15,7 @@ public class ScheduleFragment extends TabsFragment {
     @Override
     protected void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new ThisWeekFragment(), "Моё расписание");
+        adapter.addFragment(new MyGroupScheduleSubjectsFragment(), "Моё расписание");
         adapter.addFragment(new ChooseGroupScheduleFragment(), "Выбрать группу");
         viewPager.setAdapter(adapter);
     }

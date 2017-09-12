@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.mai.nix.maiapp.model.NewsModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

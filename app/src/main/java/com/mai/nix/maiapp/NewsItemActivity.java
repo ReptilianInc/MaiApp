@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -129,8 +128,13 @@ public class NewsItemActivity extends AppCompatActivity {
                 break;
             case R.id.go_web_in_frags:
                 Uri uri = Uri.parse(mId);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+                if(UserSettings.getLinksPreference(this).equals(UserSettings.ONLY_BROWSER)){
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }else{
+                    Intent intent = WebViewActivity.newInstance(this, uri);
+                    startActivity(intent);
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

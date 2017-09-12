@@ -1,16 +1,7 @@
 package com.mai.nix.maiapp;
 
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 import android.widget.Toast;
-
 import com.mai.nix.maiapp.model.SportSectionsBodies;
 import com.mai.nix.maiapp.model.SportSectionsHeaders;
 import org.jsoup.Jsoup;
@@ -18,46 +9,18 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by Nix on 11.08.2017.
  */
 
-public class SportSectionsFragment extends Fragment {
-    private ExpandableListView mExpandableListView;
-    //private ProgressBar mProgressBar;
-    private ArrayList<SportSectionsHeaders> mHeaders;
-    private SportSectionsExpListAdapter mAdapter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private final String mLink = "http://www.mai.ru/life/sport/sections.php";
+public class SportSectionsFragment extends SimpleExpandableListFragment{
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.exp_list_test, container, false);
-        mExpandableListView = (ExpandableListView)v.findViewById(R.id.exp);
-        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar_test);
-        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
-        mSwipeRefreshLayout.setRefreshing(true);
-        mHeaders = new ArrayList<>();
-        mAdapter = new SportSectionsExpListAdapter(getContext(), mHeaders);
+    protected void releaseThread() {
         new MyThread().execute();
-        mExpandableListView.setAdapter(mAdapter);
-        for(int i = 0; i < mHeaders.size(); i++){
-            mExpandableListView.expandGroup(i);
-        }
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mHeaders.clear();
-                mAdapter.notifyDataSetChanged();
-                mSwipeRefreshLayout.setRefreshing(true);
-                new MyThread().execute();
-            }
-        });
-        return v;
     }
+
     private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Document doc;
         private Element table;
@@ -69,7 +32,7 @@ public class SportSectionsFragment extends Fragment {
         @Override
         protected Integer doInBackground(Integer... integers) {
             try {
-                doc = Jsoup.connect(mLink).get();
+                doc = Jsoup.connect("http://www.mai.ru/life/sport/sections.php").get();
                 table = doc.select("table[class=data-table]").first();
                 rows = table.select("tr");
                 headers = table.select("th");

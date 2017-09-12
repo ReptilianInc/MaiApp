@@ -7,67 +7,67 @@ import java.util.UUID;
  */
 
 public class SubjectBody {
-    private String title;
-    private String teacher;
-    private String type;
-    private String time;
-    private String room;
-    private UUID uuid;
+    private String mTitle;
+    private String mTeacher;
+    private String mType;
+    private String mTime;
+    private String mRoom;
+    private UUID mUuid;
 
     public SubjectBody(String title, String teacher, String type, String time, String room) {
-        this.title = title;
-        this.teacher = teacher;
-        this.type = type;
-        this.time = time;
-        this.room = room;
+        mTitle = title;
+        mTeacher = teacher;
+        mType = type;
+        mTime = time;
+        mRoom = room;
     }
     public SubjectBody() {
     }
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        mTitle = title;
     }
 
     public String getTeacher() {
-        return teacher;
+        return mTeacher;
     }
 
     public void setTeacher(String teacher) {
-        this.teacher = teacher;
+        mTeacher = teacher;
     }
 
     public String getType() {
-        return type;
+        return mType;
     }
 
     public void setType(String type) {
-        this.type = type;
+        mType = type;
     }
 
     public String getTime() {
-        return time;
+        return mTime;
     }
 
     public void setTime(String time) {
-        this.time = time;
+        mTime = time;
     }
 
     public String getRoom() {
-        return room;
+        return mRoom;
     }
 
     public void setRoom(String room) {
-        this.room = room;
+        mRoom = room;
     }
 
     public UUID getUuid() {
-        return uuid;
+        return mUuid;
     }
 
     public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+        mUuid = uuid;
     }
 }

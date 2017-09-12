@@ -20,8 +20,6 @@ public class SportSectionsBodies {
         mOwner = owner;
     }
 
-    public SportSectionsBodies() {
-    }
 
     public String getTitle() {
         return mTitle;
@@ -35,15 +33,8 @@ public class SportSectionsBodies {
         return mOwner;
     }
 
-    public void setOwner(String owner) {
-        mOwner = owner;
-    }
-
     public String getPhoneEtc() {
         return mPhoneEtc;
     }
 
-    public void setPhoneEtc(String phoneEtc) {
-        mPhoneEtc = phoneEtc;
-    }
 }

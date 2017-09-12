@@ -16,9 +16,10 @@ public class UserSettings {
     public static final String EVERY_DAY = "1";
     public static final String EVERY_WEEK = "2";
     public static final String ONLY_FORCIBLY = "3";
+    private static final String PREF_TITLE = "mai_app";
 
     public static void initialize(Context context){
-        sSharedPreferences = context.getSharedPreferences("suka", Context.MODE_PRIVATE);
+        sSharedPreferences = context.getSharedPreferences(PREF_TITLE, Context.MODE_PRIVATE);
     }
     public static String getGroup(Context context){
         return sSharedPreferences.getString(context.getString(R.string.pref_group),

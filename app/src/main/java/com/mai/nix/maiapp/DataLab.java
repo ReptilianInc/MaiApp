@@ -38,18 +38,6 @@ public class DataLab {
         ContentValues contentValues = getExamContentValues(model);
         mDatabase.insert(ExamTable.NAME, null, contentValues);
     }
-    public void addExams(List<ExamModel> models){
-        for (ExamModel model : models){
-            ContentValues c = getExamContentValues(model);
-            mDatabase.insert(ExamTable.NAME, null, c);
-        }
-    }
-    public void addHeaders(List<SubjectHeader> models){
-        for(SubjectHeader header : models){
-            ContentValues c = getHeadersContentValues(header);
-            mDatabase.insert(HeadersTable.NAME, null, c);
-        }
-    }
     public void addHeader(SubjectHeader model){
         ContentValues contentValues = getHeadersContentValues(model);
         mDatabase.insert(HeadersTable.NAME, null, contentValues);
@@ -59,10 +47,6 @@ public class DataLab {
             ContentValues c = getBodiesContentValues(body);
             mDatabase.insert(BodiesTable.NAME, null, c);
         }
-    }
-    public void addBody(SubjectBody model){
-        ContentValues contentValues = getBodiesContentValues(model);
-        mDatabase.insert(BodiesTable.NAME, null, contentValues);
     }
     public void clearExamsCache(){
         mDatabase.delete(ExamTable.NAME, null, null);
@@ -86,23 +70,6 @@ public class DataLab {
         return models;
     }
     public boolean isSubjectsTablesEmpty(){
-        /*List<SubjectHeader> models = new ArrayList<>();
-        DatabaseCursorWrapper cursor = queryHeaders(null, null);
-        try{
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                models.add(cursor.getHeader());
-                cursor.moveToNext();
-            }
-        }finally {
-            cursor.close();
-        }
-        if(models.size() > 0){
-            return false;
-        }else{
-            return true;
-        }*/
-
         String countQuery = "SELECT  * FROM headers";
         Cursor cursor = mDatabase.rawQuery(countQuery, null);
         int count = cursor.getCount();
@@ -114,26 +81,9 @@ public class DataLab {
         }
     }
     public boolean isExamsTableEmpty(){
-        /*List<ExamModel> models = new ArrayList<>();
-        DatabaseCursorWrapper cursor = queryExams(null, null);
-        try{
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                models.add(cursor.getExam());
-                cursor.moveToNext();
-            }
-        }finally {
-            //cursor.close();
-        }
-        if(models.size() > 0){
-            return false;
-        }else{
-            return true;
-        }*/
         String countQuery = "SELECT  * FROM exams";
         Cursor cursor = mDatabase.rawQuery(countQuery, null);
         int count = cursor.getCount();
-        //cursor.close();
         if(count > 0){
             return false;
         }else{
@@ -150,21 +100,6 @@ public class DataLab {
                 cursor.moveToNext();
             }
         }finally {
-            //cursor.close();
-        }
-        return models;
-    }
-    public ArrayList<SubjectBody> getBodies(){
-        ArrayList<SubjectBody> models = new ArrayList<>();
-        DatabaseCursorWrapper cursor = queryBodies(null, null);
-        try{
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                models.add(cursor.getBody());
-                cursor.moveToNext();
-            }
-        }finally {
-            //cursor.close();
         }
         return models;
     }
@@ -174,7 +109,6 @@ public class DataLab {
         try{
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                UUID uu = cursor.getBody().getUuid();
                 if(cursor.getBody().getUuid().equals(id)){
                     models.add(cursor.getBody());
                     cursor.moveToNext();

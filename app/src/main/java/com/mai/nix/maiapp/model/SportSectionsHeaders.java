@@ -8,15 +8,11 @@ import java.util.ArrayList;
 
 public class SportSectionsHeaders {
     private String mTitle;
-    // ArrayList to store child objects
     private ArrayList<SportSectionsBodies> mBodies;
 
     public SportSectionsHeaders(String title) {
         mTitle = title;
         mBodies = new ArrayList<>();
-    }
-
-    public SportSectionsHeaders() {
     }
 
     public String getTitle() {
@@ -31,9 +27,6 @@ public class SportSectionsHeaders {
         return mBodies;
     }
 
-    public void setBodies(ArrayList<SportSectionsBodies> bodies) {
-        mBodies = bodies;
-    }
     public void addBody(SportSectionsBodies body){
         mBodies.add(body);
     }

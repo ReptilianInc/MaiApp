@@ -33,7 +33,7 @@ import java.util.GregorianCalendar;
  * Created by Nix on 02.08.2017.
  */
 
-public class ThisWeekFragment extends Fragment {
+public class MyGroupScheduleSubjectsFragment extends Fragment {
     private ExpandableListView mListView;
     private ArrayList<SubjectHeader> mGroups;
     private SubjectsExpListAdapter mAdapter;

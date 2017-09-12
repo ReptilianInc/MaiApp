@@ -7,12 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.mai.nix.maiapp.model.ExamModel;
 import org.jsoup.Jsoup;
@@ -29,7 +27,6 @@ public class ExamItemChooseGroupFragment extends Fragment {
     private ListView mListView;
     private ArrayList<ExamModel> mExamModels;
     private ExamAdapter mAdapter;
-    //private ProgressBar mProgressBar;
     private TextView mButton;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private static final int REQUEST_CODE_GROUP = 0;
@@ -52,11 +49,8 @@ public class ExamItemChooseGroupFragment extends Fragment {
             }
         });
         mExamModels = new ArrayList<>();
-        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
         mAdapter = new ExamAdapter(getContext(), mExamModels);
-        //new MyThread().execute();
-        //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -91,8 +85,6 @@ public class ExamItemChooseGroupFragment extends Fragment {
                 teacher = doc.select("div[class=sc-table-col sc-item-title]");
                 room = doc.select("div[class=sc-table-col sc-item-location]");
                 mExamModels.clear();
-                //int kek = teacher.size();
-                //.d("teacher.size = ", Integer.toString(kek));
                 for (int i = 0; i < teacher.size(); i++){
                     mExamModels.add(new ExamModel(date.get(i).text(), day.get(i).text(), time.get(i).text(), title.get(i).text(),
                             teacher.get(i).select("span[class=sc-lecturer]").text(), room.get(i).text()));
@@ -109,7 +101,6 @@ public class ExamItemChooseGroupFragment extends Fragment {
         @Override
         protected void onPostExecute(Integer integer) {
             mListView.setAdapter(mAdapter);
-            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -127,7 +118,6 @@ public class ExamItemChooseGroupFragment extends Fragment {
             mChoosenGroupTextView.setText(mSelectedGroup);
             mExamModels.clear();
             mAdapter.notifyDataSetChanged();
-            //mProgressBar.setVisibility(ProgressBar.VISIBLE);
             mSwipeRefreshLayout.setRefreshing(true);
             new MyThread().execute();
         }

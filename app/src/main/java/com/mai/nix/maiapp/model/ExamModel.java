@@ -20,13 +20,6 @@ public class ExamModel {
         mTeacher = teacher;
         mRoom = room;
     }
-    public ExamModel(String date, String day, String time, String title, String room) {
-        mDate = date;
-        mDay = day;
-        mTime = time;
-        mTitle = title;
-        mRoom = room;
-    }
     public ExamModel(){
 
     }

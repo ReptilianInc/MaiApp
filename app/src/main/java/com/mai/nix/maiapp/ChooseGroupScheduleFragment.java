@@ -16,7 +16,6 @@ import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mai.nix.maiapp.model.SubjectBody;
 import com.mai.nix.maiapp.model.SubjectHeader;
 import org.jsoup.Jsoup;
@@ -34,7 +33,6 @@ public class ChooseGroupScheduleFragment extends Fragment {
     private ExpandableListView mListView;
     private ArrayList<SubjectHeader> mGroups;
     private SubjectsExpListAdapter mAdapter;
-    //private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Spinner mSpinner;
     private TextView mButton;
@@ -63,12 +61,10 @@ public class ChooseGroupScheduleFragment extends Fragment {
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //Toast.makeText(getContext(), "Position = " + i, Toast.LENGTH_SHORT).show();
                 if(mSelectedGroup != null){
                     ChosenWeek = Integer.toString(i+1);
                     mGroups.clear();
                     mAdapter.notifyDataSetChanged();
-                    //mProgressBar.setVisibility(ProgressBar.VISIBLE);
                     mSwipeRefreshLayout.setRefreshing(true);
                     new MyThread().execute();
                 }
@@ -80,9 +76,7 @@ public class ChooseGroupScheduleFragment extends Fragment {
             }
         });
         mListView = (ExpandableListView)v.findViewById(R.id.exp);
-        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar_test);
         mGroups = new ArrayList<>();
-        //Создаем адаптер и передаем context и список с данными
         mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
         mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);

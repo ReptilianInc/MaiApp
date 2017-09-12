@@ -35,23 +35,12 @@ public class StudentOrgModel {
         return mLeader;
     }
 
-    public void setLeader(String leader) {
-        mLeader = leader;
-    }
-
     public String getPhone() {
         return mPhone;
-    }
-
-    public void setPhone(String phone) {
-        mPhone = phone;
     }
 
     public String getAddress() {
         return mAddress;
     }
 
-    public void setAddress(String address) {
-        mAddress = address;
-    }
 }

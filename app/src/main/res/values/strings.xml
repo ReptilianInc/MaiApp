@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MAI alpha</string>
+    <string name="app_name">MAI</string>
     <!-- navigation menu -->
     <string name="menu_schedule">Расписание пар</string>
     <string name="exam_schedule">Расписание сессии</string>
@@ -8,13 +8,10 @@
     <string name="menu_press_center">Пресс-центр</string>
     <string name="menu_life">Жизнь</string>
     <string name="menu_settings">Настройки</string>
-    <string name="menu_info">О программе</string>
     <string name="menu_title">Menu</string>
     <!-- -->
     <string name="user_settings">Настройки</string>
     <string name="about">О программе</string>
-    <string name="what_to_do">Нажмите на кнопку с календарём, чтобы выбрать дату</string>
-    <string name="choose_date">Выбор даты</string>
     <string name="go_to_MAI">Перейти на сайт МАИ</string>
     <string name="go_to_dev">Перейти на сайт разработчика</string>
 
@@ -22,26 +19,15 @@
     <!-- Settings -->
     <string name="pref_group">Группа</string>
     <string name="pref_links">Просмотр ссылок</string>
-    <string name="pref_language">Язык</string>
     <string name="pref_group_summary">Выберите группу</string>
     <string name="clear_cache_sub">Очистить кэш расписания пар</string>
     <string name="clear_cache_ex">Очистить кэш расписания экзаменов</string>
     <string name="freg_cache">Обновление кэша расписания пар</string>
     <string name="freg_cache_exams">Обновление кэша расписания экзаменов</string>
     <string name="title_app">Неофициальное приложение МАИ</string>
-    <string name="title_summary">Версия 0.4.0(alpha) Сборка от 10.09.2017</string>
+    <string name="title_summary">Версия 0.7.0(beta) Сборка от 13.09.2017</string>
     <string name="site_mai">Перейти на сайт МАИ</string>
     <string name="site_dev">Перейти на сайт разработчика</string>
-
-    <string-array name="lang_array">
-        <item>Русский</item>
-        <item>English</item>
-    </string-array>
-
-    <string-array name="lang_values">
-        <item>1</item>
-        <item>2</item>
-    </string-array>
 
     <string-array name="freg_array">
         <item>Каждый день</item>

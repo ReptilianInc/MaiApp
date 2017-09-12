@@ -1,8 +1,6 @@
 package com.mai.nix.maiapp;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -24,12 +22,13 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private FragmentManager mFragmentManager;
     private Fragment mFragment;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final Toolbar mToolbar = (Toolbar)findViewById(R.id.kek);
+        mToolbar = (Toolbar)findViewById(R.id.kek);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(R.string.menu_schedule);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
@@ -53,54 +52,19 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         switch (item.getItemId()){
                             case R.id.menu_sch:
-                                mFragmentManager.beginTransaction()
-                                        .remove(mFragment)
-                                        .commit();
-                                mToolbar.setTitle("Расписание пар");
-                                mFragment = new ScheduleFragment();
-                                mFragmentManager.beginTransaction()
-                                        .add(R.id.center_view, mFragment)
-                                        .commit();
+                                setFragment("Расписание пар", new ScheduleFragment());
                                 break;
                             case R.id.menu_sch_ex:
-                                mFragmentManager.beginTransaction()
-                                        .remove(mFragment)
-                                        .commit();
-                                mToolbar.setTitle("Расписание сессии");
-                                mFragment = new ExamScheduleFragment();
-                                mFragmentManager.beginTransaction()
-                                        .add(R.id.center_view, mFragment)
-                                        .commit();
+                                setFragment("Расписание сессии", new ExamScheduleFragment());
                                 break;
                             case R.id.press:
-                                mFragmentManager.beginTransaction()
-                                        .remove(mFragment)
-                                        .commit();
-                                mToolbar.setTitle("Пресс-центр");
-                                mFragment = new PressCenterFragment();
-                                mFragmentManager.beginTransaction()
-                                        .add(R.id.center_view, mFragment)
-                                        .commit();
+                                setFragment("Пресс-центр", new PressCenterFragment());
                                 break;
                             case R.id.menu_campus:
-                                mFragmentManager.beginTransaction()
-                                        .remove(mFragment)
-                                        .commit();
-                                mToolbar.setTitle("Кампус");
-                                mFragment = new CampusFragment();
-                                mFragmentManager.beginTransaction()
-                                        .add(R.id.center_view, mFragment)
-                                        .commit();
+                                setFragment("Кампус", new CampusFragment());
                                 break;
                             case R.id.life:
-                                mFragmentManager.beginTransaction()
-                                        .remove(mFragment)
-                                        .commit();
-                                mToolbar.setTitle("Жизнь");
-                                mFragment = new LifeFragment();
-                                mFragmentManager.beginTransaction()
-                                        .add(R.id.center_view, mFragment)
-                                        .commit();
+                                setFragment("Жизнь", new LifeFragment());
                                 break;
                             case R.id.menu_settings:
                                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
@@ -114,12 +78,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void switchLauncher(){
-        String s = getApplicationContext().getPackageName();
-        ComponentName cm = new ComponentName(s, s+".AliasActivity");
-        ComponentName cm2 = new ComponentName(s, s+".ChooseGroupActivity");
-        PackageManager pm = this.getPackageManager();
-        pm.setComponentEnabledSetting(cm, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-        pm.setComponentEnabledSetting(cm2, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+
+    private void setFragment(String title, Fragment fragment){
+        mFragmentManager.beginTransaction()
+                .remove(mFragment)
+                .commit();
+        mToolbar.setTitle(title);
+        mFragment = fragment;
+        mFragmentManager.beginTransaction()
+                .add(R.id.center_view, mFragment)
+                .commit();
     }
 }

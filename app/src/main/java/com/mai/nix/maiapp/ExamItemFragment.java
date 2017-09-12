@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -108,7 +107,6 @@ public class ExamItemFragment extends Fragment {
                 teacher = doc.select("div[class=sc-table-col sc-item-title]");
                 room = doc.select("div[class=sc-table-col sc-item-location]");
                 mExamModels.clear();
-                //Log.d("teacher.size = ", Integer.toString(kek));
                 for (int i = 0; i < teacher.size(); i++){
                     ExamModel model = new ExamModel(date.get(i).text(), day.get(i).text(), time.get(i).text(), title.get(i).text(),
                             teacher.get(i).select("span[class=sc-lecturer]").text(), room.get(i).text());
