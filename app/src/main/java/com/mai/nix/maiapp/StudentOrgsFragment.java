@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.mai.nix.maiapp.model.StudentOrgModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -52,7 +54,7 @@ public class StudentOrgsFragment extends Fragment {
         return v;
     }
 
-    private class MyThread extends AsyncTask<String, Void, String> {
+    private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Document doc;
         private Element table;
         private Elements rows, cols;
@@ -61,7 +63,7 @@ public class StudentOrgsFragment extends Fragment {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected Integer doInBackground(Integer... integers) {
             try{
                 doc = Jsoup.connect(mLink).get();
                 table = doc.select("table[class=data-table]").first();
@@ -76,15 +78,21 @@ public class StudentOrgsFragment extends Fragment {
 
             }catch (IOException e){
                 e.printStackTrace();
+            }catch (NullPointerException n){
+                return 0;
             }
-            return null;
+            return rows.size();
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            mListView.setAdapter(mAdapter);
-            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        protected void onPostExecute(Integer s) {
             mSwipeRefreshLayout.setRefreshing(false);
+            if (s == 0) {
+                Toast.makeText(getContext(), R.string.error,
+                        Toast.LENGTH_LONG).show();
+            }else {
+                mListView.setAdapter(mAdapter);
+            }
         }
     }
 

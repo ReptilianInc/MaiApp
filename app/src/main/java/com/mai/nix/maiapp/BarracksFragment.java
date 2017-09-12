@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 import com.mai.nix.maiapp.model.SportSectionsBodies;
 import com.mai.nix.maiapp.model.SportSectionsHeaders;
 import org.jsoup.Jsoup;
@@ -24,7 +25,6 @@ import java.util.ArrayList;
 
 public class BarracksFragment extends Fragment {
     private ExpandableListView mExpandableListView;
-    //private ProgressBar mProgressBar;
     private ArrayList<SportSectionsHeaders> mHeaders;
     private SportSectionsExpListAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -35,7 +35,6 @@ public class BarracksFragment extends Fragment {
         View v = inflater.inflate(R.layout.exp_list_test, container, false);
         mExpandableListView = (ExpandableListView)v.findViewById(R.id.exp);
         mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
-        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar_test);
         mSwipeRefreshLayout.setRefreshing(true);
         mHeaders = new ArrayList<>();
         mAdapter = new SportSectionsExpListAdapter(getContext(), mHeaders);
@@ -56,7 +55,7 @@ public class BarracksFragment extends Fragment {
         return v;
     }
 
-    private class MyThread extends AsyncTask<String, Void, String>{
+    private class MyThread extends AsyncTask<Integer, Void, Integer>{
         private Document doc;
         private Element table, stupid_header, header;
         private Elements rows;
@@ -65,17 +64,21 @@ public class BarracksFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            mExpandableListView.setAdapter(mAdapter);
+        protected void onPostExecute(Integer integer) {
             mSwipeRefreshLayout.setRefreshing(false);
-            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-            for(int i = 0; i < mHeaders.size(); i++){
-                mExpandableListView.expandGroup(i);
+            if(integer == 0){
+                Toast.makeText(getContext(), R.string.error,
+                        Toast.LENGTH_LONG).show();
+            }else{
+                mExpandableListView.setAdapter(mAdapter);
+                for(int i = 0; i < mHeaders.size(); i++){
+                    mExpandableListView.expandGroup(i);
+                }
             }
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected Integer doInBackground(Integer... integers) {
             try{
                 doc = Jsoup.connect(mLink).get();
                 table = doc.select("table[class=data-table]").first();
@@ -99,11 +102,12 @@ public class BarracksFragment extends Fragment {
                         j++;
                     }
                 }
-
             }catch (IOException e){
                 e.printStackTrace();
+            }catch (NullPointerException n){
+                return 0;
             }
-            return null;
+            return rows.size();
         }
     }
 }

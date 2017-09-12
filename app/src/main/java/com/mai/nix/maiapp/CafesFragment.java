@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.mai.nix.maiapp.model.StudentOrgModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,7 +25,6 @@ import java.util.ArrayList;
 
 public class CafesFragment extends Fragment {
     private ListView mListView;
-    //private ProgressBar mProgressBar;
     private ArrayList<StudentOrgModel> mOrgs;
     private StudOrgAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -36,7 +37,6 @@ public class CafesFragment extends Fragment {
         mListView = (ListView)v.findViewById(R.id.stud_org_listview);
         mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setRefreshing(true);
-        //mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
         mOrgs = new ArrayList<>();
         mAdapter = new StudOrgAdapter(getContext(), mOrgs);
         new MyThread().execute();
@@ -53,7 +53,7 @@ public class CafesFragment extends Fragment {
         return v;
     }
 
-    private class MyThread extends AsyncTask<String, Void, String>{
+    private class MyThread extends AsyncTask<Integer, Void, Integer>{
         private Document doc;
         private Element table;
         private Elements rows;
@@ -61,27 +61,34 @@ public class CafesFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            mListView.setAdapter(mAdapter);
-            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        protected void onPostExecute(Integer s) {
             mSwipeRefreshLayout.setRefreshing(false);
+            if(s == 0){
+                Toast.makeText(getContext(), R.string.error,
+                        Toast.LENGTH_LONG).show();
+            }else{
+                mListView.setAdapter(mAdapter);
+            }
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected Integer doInBackground(Integer... integers) {
             try{
                 doc = Jsoup.connect(mLink).get();
                 table = doc.select("table[class = table]").first();
                 rows = table.select("tr");
-                mOrgs.clear();;
+                mOrgs.clear();
                 for(int i = 1; i < rows.size(); i++){
                     Elements el = rows.get(i).select("td");
                     mOrgs.add(new StudentOrgModel(el.get(0).text(), el.get(1).text(), el.get(2).text()));
                 }
+
             }catch (IOException e){
                 e.printStackTrace();
+            }catch (NullPointerException n){
+                return 0;
             }
-            return null;
+            return rows.size();
         }
     }
 }

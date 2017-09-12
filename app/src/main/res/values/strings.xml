@@ -143,9 +143,11 @@
     <string name="clear_cache_exams_toast">Кеш раписания экзаменов очищен</string>
     <string name="author">Автор: Никита Карпунин</string>
     <string name="not_now">Сайт в разработке XD</string>
-    <!-- PlaceHolders for NewsActivity -->
+    <!-- PlaceHolder for NewsActivity -->
     <string name="place_holder">&#8230;</string>
+
     <string name="cache_updated_message">Кэш обновлён</string>
     <string name="day_pref">День</string>
     <string name="week_pref">Неделя</string>
+    <string name="error">"Не удалось загрузить данные. Либо на сайте нет ничего по этому запросу, либо ваше устройство не подключено к сети."</string>
 </resources>

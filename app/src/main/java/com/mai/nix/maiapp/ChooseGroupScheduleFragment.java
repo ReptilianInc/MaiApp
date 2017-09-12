@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.mai.nix.maiapp.model.SubjectBody;
 import com.mai.nix.maiapp.model.SubjectHeader;
 import org.jsoup.Jsoup;
@@ -96,7 +98,7 @@ public class ChooseGroupScheduleFragment extends Fragment {
         return v;
     }
 
-    private class MyThread extends AsyncTask<String, Void, String> {
+    private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Document doc;
         private Elements primaries;
         public MyThread() {
@@ -104,7 +106,8 @@ public class ChooseGroupScheduleFragment extends Fragment {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected Integer doInBackground(Integer... integers) {
+            int size = 0;
             try {
                 doc = Jsoup.connect(mLinkMain.concat(mSelectedGroup).concat(PLUS_WEEK).concat(ChosenWeek)).get();
                 primaries = doc.select("div[class=sc-table sc-table-day]");
@@ -129,19 +132,27 @@ public class ChooseGroupScheduleFragment extends Fragment {
                     header.setChildren(bodies);
                     mGroups.add(header);
                 }
+                size = primaries.size();
             }catch (IOException e){
                 e.printStackTrace();
+            } catch (NullPointerException n){
+                return 0;
             }
-            return null;
+            return size;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            mListView.setAdapter(mAdapter);
-            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        protected void onPostExecute(Integer integer) {
             mSwipeRefreshLayout.setRefreshing(false);
-            for(int i = 0; i < mGroups.size(); i++){
-                mListView.expandGroup(i);
+            if (integer == 0) {
+                Toast.makeText(getContext(), R.string.error,
+                        Toast.LENGTH_LONG).show();
+            } else {
+                mListView.setAdapter(mAdapter);
+                //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                for (int i = 0; i < mGroups.size(); i++) {
+                    mListView.expandGroup(i);
+                }
             }
         }
     }

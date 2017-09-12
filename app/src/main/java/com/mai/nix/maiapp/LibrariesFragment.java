@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
+
 import com.mai.nix.maiapp.model.SportSectionsBodies;
 import com.mai.nix.maiapp.model.SportSectionsHeaders;
 import org.jsoup.Jsoup;
@@ -57,7 +59,7 @@ public class LibrariesFragment extends Fragment {
         return v;
     }
 
-    private class MyThread extends AsyncTask<String, Void, String>{
+    private class MyThread extends AsyncTask<Integer, Void, Integer>{
         private Document doc;
         private Element table;
         private Elements rows;
@@ -66,17 +68,21 @@ public class LibrariesFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            mExpandableListView.setAdapter(mAdapter);
-            //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        protected void onPostExecute(Integer s) {
             mSwipeRefreshLayout.setRefreshing(false);
-            for(int i = 0; i < mHeaders.size(); i++){
-                mExpandableListView.expandGroup(i);
+            if(s == 0){
+                Toast.makeText(getContext(), R.string.error,
+                        Toast.LENGTH_LONG).show();
+            }else {
+                mExpandableListView.setAdapter(mAdapter);
+                for(int i = 0; i < mHeaders.size(); i++){
+                    mExpandableListView.expandGroup(i);
+                }
             }
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected Integer doInBackground(Integer... integers) {
             try{
                 doc = Jsoup.connect(mLink).get();
                 table = doc.select("table[class = table table-bordered table-hover]").first();
@@ -102,8 +108,10 @@ public class LibrariesFragment extends Fragment {
 
             }catch (IOException e){
                 e.printStackTrace();
+            }catch (NullPointerException n){
+                return 0;
             }
-            return null;
+            return rows.size();
         }
     }
 }

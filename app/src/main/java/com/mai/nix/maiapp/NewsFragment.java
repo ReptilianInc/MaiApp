@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.mai.nix.maiapp.model.NewsModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -102,12 +104,12 @@ public class NewsFragment extends Fragment {
         return v;
     }
 
-    private class MyThread extends AsyncTask<String, Void, String>{
+    private class MyThread extends AsyncTask<Integer, Void, Integer>{
         private Elements title1, title2, title3, links;
         private Document doc;
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected Integer doInBackground(Integer... integers) {
             try{
                 doc = Jsoup.connect(mLink).get();
                 title1 = doc.select("div[class = col-md-9] > h5");
@@ -115,22 +117,28 @@ public class NewsFragment extends Fragment {
                 title2 = doc.select("div[class = col-md-9] > p[class = b-date]");
                 title3 = doc.select("img[class = img-responsive]");
                 mModels.clear();
-                int kek = title1.size();
-                for (int i = 0; i < kek; i++){
+                for (int i = 0; i < title1.size(); i++){
                     mModels.add(new NewsModel(title1.get(i).text(), title2.get(i).text(),
                             mLinkMain.concat(title3.get(i).attr("src")), links.get(i).attr("abs:href")));
                     Log.d("suka blyat = ", links.get(i).attr("a[href]"));
                 }
             }catch(IOException e){
                 e.printStackTrace();
+            }catch (NullPointerException n){
+                return 0;
             }
-            return null;
+            return title1.size();
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(Integer integer) {
             mSwipeRefreshLayout.setRefreshing(false);
-            mListView.setAdapter(mAdapter);
+            if(integer == 0){
+                Toast.makeText(getContext(), R.string.error,
+                        Toast.LENGTH_LONG).show();
+            }else {
+                mListView.setAdapter(mAdapter);
+            }
         }
     }
 

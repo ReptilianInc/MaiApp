@@ -85,7 +85,7 @@ public class ExamItemFragment extends Fragment {
         });
         return v;
     }
-    private class MyThread extends AsyncTask<String, Void, String>{
+    private class MyThread extends AsyncTask<Integer, Void, Integer>{
         private Elements date, day, time, title, teacher, room;
         private Document doc;
         private boolean isCaching;
@@ -97,7 +97,8 @@ public class ExamItemFragment extends Fragment {
             isCaching = cache;
         }
         @Override
-        protected String doInBackground(String... strings) {
+        protected Integer doInBackground(Integer... integers) {
+            int size = 0;
             try {
                 doc = Jsoup.connect(mCurrentLink).get();
                 date = doc.select("div[class=sc-table-col sc-day-header sc-gray]");
@@ -107,25 +108,32 @@ public class ExamItemFragment extends Fragment {
                 teacher = doc.select("div[class=sc-table-col sc-item-title]");
                 room = doc.select("div[class=sc-table-col sc-item-location]");
                 mExamModels.clear();
-                int kek = teacher.size();
-                Log.d("teacher.size = ", Integer.toString(kek));
-                for (int i = 0; i < kek; i++){
+                //Log.d("teacher.size = ", Integer.toString(kek));
+                for (int i = 0; i < teacher.size(); i++){
                     ExamModel model = new ExamModel(date.get(i).text(), day.get(i).text(), time.get(i).text(), title.get(i).text(),
                             teacher.get(i).select("span[class=sc-lecturer]").text(), room.get(i).text());
                     mExamModels.add(model);
                     if(isCaching)mDataLab.addExam(model);
                 }
+                size = teacher.size();
             }catch (IOException e){
                 e.printStackTrace();
+            }catch (NullPointerException n){
+                return 0;
             }
-            return null;
+            return size;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            mListView.setAdapter(mAdapter);
+        protected void onPostExecute(Integer integer) {
             mSwipeRefreshLayout.setRefreshing(false);
-            if (isCaching) Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
+            if (integer == 0) {
+                Toast.makeText(getContext(), R.string.error,
+                        Toast.LENGTH_LONG).show();
+            }else{
+                mListView.setAdapter(mAdapter);
+                if (isCaching) Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
+            }
         }
     }
     @Override

@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -76,15 +78,20 @@ public class NewsItemActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            mLongRead.setText(mText);
-            mAuthorView.setText(mAuthor);
-            if(mBitmapGet.length == 0){
-                Glide
-                        .with(getApplicationContext())
-                        .load(ULTRA_LINK.concat(image))
-                        .into(mImageView);
-            }
             mProgressBar.setVisibility(View.GONE);
+            if(s == null){
+                Toast.makeText(NewsItemActivity.this, R.string.error,
+                        Toast.LENGTH_LONG).show();
+            }else{
+                mLongRead.setText(mText);
+                mAuthorView.setText(mAuthor);
+                if(mBitmapGet.length == 0){
+                    Glide
+                            .with(getApplicationContext())
+                            .load(ULTRA_LINK.concat(image))
+                            .into(mImageView);
+                }
+            }
         }
         @Override
         protected String doInBackground(String... strings) {
@@ -103,7 +110,7 @@ public class NewsItemActivity extends AppCompatActivity {
             }catch (IOException e){
                 e.printStackTrace();
             }
-            return null;
+            return author.text();
         }
     }
 

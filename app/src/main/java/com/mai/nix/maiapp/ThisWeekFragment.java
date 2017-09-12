@@ -15,7 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 import com.mai.nix.maiapp.model.SubjectBody;
@@ -111,7 +113,6 @@ public class ThisWeekFragment extends Fragment {
 
             }
         });
-
         mListView = (ExpandableListView)v.findViewById(R.id.exp);
         mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);
@@ -137,7 +138,7 @@ public class ThisWeekFragment extends Fragment {
         });
         return v;
     }
-    private class MyThread extends AsyncTask<String, Void, String> {
+    private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Document doc;
         private Elements primaries;
         private String final_link;
@@ -156,7 +157,8 @@ public class ThisWeekFragment extends Fragment {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected Integer doInBackground(Integer... ints) {
+            int size = 0;
             try {
                 doc = Jsoup.connect(final_link).get();
                 primaries = doc.select("div[class=sc-table sc-table-day]");
@@ -189,20 +191,30 @@ public class ThisWeekFragment extends Fragment {
                         mDataLab.addHeader(header);
                     }
                 }
+                size = primaries.size();
+
             }catch (IOException e){
                 e.printStackTrace();
+            }catch (NullPointerException n){
+                return 0;
             }
-            return null;
+            return size;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            mListView.setAdapter(mAdapter);
+        protected void onPostExecute(Integer i) {
             mSwipeRefreshLayout.setRefreshing(false);
-            for(int i = 0; i < mGroups.size(); i++){
-                mListView.expandGroup(i);
+            if(i == 0){
+                Toast.makeText(getContext(), R.string.error,
+                        Toast.LENGTH_LONG).show();
+            }else{
+                mListView.setAdapter(mAdapter);
+                for(int j = 0; j < mGroups.size(); j++){
+                    mListView.expandGroup(j);
+                }
+                if(isCaching)Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
             }
-            if(isCaching)Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
+
         }
     }
 

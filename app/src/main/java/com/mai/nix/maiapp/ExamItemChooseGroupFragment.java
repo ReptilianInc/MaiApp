@@ -72,7 +72,7 @@ public class ExamItemChooseGroupFragment extends Fragment {
         });
         return v;
     }
-    private class MyThread extends AsyncTask<String, Void, String> {
+    private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Elements date, day, time, title, teacher, room;
         private Document doc;
         public MyThread() {
@@ -80,7 +80,8 @@ public class ExamItemChooseGroupFragment extends Fragment {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected Integer doInBackground(Integer... integers) {
+            int size = 0;
             try {
                 doc = Jsoup.connect(mLink.concat(mSelectedGroup)).get();
                 date = doc.select("div[class=sc-table-col sc-day-header sc-gray]");
@@ -90,20 +91,23 @@ public class ExamItemChooseGroupFragment extends Fragment {
                 teacher = doc.select("div[class=sc-table-col sc-item-title]");
                 room = doc.select("div[class=sc-table-col sc-item-location]");
                 mExamModels.clear();
-                int kek = teacher.size();
-                Log.d("teacher.size = ", Integer.toString(kek));
-                for (int i = 0; i < kek; i++){
+                //int kek = teacher.size();
+                //.d("teacher.size = ", Integer.toString(kek));
+                for (int i = 0; i < teacher.size(); i++){
                     mExamModels.add(new ExamModel(date.get(i).text(), day.get(i).text(), time.get(i).text(), title.get(i).text(),
                             teacher.get(i).select("span[class=sc-lecturer]").text(), room.get(i).text()));
                 }
+                size = teacher.size();
             }catch (IOException e){
                 e.printStackTrace();
+            }catch (NullPointerException n){
+                return 0;
             }
-            return null;
+            return size;
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(Integer integer) {
             mListView.setAdapter(mAdapter);
             //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
             mSwipeRefreshLayout.setRefreshing(false);

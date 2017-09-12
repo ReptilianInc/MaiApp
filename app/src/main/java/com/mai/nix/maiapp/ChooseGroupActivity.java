@@ -66,7 +66,6 @@ public class ChooseGroupActivity extends AppCompatActivity{
         String[] mFacsArray = getResources().getStringArray(R.array.spinner_facs);
         String[] mStagesArray = getResources().getStringArray(R.array.spinner_stages);
         View header = View.inflate(this, R.layout.group_choosing_header, null);
-        //View footer = View.inflate(this, R.layout.group_choosing_button, null);
         mSpinnerFacs = (Spinner)header.findViewById(R.id.spinner_facs);
         mSpinnerStages = (Spinner)header.findViewById(R.id.spinner_stages);
         HintAdapter hintAdapter = new HintAdapter(this, android.R.layout.simple_spinner_item, mFacsArray);
@@ -77,8 +76,6 @@ public class ChooseGroupActivity extends AppCompatActivity{
 
         mSpinnerFacs.setAdapter(hintAdapter);
         mSpinnerStages.setAdapter(hintAdapter2);
-
-        //mButton = (Button)footer.findViewById(R.id.accept_button);
         mSpinnerFacs.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -123,30 +120,34 @@ public class ChooseGroupActivity extends AppCompatActivity{
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mProgressBar = (ProgressBar)findViewById(R.id.progressbar_activity_groups);
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, mGroups);
-        //new MyThread().execute();
         mListView.addHeaderView(header);
-        //mListView.addFooterView(footer);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //mAdapter.switchSelection(i);
                 mCurrentGroup =  mGroups.get(i-1);
             }
         });
     }
 
-    private class MyThread extends AsyncTask<String, Void, String>{
+    private class MyThread extends AsyncTask<Integer, Void, Integer>{
         private Document doc;
         private Elements titles;
         @Override
-        protected void onPostExecute(String s) {
-            mListView.setAdapter(mAdapter);
+        protected void onPostExecute(Integer s) {
             mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            if(s == 0){
+                Toast.makeText(ChooseGroupActivity.this, R.string.error,
+                        Toast.LENGTH_LONG).show();
+            }else{
+                mListView.setAdapter(mAdapter);
+            }
+
+
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected Integer doInBackground(Integer... integers) {
             try {
                 doc = Jsoup.connect(LINK.concat(FAC_CODES[mCurrentFac]).concat(PLUS_COURSE)
                         .concat(Integer.toString(mCurrentStage))).get();
@@ -158,12 +159,14 @@ public class ChooseGroupActivity extends AppCompatActivity{
                 }
             }catch (IOException e){
                 e.printStackTrace();
+            }catch (NullPointerException n){
+                return 0;
             }
 
-            return null;
+            return titles.size();
         }
     }
-    //ебать пиздееееец
+
     private class HintAdapter extends ArrayAdapter<String>{
         Context mContext;
         public HintAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull String[] objects) {

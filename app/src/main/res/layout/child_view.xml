@@ -28,21 +28,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginRight="12dp"
         android:id="@+id/subject_title"
-        android:layout_below="@+id/subject_time"
         tools:text="Стандартизация и сертификация программных продуктов"
         android:textSize="24sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textColor="@color/colorTextSecondary"
+        android:layout_below="@+id/subject_time"
+        android:layout_alignLeft="@+id/subject_teacher"
+        android:layout_alignStart="@+id/subject_teacher"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/subject_teacher"
         android:layout_below="@+id/subject_title"
         tools:text="Молчанова Светлана Ивановна"
+        android:textColor="@color/colorTextSecondary"
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
         android:layout_marginBottom="4dp"/>
@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/subject_room"
         android:layout_below="@+id/subject_teacher"
+        android:textColor="@color/colorTextSecondary"
         tools:text="609 (Орш. А)"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
