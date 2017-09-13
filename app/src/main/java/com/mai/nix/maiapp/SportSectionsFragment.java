@@ -31,6 +31,7 @@ public class SportSectionsFragment extends SimpleExpandableListFragment{
 
         @Override
         protected Integer doInBackground(Integer... integers) {
+            int size = 0;
             try {
                 doc = Jsoup.connect("http://www.mai.ru/life/sport/sections.php").get();
                 table = doc.select("table[class=data-table]").first();
@@ -50,13 +51,13 @@ public class SportSectionsFragment extends SimpleExpandableListFragment{
                         j++;
                     }
                 }
-
+                size = rows.size();
             }catch (IOException e){
                 e.printStackTrace();
             }catch (NullPointerException n){
                 return 0;
             }
-            return rows.size();
+            return size;
         }
 
         @Override

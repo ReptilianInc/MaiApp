@@ -109,6 +109,7 @@ public class NewsFragment extends Fragment {
 
         @Override
         protected Integer doInBackground(Integer... integers) {
+            int size = 0;
             try{
                 doc = Jsoup.connect(mLink).get();
                 title1 = doc.select("div[class = col-md-9] > h5");
@@ -121,12 +122,13 @@ public class NewsFragment extends Fragment {
                             mLinkMain.concat(title3.get(i).attr("src")), links.get(i).attr("abs:href")));
                     Log.d("suka blyat = ", links.get(i).attr("a[href]"));
                 }
+                size = title1.size();
             }catch(IOException e){
                 e.printStackTrace();
             }catch (NullPointerException n){
                 return 0;
             }
-            return title1.size();
+            return size;
         }
 
         @Override

@@ -29,6 +29,7 @@ public class StudentOrgsFragment extends SimpleListFragment {
 
         @Override
         protected Integer doInBackground(Integer... integers) {
+            int size = 0;
             try{
                 doc = Jsoup.connect("http://www.mai.ru/life/join/index.php").get();
                 table = doc.select("table[class=data-table]").first();
@@ -40,13 +41,13 @@ public class StudentOrgsFragment extends SimpleListFragment {
                             cols.get(j+2).text()));
                     i++;
                 }
-
+                size = rows.size();
             }catch (IOException e){
                 e.printStackTrace();
             }catch (NullPointerException n){
                 return 0;
             }
-            return rows.size();
+            return size;
         }
 
         @Override

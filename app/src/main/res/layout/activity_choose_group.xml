@@ -6,15 +6,14 @@
     android:layout_height="match_parent"
     tools:context="com.mai.nix.maiapp.ChooseGroupActivity"
     android:background="@color/colorPrimary">
-<ListView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/listview">
-</ListView>
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:id="@+id/progressbar_activity_groups"
-        android:visibility="invisible"/>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swiperefresh_groups">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/listview">
+        </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

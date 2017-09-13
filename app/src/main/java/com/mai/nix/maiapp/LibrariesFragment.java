@@ -44,6 +44,7 @@ public class LibrariesFragment extends SimpleExpandableListFragment {
 
         @Override
         protected Integer doInBackground(Integer... integers) {
+            int size = 0;
             try{
                 doc = Jsoup.connect("http://mai.ru/common/campus/library/").get();
                 table = doc.select("table[class = table table-bordered table-hover]").first();
@@ -66,13 +67,13 @@ public class LibrariesFragment extends SimpleExpandableListFragment {
                         j++;
                     }
                 }
-
+                size = rows.size();
             }catch (IOException e){
                 e.printStackTrace();
             }catch (NullPointerException n){
                 return 0;
             }
-            return rows.size();
+            return size;
         }
     }
 }

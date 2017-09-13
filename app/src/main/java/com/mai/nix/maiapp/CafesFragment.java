@@ -40,6 +40,7 @@ public class CafesFragment extends SimpleListFragment {
 
         @Override
         protected Integer doInBackground(Integer... integers) {
+            int size = 0;
             try{
                 doc = Jsoup.connect("http://mai.ru/common/campus/cafeteria/").get();
                 table = doc.select("table[class = table]").first();
@@ -49,13 +50,13 @@ public class CafesFragment extends SimpleListFragment {
                     Elements el = rows.get(i).select("td");
                     mOrgs.add(new StudentOrgModel(el.get(0).text(), el.get(1).text(), el.get(2).text()));
                 }
-
+                size = rows.size();
             }catch (IOException e){
                 e.printStackTrace();
             }catch (NullPointerException n){
                 return 0;
             }
-            return rows.size();
+            return size;
         }
     }
 }

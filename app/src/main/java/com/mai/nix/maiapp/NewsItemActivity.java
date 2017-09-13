@@ -6,15 +6,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -32,8 +31,8 @@ public class NewsItemActivity extends AppCompatActivity {
     private String mId, mTitleGet, mDateGet;
     private byte[] mBitmapGet;
     private TextView mTitleView, mLongRead, mAuthorView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private ImageView mImageView;
-    private ProgressBar mProgressBar;
     private Toolbar mToolbar;
     private String mText, mAuthor;
     public static Intent newIntent(Context context, String id, String date, String title, byte[] bytes){
@@ -56,8 +55,8 @@ public class NewsItemActivity extends AppCompatActivity {
         mLongRead = (TextView)findViewById(R.id.news_text);
         mAuthorView = (TextView)findViewById(R.id.author_view);
         mImageView = (ImageView)findViewById(R.id.image_view);
-        mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
         mToolbar = (Toolbar)findViewById(R.id.news_toolbar);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.news_item_swiperefresh);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -68,7 +67,12 @@ public class NewsItemActivity extends AppCompatActivity {
             mImageView.setImageBitmap(bmp);
         }
         new MyThread().execute();
-
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new MyThread().execute();
+            }
+        });
     }
     private class MyThread extends AsyncTask<String, Integer, String>{
         private Element text, author;
@@ -76,8 +80,14 @@ public class NewsItemActivity extends AppCompatActivity {
         private String image;
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+
+        @Override
         protected void onPostExecute(String s) {
-            mProgressBar.setVisibility(View.GONE);
+            mSwipeRefreshLayout.setRefreshing(false);
             if(s == null){
                 Toast.makeText(NewsItemActivity.this, R.string.error,
                         Toast.LENGTH_LONG).show();
@@ -101,15 +111,14 @@ public class NewsItemActivity extends AppCompatActivity {
                 image = doc.select("img[class = img-responsive hidden-xs pull-left j-marg-right-lg j-marg-bottom]")
                         .attr("src");
                 mText = text.text();
-                if(author != null){
-                    mAuthor = author.text();
-                }else{
-                    mAuthor = getResources().getString(R.string.place_holder);
-                }
+                mAuthor = author.text();
             }catch (IOException e){
                 e.printStackTrace();
+            }catch (NullPointerException n){
+                mAuthor = getResources().getString(R.string.place_holder);
+                return null;
             }
-            return author.text();
+            return mText;
         }
     }
 

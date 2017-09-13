@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,10 +34,10 @@ public class ChooseGroupActivity extends AppCompatActivity{
     private ArrayAdapter<String> mAdapter;
     private ArrayList<String> mGroups;
     private Spinner mSpinnerFacs, mSpinnerStages;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private String mCurrentGroup;
     public static final String EXTRA_GROUP = "com.mai.nix.group_result";
     private static final String MODE = "com.mai.nix.maiapp.mode";
-    private ProgressBar mProgressBar;
     private String[] FAC_CODES = {"150", "153", "157", "149", "155", "160", "154", "151",
             "152", "146", "161", "165", "164", "163", "162"};
     private final String LINK = "http://mai.ru/education/schedule/?department=";
@@ -63,6 +63,7 @@ public class ChooseGroupActivity extends AppCompatActivity{
         View header = View.inflate(this, R.layout.group_choosing_header, null);
         mSpinnerFacs = (Spinner)header.findViewById(R.id.spinner_facs);
         mSpinnerStages = (Spinner)header.findViewById(R.id.spinner_stages);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swiperefresh_groups);
         HintAdapter hintAdapter = new HintAdapter(this, android.R.layout.simple_spinner_item, mFacsArray);
         hintAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -78,9 +79,6 @@ public class ChooseGroupActivity extends AppCompatActivity{
                     mCurrentFac = i-1;
                 }
                 if(mCurrentStage != -1){
-                    mGroups.clear();
-                    mAdapter.notifyDataSetChanged();
-                    mProgressBar.setVisibility(ProgressBar.VISIBLE);
                     new MyThread().execute();
                 }
 
@@ -98,9 +96,6 @@ public class ChooseGroupActivity extends AppCompatActivity{
                     mCurrentStage = i;
                 }
                 if(mCurrentFac != -1){
-                    mGroups.clear();
-                    mAdapter.notifyDataSetChanged();
-                    mProgressBar.setVisibility(ProgressBar.VISIBLE);
                     new MyThread().execute();
                 }
 
@@ -113,7 +108,6 @@ public class ChooseGroupActivity extends AppCompatActivity{
         });
         mListView = (ListView)findViewById(R.id.listview);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mProgressBar = (ProgressBar)findViewById(R.id.progressbar_activity_groups);
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, mGroups);
         mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);
@@ -123,14 +117,27 @@ public class ChooseGroupActivity extends AppCompatActivity{
                 mCurrentGroup =  mGroups.get(i-1);
             }
         });
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new MyThread().execute();
+            }
+        });
     }
 
     private class MyThread extends AsyncTask<Integer, Void, Integer>{
         private Document doc;
         private Elements titles;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+
         @Override
         protected void onPostExecute(Integer s) {
-            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
             if(s == 0){
                 Toast.makeText(ChooseGroupActivity.this, R.string.error,
                         Toast.LENGTH_LONG).show();
@@ -143,22 +150,25 @@ public class ChooseGroupActivity extends AppCompatActivity{
 
         @Override
         protected Integer doInBackground(Integer... integers) {
+            int size = 0;
             try {
                 doc = Jsoup.connect(LINK.concat(FAC_CODES[mCurrentFac]).concat(PLUS_COURSE)
                         .concat(Integer.toString(mCurrentStage))).get();
+                mGroups.clear();
                 Log.d("link = ", LINK.concat(FAC_CODES[mCurrentFac]).concat(PLUS_COURSE)
                         .concat(Integer.toString(mCurrentStage)));
                 titles = doc.select("a[class = sc-group-item]");
                 for(int i = 0; i < titles.size(); i++){
                     mGroups.add(titles.get(i).text());
                 }
+                size = titles.size();
             }catch (IOException e){
                 e.printStackTrace();
             }catch (NullPointerException n){
                 return 0;
             }
 
-            return titles.size();
+            return size;
         }
     }
 
