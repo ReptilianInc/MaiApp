@@ -111,12 +111,13 @@ public class NewsItemActivity extends AppCompatActivity {
                 image = doc.select("img[class = img-responsive hidden-xs pull-left j-marg-right-lg j-marg-bottom]")
                         .attr("src");
                 mText = text.text();
-                mAuthor = author.text();
+                if(author != null){
+                    mAuthor = author.text();
+                }else{
+                    mAuthor = getResources().getString(R.string.place_holder);
+                }
             }catch (IOException e){
                 e.printStackTrace();
-            }catch (NullPointerException n){
-                mAuthor = getResources().getString(R.string.place_holder);
-                return null;
             }
             return mText;
         }
