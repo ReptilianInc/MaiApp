@@ -120,7 +120,11 @@ public class ChooseGroupActivity extends AppCompatActivity{
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new MyThread().execute();
+                if(mCurrentStage != -1 && mCurrentFac != -1) {
+                    new MyThread().execute();
+                }else{
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }

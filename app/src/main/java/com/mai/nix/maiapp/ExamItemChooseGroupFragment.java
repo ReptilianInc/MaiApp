@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.mai.nix.maiapp.model.ExamModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -56,9 +58,10 @@ public class ExamItemChooseGroupFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(!mSelectedGroup.isEmpty()){
-                    mSwipeRefreshLayout.setRefreshing(true);
+                if(mSelectedGroup != null){
                     new MyThread().execute();
+                }else{
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
@@ -69,6 +72,12 @@ public class ExamItemChooseGroupFragment extends Fragment {
         private Document doc;
         public MyThread() {
             super();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mSwipeRefreshLayout.setRefreshing(true);
         }
 
         @Override
@@ -98,8 +107,13 @@ public class ExamItemChooseGroupFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Integer integer) {
-            mListView.setAdapter(mAdapter);
             mSwipeRefreshLayout.setRefreshing(false);
+            if (integer == 0) {
+                Toast.makeText(getContext(), R.string.error,
+                        Toast.LENGTH_LONG).show();
+            }else{
+                mListView.setAdapter(mAdapter);
+            }
         }
     }
 

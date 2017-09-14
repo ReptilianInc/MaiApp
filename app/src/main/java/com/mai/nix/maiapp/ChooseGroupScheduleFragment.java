@@ -81,8 +81,12 @@ public class ChooseGroupScheduleFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(true);
-                new MyThread().execute();
+                if(mSelectedGroup != null){
+                    new MyThread().execute();
+                }else{
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+
             }
         });
         return v;
@@ -132,6 +136,12 @@ public class ChooseGroupScheduleFragment extends Fragment {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+
+        @Override
         protected void onPostExecute(Integer integer) {
             mSwipeRefreshLayout.setRefreshing(false);
             if (integer == 0) {
@@ -139,7 +149,6 @@ public class ChooseGroupScheduleFragment extends Fragment {
                         Toast.LENGTH_LONG).show();
             } else {
                 mListView.setAdapter(mAdapter);
-                //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 for (int i = 0; i < mGroups.size(); i++) {
                     mListView.expandGroup(i);
                 }

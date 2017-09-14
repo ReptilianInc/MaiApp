@@ -30,7 +30,7 @@
 
     </style>
 
-    <!-- Experimental Shit!!! -->
+    <!-- Основная тема для тестирования -->
     <style name="AppThemeTest" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimarySec</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkSec</item>

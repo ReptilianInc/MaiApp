@@ -35,8 +35,6 @@ public abstract class SimpleListFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mOrgs.clear();
-                mAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(true);
                 releaseThread();
             }

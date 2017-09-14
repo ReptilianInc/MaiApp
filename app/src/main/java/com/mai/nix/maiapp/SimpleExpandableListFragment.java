@@ -38,8 +38,6 @@ public abstract class SimpleExpandableListFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mHeaders.clear();
-                mAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(true);
                 releaseThread();
             }

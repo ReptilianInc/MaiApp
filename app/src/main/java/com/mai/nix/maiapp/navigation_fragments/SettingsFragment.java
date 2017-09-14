@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.mai.nix.maiapp.ChooseGroupActivity;
+import com.mai.nix.maiapp.DataLab;
 import com.mai.nix.maiapp.R;
 import com.mai.nix.maiapp.UserSettings;
 import com.mai.nix.maiapp.WebViewActivity;
@@ -33,6 +34,7 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
     private Preference mDev;
     private static final int REQUEST_CODE_GROUP = 0;
     private String mChoosenGroup;
+    private DataLab mDataLab;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,7 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         UserSettings.initialize(getActivity());
+        mDataLab = DataLab.get(getActivity());
         mGroupPreference = getPreferenceManager().findPreference("pref_group");
         mClearSubjectsCache = getPreferenceScreen().findPreference("clear_cache_subj");
         mClearExamsCache = getPreferenceScreen().findPreference("clear_cache_ex");
@@ -77,9 +80,11 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
                 startActivityForResult(i, REQUEST_CODE_GROUP);
                 break;
             case "clear_cache_subj":
+                mDataLab.clearSubjectsCache();
                 Toast.makeText(getActivity(), R.string.clear_cache_subj_toast, Toast.LENGTH_SHORT).show();
                 break;
             case "clear_cache_ex":
+                mDataLab.clearExamsCache();
                 Toast.makeText(getActivity(), R.string.clear_cache_exams_toast, Toast.LENGTH_SHORT).show();
                 break;
             case "about":

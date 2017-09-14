@@ -80,8 +80,6 @@ public class NewsFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mModels.clear();
-                mAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(true);
                 new MyThread().execute();
             }

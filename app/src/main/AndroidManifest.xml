@@ -45,7 +45,7 @@
             android:name=".NewsItemActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/place_holder"
-            android:theme="@style/AppThemeTest">
+            android:theme="@style/AppThemeSecondary.NoActionBar">
         </activity>
         <activity android:name=".WebViewActivity"
                   android:configChanges="orientation|screenSize|keyboardHidden"
