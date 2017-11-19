@@ -12,6 +12,3 @@
 
 [Сайт университета МАИ](https://mai.ru/)
 ## Скриншоты
-![Alt Text](https://lh3.googleusercontent.com/uEHDIkkqQhjqFNbMuSYeZjUY6_pvtxxt1msSmAMrOowsRI0FbPYpGFAuWwDlwcMfgg=h310-rw)
-![Alt Text](https://lh3.googleusercontent.com/qH5wl12LQayileMJaVsN600uAL9BWdVUBQo-QcphcpD69cC70K4g7qNQm2lnNxaELWY=h310-rw)
-![Alt Text](https://lh3.googleusercontent.com/NkfV2j34AhnE6sKSXoB2CWHZmerj5T_s3vrBYcFy1gs8xI_opkAG5gDZHTs3SChFhw=h310-rw)
