@@ -57,7 +57,6 @@ public class ExamItemFragment extends Fragment {
         mCurrentLink = mLink.concat(mCurrentGroup);
         mDataLab = DataLab.get(getContext());
         mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
-        mSwipeRefreshLayout.setRefreshing(true);
         mExamModels = new ArrayList<>();
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
         mAdapter = new ExamAdapter(getContext(), mExamModels);
@@ -72,6 +71,7 @@ public class ExamItemFragment extends Fragment {
         }else{
             mExamModels.addAll(mDataLab.getExams());
             mAdapter.notifyDataSetChanged();
+            mSwipeRefreshLayout.setRefreshing(false);
         }
         mListView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -132,6 +132,11 @@ public class ExamItemFragment extends Fragment {
                 mListView.setAdapter(mAdapter);
                 if (isCaching) Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
             }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mSwipeRefreshLayout.setRefreshing(true);
         }
     }
     @Override

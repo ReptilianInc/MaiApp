@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">MAI</string>
+    <string name="title">МАИ</string>
+    <string name="loading">Загрузка&#8230;</string>
     <!-- navigation menu -->
     <string name="menu_schedule">Расписание пар</string>
     <string name="exam_schedule">Расписание сессии</string>
