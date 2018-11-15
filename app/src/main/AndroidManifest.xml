@@ -28,7 +28,6 @@
             android:name=".ChooseGroupActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/choose_group_activity_title"
-            android:noHistory="true"
             android:theme="@style/AppThemeSecondary">
         </activity>
         <activity

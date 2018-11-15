@@ -228,6 +228,7 @@ public class ChooseGroupActivity extends AppCompatActivity{
                 UserSettings.setGroup(this, mCurrentGroup);
                 Intent i = new Intent(ChooseGroupActivity.this, MainActivity.class);
                 startActivity(i);
+                finish();
             }else{
                 setGroupResult(mCurrentGroup);
                 this.finish();
