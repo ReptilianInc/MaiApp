@@ -31,7 +31,6 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
     private ListPreference mLinks;
     private Preference mAbout;
     private Preference mMAI;
-    private Preference mDev;
     private static final int REQUEST_CODE_GROUP = 0;
     private String mChoosenGroup;
     private DataLab mDataLab;
@@ -59,13 +58,11 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
 
         mAbout = getPreferenceScreen().findPreference("about");
         mMAI = getPreferenceScreen().findPreference("go_mai");
-        mDev = getPreferenceScreen().findPreference("go_dev");
         mGroupPreference.setOnPreferenceClickListener(this);
         mClearSubjectsCache.setOnPreferenceClickListener(this);
         mClearExamsCache.setOnPreferenceClickListener(this);
         mAbout.setOnPreferenceClickListener(this);
         mMAI.setOnPreferenceClickListener(this);
-        mDev.setOnPreferenceClickListener(this);
         mFregSubjects.setOnPreferenceClickListener(this);
         mFregExams.setOnPreferenceClickListener(this);
         mLinks.setOnPreferenceClickListener(this);
@@ -99,9 +96,6 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
                     Intent intent = WebViewActivity.newInstance(getActivity(), uri);
                     startActivity(intent);
                 }
-                break;
-            case "go_dev":
-                Toast.makeText(getActivity(), R.string.not_now, Toast.LENGTH_SHORT).show();
                 break;
         }
         return true;

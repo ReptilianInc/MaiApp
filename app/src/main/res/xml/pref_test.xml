@@ -51,10 +51,6 @@
             android:summary="@string/title_summary">
         </Preference>
         <Preference
-            android:title="@string/site_dev"
-            android:key="go_dev">
-        </Preference>
-        <Preference
             android:key="go_mai"
             android:title="@string/site_mai">
         </Preference>
