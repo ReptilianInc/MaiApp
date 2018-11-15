@@ -99,19 +99,20 @@
     <string name="spinner_stage_title">Выберите курс</string>
     <string-array name="spinner_facs">
         <item>Выберите факультет</item>
-        <item>Факультет 1</item>
-        <item>Факультет 2</item>
-        <item>Факультет 3</item>
-        <item>Факультет 4</item>
-        <item>ИНЖЭКИН</item>
-        <item>Факультет 6</item>
-        <item>Факультет 7</item>
-        <item>Факультет 8</item>
-        <item>Факультет 9</item>
-        <item>Факультет 10</item>
-        <item>ФИЯ</item>
-        <item>Институт №1</item>
+        <item>Факультет №1</item>
         <item>Институт №2</item>
+        <item>Институт №3</item>
+        <item>Институт №4</item>
+        <item>ИНЖЭКИН</item>
+        <item>Институт №6</item>
+        <item>Факультет №7</item>
+        <item>Факультет №8</item>
+        <item>Институт №9</item>
+        <item>Институт №10</item>
+        <item>Институт №11</item>
+        <item>Институт №12</item>
+        <item>Факультет \"ФИЯ\"</item>
+        <item>ИЗО</item>
     </string-array>
     <string-array name="spinner_stages">
         <item>Выберите курс</item>

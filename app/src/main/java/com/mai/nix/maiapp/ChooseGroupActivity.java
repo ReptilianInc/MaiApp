@@ -39,7 +39,7 @@ public class ChooseGroupActivity extends AppCompatActivity{
     public static final String EXTRA_GROUP = "com.mai.nix.group_result";
     private static final String MODE = "com.mai.nix.maiapp.mode";
     private String[] FAC_CODES = {"150", "153", "157", "149", "155", "160", "154", "151",
-            "152", "146", "161", "165", "164", "163", "162"};
+            "152", "146", "165", "164", "168", "169"};
     private final String LINK = "http://mai.ru/education/schedule/?department=";
     private final String PLUS_COURSE = "&course=";
     private int mCurrentFac = -1, mCurrentStage = -1;
@@ -148,31 +148,29 @@ public class ChooseGroupActivity extends AppCompatActivity{
             }else{
                 mListView.setAdapter(mAdapter);
             }
-
-
         }
 
         @Override
         protected Integer doInBackground(Integer... integers) {
-            int size = 0;
             try {
                 doc = Jsoup.connect(LINK.concat(FAC_CODES[mCurrentFac]).concat(PLUS_COURSE)
                         .concat(Integer.toString(mCurrentStage))).get();
-                mGroups.clear();
                 Log.d("link = ", LINK.concat(FAC_CODES[mCurrentFac]).concat(PLUS_COURSE)
                         .concat(Integer.toString(mCurrentStage)));
                 titles = doc.select("a[class = sc-group-item]");
-                for(int i = 0; i < titles.size(); i++){
-                    mGroups.add(titles.get(i).text());
+                if (titles.size() > 0){
+                    mGroups.clear();
+                    for(int i = 0; i < titles.size(); i++){
+                        mGroups.add(titles.get(i).text());
+                    }
                 }
-                size = titles.size();
             }catch (IOException e){
                 e.printStackTrace();
             }catch (NullPointerException n){
                 return 0;
             }
 
-            return size;
+            return titles.size();
         }
     }
 
