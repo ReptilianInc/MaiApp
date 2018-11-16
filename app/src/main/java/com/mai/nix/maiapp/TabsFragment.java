@@ -29,6 +29,7 @@ public abstract class TabsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.test_tabs, container, false);
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
+        viewPager.setOffscreenPageLimit(3);
         setupViewPager(viewPager);
         tabLayout = (TabLayout) v.findViewById(R.id.tabs);
         tabLayout.post(new Runnable() {
