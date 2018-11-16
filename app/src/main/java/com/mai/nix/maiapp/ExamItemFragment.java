@@ -60,18 +60,21 @@ public class ExamItemFragment extends Fragment {
         mExamModels = new ArrayList<>();
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
         mAdapter = new ExamAdapter(getContext(), mExamModels);
-        if(mDataLab.isExamsTableEmpty()){
-            new MyThread(true).execute();
-        }else if(UserSettings.getExamsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
-                UserSettings.getDay(getContext()) != mCurrentDay){
-            new MyThread(true).execute();
-        }else if(UserSettings.getExamsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
-                UserSettings.getWeek(getContext()) != mCurrentWeek){
-            new MyThread(true).execute();
-        }else{
-            mExamModels.addAll(mDataLab.getExams());
-            mAdapter.notifyDataSetChanged();
-            mSwipeRefreshLayout.setRefreshing(false);
+        if(!((MainActivity) getActivity()).examsNeedToUpdate) {
+            if (mDataLab.isExamsTableEmpty()) {
+                new MyThread(true).execute();
+            } else if (UserSettings.getExamsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
+                    UserSettings.getDay(getContext()) != mCurrentDay) {
+                new MyThread(true).execute();
+            }
+            if (UserSettings.getExamsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
+                    UserSettings.getWeek(getContext()) != mCurrentWeek) {
+                new MyThread(true).execute();
+            } else {
+                mExamModels.addAll(mDataLab.getExams());
+                mAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
         }
         mListView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -142,7 +145,11 @@ public class ExamItemFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mCurrentGroup = UserSettings.getGroup(getContext());
+        if(((MainActivity) getActivity()).examsNeedToUpdate) {
+            mCurrentGroup = UserSettings.getGroup(getContext());
+            new MyThread(true).execute();
+            ((MainActivity) getActivity()).examsNeedToUpdate = false;
+        }
     }
 
     @Override

@@ -158,6 +158,7 @@ public class ChooseGroupActivity extends AppCompatActivity{
                 Log.d("link = ", LINK.concat(FAC_CODES[mCurrentFac]).concat(PLUS_COURSE)
                         .concat(Integer.toString(mCurrentStage)));
                 titles = doc.select("a[class = sc-group-item]");
+                if(titles == null) return 0;
                 if (titles.size() > 0){
                     mGroups.clear();
                     for(int i = 0; i < titles.size(); i++){
@@ -166,11 +167,9 @@ public class ChooseGroupActivity extends AppCompatActivity{
                 }
             }catch (IOException e){
                 e.printStackTrace();
-            }catch (NullPointerException n){
-                return 0;
             }
 
-            return titles.size();
+            if (titles != null) return titles.size(); else return 0;
         }
     }
 

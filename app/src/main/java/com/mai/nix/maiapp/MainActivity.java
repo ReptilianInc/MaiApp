@@ -1,5 +1,6 @@
 package com.mai.nix.maiapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,10 +20,15 @@ import com.mai.nix.maiapp.navigation_fragments.PressCenterFragment;
 import com.mai.nix.maiapp.navigation_fragments.ScheduleFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final int UPDATE_SCHEDULE = 69;
+
     private DrawerLayout mDrawerLayout;
     private FragmentManager mFragmentManager;
     private Fragment mFragment;
     private Toolbar mToolbar;
+    public boolean subjectsNeedToUpdate = false;
+    public boolean examsNeedToUpdate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case R.id.menu_settings:
                                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                                startActivity(intent);
+                                startActivityForResult(intent, UPDATE_SCHEDULE);
                                 break;
                         }
 
@@ -88,5 +94,14 @@ public class MainActivity extends AppCompatActivity {
         mFragmentManager.beginTransaction()
                 .add(R.id.center_view, mFragment)
                 .commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK && requestCode == MainActivity.UPDATE_SCHEDULE){
+            subjectsNeedToUpdate = true;
+            examsNeedToUpdate = true;
+        }
     }
 }

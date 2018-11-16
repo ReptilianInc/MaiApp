@@ -71,38 +71,40 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i != 0){
-                    mWeek = Integer.toString(i);
-                    mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
-                    new MyThread(mCurrentLink, false).execute();
-                }else if(mDataLab.isSubjectsTablesEmpty()){
-                    mCurrentLink = mLink.concat(mCurrentGroup);
-                    new MyThread(mCurrentLink, true).execute();
-                }else if(UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
-                        UserSettings.getDay(getContext()) != mCurrentDay){
-                    UserSettings.setDay(getContext(), mCurrentDay);
-                    mDataLab.clearSubjectsCache();
-                    mCurrentLink = mLink.concat(mCurrentGroup);
-                    new MyThread(mCurrentLink, true).execute();
-                }else if(UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
-                        UserSettings.getWeek(getContext()) != mCurrentWeek){
-                    UserSettings.setWeek(getContext(), mCurrentWeek);
-                    mDataLab.clearSubjectsCache();
-                    mCurrentLink = mLink.concat(mCurrentGroup);
-                    new MyThread(mCurrentLink, true).execute();
-                }else{
-                    mGroups.clear();
-                    mCurrentLink = mLink.concat(mCurrentGroup);
-                    ArrayList<SubjectHeader> headers = new ArrayList<>();
-                    headers.addAll(mDataLab.getHeaders());
-                    for(SubjectHeader header : headers){
-                        header.setChildren(mDataLab.getBodies(header.getUuid()));
+                if(!((MainActivity) getActivity()).subjectsNeedToUpdate){
+                    if (i != 0) {
+                        mWeek = Integer.toString(i);
+                        mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
+                        new MyThread(mCurrentLink, false).execute();
+                    } else if (mDataLab.isSubjectsTablesEmpty()) {
+                        mCurrentLink = mLink.concat(mCurrentGroup);
+                        new MyThread(mCurrentLink, true).execute();
+                    } else if (UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
+                            UserSettings.getDay(getContext()) != mCurrentDay) {
+                        UserSettings.setDay(getContext(), mCurrentDay);
+                        mDataLab.clearSubjectsCache();
+                        mCurrentLink = mLink.concat(mCurrentGroup);
+                        new MyThread(mCurrentLink, true).execute();
+                    } else if (UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
+                            UserSettings.getWeek(getContext()) != mCurrentWeek) {
+                        UserSettings.setWeek(getContext(), mCurrentWeek);
+                        mDataLab.clearSubjectsCache();
+                        mCurrentLink = mLink.concat(mCurrentGroup);
+                        new MyThread(mCurrentLink, true).execute();
+                    } else {
+                        mGroups.clear();
+                        mCurrentLink = mLink.concat(mCurrentGroup);
+                        ArrayList<SubjectHeader> headers = new ArrayList<>();
+                        headers.addAll(mDataLab.getHeaders());
+                        for (SubjectHeader header : headers) {
+                            header.setChildren(mDataLab.getBodies(header.getUuid()));
+                        }
+                        mGroups.addAll(headers);
+                        for (int j = 0; j < mGroups.size(); j++) {
+                            mListView.expandGroup(j);
+                        }
+                        mAdapter.notifyDataSetChanged();
                     }
-                    mGroups.addAll(headers);
-                    for(int j = 0; j < mGroups.size(); j++){
-                        mListView.expandGroup(j);
-                    }
-                    mAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -219,7 +221,12 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mCurrentGroup = UserSettings.getGroup(getContext());
+        if (((MainActivity)getActivity()).subjectsNeedToUpdate){
+            mCurrentGroup = UserSettings.getGroup(getContext());
+            mCurrentLink = mLink.concat(mCurrentGroup);
+            new MyThread(mCurrentLink, true).execute();
+            ((MainActivity)getActivity()).subjectsNeedToUpdate = false;
+        }
     }
 
     @Override

@@ -130,6 +130,7 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
             mChoosenGroup = data.getStringExtra(ChooseGroupActivity.EXTRA_GROUP);
             UserSettings.setGroup(getActivity(), mChoosenGroup);
             mGroupPreference.setSummary(mChoosenGroup);
+            getActivity().setResult(Activity.RESULT_OK);
         }
     }
 }
