@@ -22,7 +22,8 @@ import com.mai.nix.maiapp.WebViewActivity;
  * Created by Nix on 03.08.2017.
  */
 
-public class SettingsFragment extends PreferenceFragment implements android.preference.Preference.OnPreferenceClickListener {
+public class SettingsFragment extends PreferenceFragment implements android.preference.Preference.OnPreferenceClickListener,
+        Preference.OnPreferenceChangeListener{
     private Preference mGroupPreference;
     private Preference mClearSubjectsCache;
     private Preference mClearExamsCache;
@@ -63,9 +64,9 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
         mClearExamsCache.setOnPreferenceClickListener(this);
         mAbout.setOnPreferenceClickListener(this);
         mMAI.setOnPreferenceClickListener(this);
-        mFregSubjects.setOnPreferenceClickListener(this);
-        mFregExams.setOnPreferenceClickListener(this);
-        mLinks.setOnPreferenceClickListener(this);
+        mFregSubjects.setOnPreferenceChangeListener(this);
+        mFregExams.setOnPreferenceChangeListener(this);
+        mLinks.setOnPreferenceChangeListener(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -102,6 +103,22 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
     }
 
     @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        switch (preference.getKey()) {
+            case "links":
+                UserSettings.setLinksPreference(getActivity(), (String) newValue);
+                break;
+            case "freg":
+                UserSettings.setSubjectsUpdateFrequency(getActivity(), (String) newValue);
+                break;
+            case "freg_ex":
+                UserSettings.setExamsUpdateFrequency(getActivity(), (String) newValue);
+                break;
+        }
+        return true;
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
             return;
@@ -114,13 +131,5 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
             UserSettings.setGroup(getActivity(), mChoosenGroup);
             mGroupPreference.setSummary(mChoosenGroup);
         }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        UserSettings.setLinksPreference(getActivity(), mLinks.getValue());
-        UserSettings.setSubjectsUpdateFrequency(getActivity(), mFregSubjects.getValue());
-        UserSettings.setExamsUpdateFrequency(getActivity(), mFregExams.getValue());
     }
 }
