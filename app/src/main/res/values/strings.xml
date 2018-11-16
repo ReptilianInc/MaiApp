@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">МАИ</string>
-    <string name="title">МАИ</string>
-    <string name="loading">Загрузка&#8230;</string>
     <!-- navigation menu -->
     <string name="menu_schedule">Расписание пар</string>
     <string name="exam_schedule">Расписание сессии</string>
@@ -15,7 +13,6 @@
     <string name="user_settings">Настройки</string>
     <string name="about">О программе</string>
     <string name="go_to_MAI">Перейти на сайт МАИ</string>
-    <string name="go_to_dev">Перейти на сайт разработчика</string>
 
     <string name="title_activity_settings">Настройки</string>
     <!-- Settings -->
@@ -27,9 +24,8 @@
     <string name="freg_cache">Обновление кэша расписания пар</string>
     <string name="freg_cache_exams">Обновление кэша расписания экзаменов</string>
     <string name="title_app">Неофициальное приложение МАИ</string>
-    <string name="title_summary">Версия 0.7.4(beta) Сборка от 15.11.2018</string>
+    <string name="title_summary">Версия 0.7.4 Сборка от 17.11.2018</string>
     <string name="site_mai">Перейти на сайт МАИ</string>
-    <string name="site_dev">Перейти на сайт разработчика</string>
 
     <string-array name="freg_array">
         <item>Каждый день</item>
@@ -131,7 +127,6 @@
     <string name="clear_cache_subj_toast">Кеш раписания пар очищен</string>
     <string name="clear_cache_exams_toast">Кеш раписания экзаменов очищен</string>
     <string name="author">Автор: Никита Карпунин</string>
-    <string name="not_now">Сайт в разработке XD</string>
     <!-- PlaceHolder for NewsActivity -->
     <string name="place_holder">&#8230;</string>
 
