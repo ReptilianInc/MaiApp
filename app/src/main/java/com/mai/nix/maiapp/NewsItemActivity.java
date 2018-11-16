@@ -126,7 +126,7 @@ public class NewsItemActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.go_web_menu, menu);
+        inflater.inflate(R.menu.share_menu, menu);
         return true;
     }
 
@@ -136,16 +136,12 @@ public class NewsItemActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.go_web_in_frags:
-                Uri uri = Uri.parse(mId);
-                if(UserSettings.getLinksPreference(this).equals(UserSettings.ONLY_BROWSER)){
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                }else{
-                    Intent intent = WebViewActivity.newInstance(this, uri);
-                    startActivity(intent);
-                }
-                break;
+            case R.id.share_button:
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_TEXT, mId);
+                i.putExtra(Intent.EXTRA_SUBJECT, mTitleGet);
+                startActivity(Intent.createChooser(i, getString(R.string.share_news_link)));
         }
         return super.onOptionsItemSelected(item);
     }

@@ -52,7 +52,7 @@
     <string name="about_cath">О программе</string>
 
     <string-array name="spinner_items">
-        <item>Текущая неделя(кэш)</item>
+        <item>Текущая неделя (кэш)</item>
         <item>1 неделя</item>
         <item>2 неделя</item>
         <item>3 неделя</item>
@@ -120,7 +120,10 @@
         <item>6 курс</item>
     </string-array>
     <string name="choose_group_accept">ГОТОВО</string>
-    <string name="go_web_accept">Посмотреть на сайте</string>
+    <string name="share_link_hint">Поделиться</string>
+    <string name="share_exam_link">Поделиться расписанием экзаменов</string>
+    <string name="share_subjects_link">Поделиться расписанием пар</string>
+    <string name="share_news_link">Поделиться новостью</string>
     <string name="exception_group_null">Сначала выберите группу</string>
     <string name="go_button">Далее</string>
     <!-- Settings Toasts-->

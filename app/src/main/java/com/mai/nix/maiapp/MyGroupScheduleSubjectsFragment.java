@@ -1,7 +1,6 @@
 package com.mai.nix.maiapp;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -224,6 +223,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         if (((MainActivity)getActivity()).subjectsNeedToUpdate){
             mCurrentGroup = UserSettings.getGroup(getContext());
             mCurrentLink = mLink.concat(mCurrentGroup);
+            mDataLab.clearSubjectsCache();
             new MyThread(mCurrentLink, true).execute();
             ((MainActivity)getActivity()).subjectsNeedToUpdate = false;
         }
@@ -231,22 +231,18 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.go_web_menu, menu);
+        inflater.inflate(R.menu.share_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.go_web_in_frags) {
-            Uri uri = Uri.parse(mCurrentLink);
-            if(UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)){
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }else{
-                Intent intent = WebViewActivity.newInstance(getContext(), uri);
-                startActivity(intent);
-            }
-
+        if (item.getItemId() == R.id.share_button) {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_TEXT, mCurrentLink);
+            i.putExtra(Intent.EXTRA_SUBJECT, mCurrentGroup);
+            startActivity(Intent.createChooser(i, getString(R.string.share_subjects_link)));
         }
         return super.onOptionsItemSelected(item);
     }
