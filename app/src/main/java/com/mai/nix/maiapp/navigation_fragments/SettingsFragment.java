@@ -29,7 +29,6 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
     private Preference mClearExamsCache;
     private ListPreference mFregSubjects;
     private ListPreference mFregExams;
-    private ListPreference mLinks;
     private Preference mAbout;
     private Preference mMAI;
     private static final int REQUEST_CODE_GROUP = 0;
@@ -50,9 +49,6 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
         mClearExamsCache = getPreferenceScreen().findPreference("clear_cache_ex");
         mFregSubjects = (ListPreference)getPreferenceScreen().findPreference("freg");
         mFregExams = (ListPreference)getPreferenceScreen().findPreference("freg_ex");
-        mLinks = (ListPreference) getPreferenceScreen().findPreference("links");
-
-        mLinks.setValue(UserSettings.getLinksPreference(getActivity()));
         mGroupPreference.setSummary(UserSettings.getGroup(getActivity()));
         mFregSubjects.setValue(UserSettings.getSubjectsUpdateFrequency(getActivity()));
         mFregExams.setValue(UserSettings.getExamsUpdateFrequency(getActivity()));
@@ -66,7 +62,6 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
         mMAI.setOnPreferenceClickListener(this);
         mFregSubjects.setOnPreferenceChangeListener(this);
         mFregExams.setOnPreferenceChangeListener(this);
-        mLinks.setOnPreferenceChangeListener(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -89,14 +84,8 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
                 Toast.makeText(getActivity(), R.string.author, Toast.LENGTH_SHORT).show();
                 break;
             case "go_mai":
-                Uri uri = Uri.parse("http://mai.ru/");
-                if(UserSettings.getLinksPreference(getActivity()).equals(UserSettings.ONLY_BROWSER)){
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                }else{
-                    Intent intent = WebViewActivity.newInstance(getActivity(), uri);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://mai.ru/"));
+                startActivity(intent);
                 break;
         }
         return true;
@@ -105,9 +94,6 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         switch (preference.getKey()) {
-            case "links":
-                UserSettings.setLinksPreference(getActivity(), (String) newValue);
-                break;
             case "freg":
                 UserSettings.setSubjectsUpdateFrequency(getActivity(), (String) newValue);
                 break;

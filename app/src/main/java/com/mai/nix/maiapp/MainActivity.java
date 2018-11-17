@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     }
-                }, 250);
+                }, 270);
                 return true;
             }
         });
