@@ -145,7 +145,7 @@ public class ChooseGroupScheduleFragment extends Fragment {
         protected void onPostExecute(Integer integer) {
             mSwipeRefreshLayout.setRefreshing(false);
             if (integer == 0) {
-                Toast.makeText(getContext(), R.string.error,
+                if (getContext() != null) Toast.makeText(getContext(), R.string.error,
                         Toast.LENGTH_LONG).show();
             } else {
                 mListView.setAdapter(mAdapter);

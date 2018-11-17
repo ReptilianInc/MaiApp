@@ -204,7 +204,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         protected void onPostExecute(Integer i) {
             mSwipeRefreshLayout.setRefreshing(false);
             if(i == 0){
-                Toast.makeText(getContext(), R.string.error,
+                if (getContext() != null) Toast.makeText(getContext(), R.string.error,
                         Toast.LENGTH_LONG).show();
             }else{
                 mListView.setAdapter(mAdapter);

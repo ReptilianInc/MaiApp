@@ -32,7 +32,7 @@ public class LibrariesFragment extends SimpleExpandableListFragment {
         protected void onPostExecute(Integer s) {
             mSwipeRefreshLayout.setRefreshing(false);
             if(s == 0){
-                Toast.makeText(getContext(), R.string.error,
+                if (getContext() != null) Toast.makeText(getContext(), R.string.error,
                         Toast.LENGTH_LONG).show();
             }else {
                 mExpandableListView.setAdapter(mAdapter);

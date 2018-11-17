@@ -56,7 +56,7 @@ public class WorkersAndGradsOrgsFragment extends SimpleListFragment {
         protected void onPostExecute(Integer s) {
             mSwipeRefreshLayout.setRefreshing(false);
             if(s == 0){
-                Toast.makeText(getContext(), R.string.error,
+                if (getContext() != null) Toast.makeText(getContext(), R.string.error,
                         Toast.LENGTH_LONG).show();
             }else {
                 mListView.setAdapter(mAdapter);
