@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -141,6 +142,15 @@ public class NewsItemActivity extends AppCompatActivity {
                 i.putExtra(Intent.EXTRA_TEXT, mId);
                 i.putExtra(Intent.EXTRA_SUBJECT, mTitleGet);
                 startActivity(Intent.createChooser(i, getString(R.string.share_news_link)));
+            case R.id.browser_button:
+                if (UserSettings.getLinksPreference(this).equals(UserSettings.ONLY_BROWSER)) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mId));
+                    startActivity(intent);
+                } else {
+                    Intent intent = WebViewActivity.newInstance(this, Uri.parse(mId));
+                    startActivity(intent);
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
