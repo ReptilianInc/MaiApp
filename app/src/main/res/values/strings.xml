@@ -17,6 +17,7 @@
     <string name="title_activity_settings">Настройки</string>
     <!-- Settings -->
     <string name="pref_group">Группа</string>
+    <string name="pref_links">Просмотр ссылок</string>
     <string name="pref_group_summary">Выберите группу</string>
     <string name="clear_cache_sub">Очистить кэш расписания пар</string>
     <string name="clear_cache_ex">Очистить кэш расписания экзаменов</string>
@@ -120,6 +121,7 @@
     </string-array>
     <string name="choose_group_accept">ГОТОВО</string>
     <string name="share_link_hint">Поделиться</string>
+    <string name="browser_link_hint">Посмотреть на сайте</string>
     <string name="share_exam_link">Поделиться расписанием экзаменов</string>
     <string name="share_subjects_link">Поделиться расписанием пар</string>
     <string name="share_news_link">Поделиться новостью</string>

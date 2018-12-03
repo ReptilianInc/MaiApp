@@ -2,8 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/browser_button"
+        android:title="@string/browser_link_hint"
+        app:showAsAction="never">
+    </item>
+    <item
         android:id="@+id/share_button"
         android:title="@string/share_link_hint"
-        app:showAsAction="ifRoom|withText"
-        android:icon="@drawable/ic_share"/>
+        app:showAsAction="never"/>
 </menu>

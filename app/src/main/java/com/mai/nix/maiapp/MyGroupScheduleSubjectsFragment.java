@@ -1,6 +1,7 @@
 package com.mai.nix.maiapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -231,7 +232,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.share_menu, menu);
+        inflater.inflate(R.menu.action_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -243,6 +244,14 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
             i.putExtra(Intent.EXTRA_TEXT, mCurrentLink);
             i.putExtra(Intent.EXTRA_SUBJECT, mCurrentGroup);
             startActivity(Intent.createChooser(i, getString(R.string.share_subjects_link)));
+        } else if (item.getItemId() == R.id.browser_button){
+            if (UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)){
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentLink));
+                startActivity(intent);
+            } else {
+                Intent intent = WebViewActivity.newInstance(getContext(), Uri.parse(mCurrentLink));
+                startActivity(intent);
+            }
         }
         return super.onOptionsItemSelected(item);
     }

@@ -11,6 +11,8 @@ public class UserSettings {
     private static SharedPreferences sSharedPreferences;
     private static SharedPreferences.Editor sEditor;
 
+    public static final String WITH_APP = "1";
+    public static final String ONLY_BROWSER = "2";
     public static final String EVERY_DAY = "1";
     public static final String EVERY_WEEK = "2";
     public static final String ONLY_FORCIBLY = "3";
@@ -26,6 +28,15 @@ public class UserSettings {
     public static void setGroup(Context context, String group){
         sEditor = sSharedPreferences.edit();
         sEditor.putString(context.getString(R.string.pref_group), group);
+        sEditor.apply();
+    }
+    public static String getLinksPreference(Context context){
+        return sSharedPreferences.getString(context.getString(R.string.pref_links),
+                WITH_APP);
+    }
+    public static void setLinksPreference(Context context, String value){
+        sEditor = sSharedPreferences.edit();
+        sEditor.putString(context.getString(R.string.pref_links), value);
         sEditor.apply();
     }
     public static String getSubjectsUpdateFrequency(Context context){
