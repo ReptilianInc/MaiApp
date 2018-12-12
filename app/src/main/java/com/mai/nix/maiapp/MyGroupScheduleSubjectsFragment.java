@@ -82,13 +82,11 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                     } else if (UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
                             UserSettings.getDay(getContext()) != mCurrentDay) {
                         UserSettings.setDay(getContext(), mCurrentDay);
-                        mDataLab.clearSubjectsCache();
                         mCurrentLink = mLink.concat(mCurrentGroup);
                         new MyThread(mCurrentLink, true).execute();
                     } else if (UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
                             UserSettings.getWeek(getContext()) != mCurrentWeek) {
                         UserSettings.setWeek(getContext(), mCurrentWeek);
-                        mDataLab.clearSubjectsCache();
                         mCurrentLink = mLink.concat(mCurrentGroup);
                         new MyThread(mCurrentLink, true).execute();
                     } else {
@@ -129,7 +127,6 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                     mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
                     new MyThread(mCurrentLink, false).execute();
                 }else {
-                    mDataLab.clearSubjectsCache();
                     mCurrentLink = mLink.concat(mCurrentGroup);
                     new MyThread(mCurrentLink, true).execute();
                 }
@@ -164,6 +161,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                 primaries = doc.select("div[class=sc-table sc-table-day]");
                 Log.d("link", final_link);
                 mGroups.clear();
+                if (!primaries.isEmpty() && isCaching) mDataLab.clearSubjectsCache();
                 for(Element prim : primaries){
                     String date = prim.select("div[class=sc-table-col sc-day-header sc-gray]").text();
                     if(date.isEmpty()){
@@ -224,7 +222,6 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         if (((MainActivity)getActivity()).subjectsNeedToUpdate){
             mCurrentGroup = UserSettings.getGroup(getContext());
             mCurrentLink = mLink.concat(mCurrentGroup);
-            mDataLab.clearSubjectsCache();
             new MyThread(mCurrentLink, true).execute();
             ((MainActivity)getActivity()).subjectsNeedToUpdate = false;
         }

@@ -80,7 +80,6 @@ public class ExamItemFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mDataLab.clearExamsCache();
                 mSwipeRefreshLayout.setRefreshing(true);
                 new MyThread(true).execute();
             }
@@ -110,11 +109,12 @@ public class ExamItemFragment extends Fragment {
                 teacher = doc.select("div[class=sc-table-col sc-item-title]");
                 room = doc.select("div[class=sc-table-col sc-item-location]");
                 mExamModels.clear();
+                if (!teacher.isEmpty() && isCaching) mDataLab.clearExamsCache();
                 for (int i = 0; i < teacher.size(); i++){
                     ExamModel model = new ExamModel(date.get(i).text(), day.get(i).text(), time.get(i).text(), title.get(i).text(),
                             teacher.get(i).select("span[class=sc-lecturer]").text(), room.get(i).text());
                     mExamModels.add(model);
-                    if(isCaching)mDataLab.addExam(model);
+                    if (isCaching) mDataLab.addExam(model);
                 }
                 size = teacher.size();
             }catch (IOException e){
