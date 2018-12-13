@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      android:checkableBehavior="single">
     <item
         android:id="@+id/menu_sch"
         android:title="@string/menu_schedule"
         android:icon="@drawable/ic_schedule"
-        />
+        android:checkable="true"
+        android:checked="true"/>
     <item
         android:id="@+id/menu_sch_ex"
         android:title="@string/exam_schedule"
         android:icon="@drawable/ic_exam_schedule"
-        />
+        android:checkable="true"/>
     <item
         android:id="@+id/menu_campus"
         android:title="@string/menu_campus"
         android:icon="@drawable/ic_campus"
-        />
+        android:checkable="true"/>
     <item
         android:id="@+id/press"
         android:title="@string/menu_press_center"
-        android:icon="@drawable/ic_press_center"/>
+        android:icon="@drawable/ic_press_center"
+        android:checkable="true"/>
     <item
         android:id="@+id/life"
         android:title="@string/menu_life"
-        android:icon="@drawable/ic_life"/>
+        android:icon="@drawable/ic_life"
+        android:checkable="true"/>
     <item
         android:id="@+id/menu_settings"
         android:title="@string/menu_settings"

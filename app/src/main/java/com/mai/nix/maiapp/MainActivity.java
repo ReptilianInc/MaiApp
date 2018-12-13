@@ -13,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
 import com.mai.nix.maiapp.navigation_fragments.CampusFragment;
 import com.mai.nix.maiapp.navigation_fragments.ExamScheduleFragment;
 import com.mai.nix.maiapp.navigation_fragments.LifeFragment;
@@ -29,63 +32,66 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     public boolean subjectsNeedToUpdate = false;
     public boolean examsNeedToUpdate = false;
+    private int mSelectedItemId = -999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mToolbar = (Toolbar)findViewById(R.id.kek);
+        mToolbar = findViewById(R.id.kek);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(R.string.menu_schedule);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
         mFragmentManager = getSupportFragmentManager();
         mFragment = mFragmentManager.findFragmentById(R.id.center_view);
         mFragment = new ScheduleFragment();
         mFragmentManager.beginTransaction()
                 .add(R.id.center_view, mFragment)
                 .commit();
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.menu_schedule,
-                R.string.menu_schedule);
-        mDrawerLayout.setDrawerListener(toggle);
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.menu_schedule,
+                R.string.menu_schedule) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                switch (mSelectedItemId) {
+                    case R.id.menu_sch:
+                        setFragment("Расписание пар", new ScheduleFragment());
+                        break;
+                    case R.id.menu_sch_ex:
+                        setFragment("Расписание сессии", new ExamScheduleFragment());
+                        break;
+                    case R.id.press:
+                        setFragment("Пресс-центр", new PressCenterFragment());
+                        break;
+                    case R.id.menu_campus:
+                        setFragment("Кампус", new CampusFragment());
+                        break;
+                    case R.id.life:
+                        setFragment("Жизнь", new LifeFragment());
+                        break;
+                    case R.id.menu_settings:
+                        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivityForResult(intent, UPDATE_SCHEDULE);
+                        break;
+                }
+                mSelectedItemId = -999;
+                super.onDrawerClosed(drawerView);
+            }
+        };
+        mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        final NavigationView navigationview = (NavigationView) findViewById(R.id.navigation);
+        final NavigationView navigationview = findViewById(R.id.navigation);
         navigationview.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+                mSelectedItemId = item.getItemId();
                 mDrawerLayout.closeDrawers();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        switch (item.getItemId()){
-                            case R.id.menu_sch:
-                                setFragment("Расписание пар", new ScheduleFragment());
-                                break;
-                            case R.id.menu_sch_ex:
-                                setFragment("Расписание сессии", new ExamScheduleFragment());
-                                break;
-                            case R.id.press:
-                                setFragment("Пресс-центр", new PressCenterFragment());
-                                break;
-                            case R.id.menu_campus:
-                                setFragment("Кампус", new CampusFragment());
-                                break;
-                            case R.id.life:
-                                setFragment("Жизнь", new LifeFragment());
-                                break;
-                            case R.id.menu_settings:
-                                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                                startActivityForResult(intent, UPDATE_SCHEDULE);
-                                break;
-                        }
-
-                    }
-                }, 270);
                 return true;
             }
         });
     }
 
-    private void setFragment(String title, Fragment fragment){
+    private void setFragment(String title, Fragment fragment) {
         mFragmentManager.beginTransaction()
                 .remove(mFragment)
                 .commit();
@@ -99,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Activity.RESULT_OK && requestCode == MainActivity.UPDATE_SCHEDULE){
+        if (resultCode == Activity.RESULT_OK && requestCode == MainActivity.UPDATE_SCHEDULE) {
             subjectsNeedToUpdate = true;
             examsNeedToUpdate = true;
         }
