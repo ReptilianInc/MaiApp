@@ -16,24 +16,28 @@
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
-            android:theme="@style/AppThemeTest">
+            android:theme="@style/AppThemeTest"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppThemeSecondary">
+            android:theme="@style/AppThemeSecondary"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ChooseGroupActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/choose_group_activity_title"
-            android:theme="@style/AppThemeSecondary">
+            android:theme="@style/AppThemeSecondary"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SplashActivity"
             android:noHistory="true"
-            android:theme="@style/Splash">
+            android:theme="@style/Splash"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -44,12 +48,14 @@
             android:name=".NewsItemActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/place_holder"
-            android:theme="@style/AppThemeSecondary.NoActionBar">
+            android:theme="@style/AppThemeSecondary.NoActionBar"
+            android:screenOrientation="portrait">
         </activity>
         <activity android:name=".WebViewActivity"
                   android:configChanges="orientation|screenSize|keyboardHidden"
                   android:label="@string/place_holder"
-                  android:theme="@style/WebViewTheme">
+                  android:theme="@style/WebViewTheme"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 
