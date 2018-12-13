@@ -36,7 +36,7 @@ public class WorkersAndGradsOrgsFragment extends SimpleListFragment {
                 table = doc.select("table[class=data-table]").first();
                 rows = table.select("th");
                 cols = table.select("td");
-                mOrgs.clear();
+                if (table != null) mOrgs.clear();
                 int i = 0;
                 for(int j = 0; j < cols.size(); j+=3){
                     mOrgs.add(new StudentOrgModel(rows.get(i).text(), cols.get(j).text(), cols.get(j+1).text(),

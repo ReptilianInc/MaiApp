@@ -37,7 +37,7 @@ public class SportSectionsFragment extends SimpleExpandableListFragment{
                 table = doc.select("table[class=data-table]").first();
                 rows = table.select("tr");
                 headers = table.select("th");
-                mHeaders.clear();
+                if (table != null) mHeaders.clear();
                 for(int i = 0; i < headers.size(); i++){
                     mHeaders.add(new SportSectionsHeaders(headers.get(i).text()));
                 }

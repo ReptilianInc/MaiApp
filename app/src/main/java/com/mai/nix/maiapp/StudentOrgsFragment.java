@@ -2,11 +2,14 @@ package com.mai.nix.maiapp;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
+
 import com.mai.nix.maiapp.model.StudentOrgModel;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import java.io.IOException;
 
 /**
@@ -23,6 +26,7 @@ public class StudentOrgsFragment extends SimpleListFragment {
         private Document doc;
         private Element table;
         private Elements rows, cols;
+
         public MyThread() {
             super();
         }
@@ -30,21 +34,22 @@ public class StudentOrgsFragment extends SimpleListFragment {
         @Override
         protected Integer doInBackground(Integer... integers) {
             int size = 0;
-            try{
+            try {
                 doc = Jsoup.connect("http://www.mai.ru/life/join/index.php").get();
                 table = doc.select("table[class=data-table]").first();
                 rows = table.select("th");
                 cols = table.select("td");
+                if (table != null) mOrgs.clear();
                 int i = 0;
-                for(int j = 0; j < cols.size(); j+=3){
-                    mOrgs.add(new StudentOrgModel(rows.get(i).text(), cols.get(j).text(), cols.get(j+1).text(),
-                            cols.get(j+2).text()));
+                for (int j = 0; j < cols.size(); j += 3) {
+                    mOrgs.add(new StudentOrgModel(rows.get(i).text(), cols.get(j).text(), cols.get(j + 1).text(),
+                            cols.get(j + 2).text()));
                     i++;
                 }
                 size = rows.size();
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
-            }catch (NullPointerException n){
+            } catch (NullPointerException n) {
                 return 0;
             }
             return size;
@@ -56,7 +61,7 @@ public class StudentOrgsFragment extends SimpleListFragment {
             if (s == 0) {
                 if (getContext() != null) Toast.makeText(getContext(), R.string.error,
                         Toast.LENGTH_LONG).show();
-            }else {
+            } else {
                 mListView.setAdapter(mAdapter);
             }
         }
