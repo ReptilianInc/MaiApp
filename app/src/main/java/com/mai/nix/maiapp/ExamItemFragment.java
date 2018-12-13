@@ -15,10 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.mai.nix.maiapp.model.ExamModel;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,11 +59,11 @@ public class ExamItemFragment extends Fragment {
         mCurrentGroup = UserSettings.getGroup(getContext());
         mCurrentLink = mLink.concat(mCurrentGroup);
         mDataLab = DataLab.get(getContext());
-        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
         mExamModels = new ArrayList<>();
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
         mAdapter = new ExamAdapter(getContext(), mExamModels);
-        if(!((MainActivity) getActivity()).examsNeedToUpdate) {
+        if (!((MainActivity) getActivity()).examsNeedToUpdate) {
             if (mDataLab.isExamsTableEmpty()) {
                 new MyThread(true).execute();
             } else if (UserSettings.getExamsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
@@ -86,17 +89,21 @@ public class ExamItemFragment extends Fragment {
         });
         return v;
     }
-    private class MyThread extends AsyncTask<Integer, Void, Integer>{
+
+    private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Elements date, day, time, title, teacher, room;
         private Document doc;
         private boolean isCaching;
+
         public MyThread() {
             super();
         }
+
         public MyThread(boolean cache) {
             super();
             isCaching = cache;
         }
+
         @Override
         protected Integer doInBackground(Integer... integers) {
             int size = 0;
@@ -108,18 +115,20 @@ public class ExamItemFragment extends Fragment {
                 title = doc.select("span[class=sc-title]");
                 teacher = doc.select("div[class=sc-table-col sc-item-title]");
                 room = doc.select("div[class=sc-table-col sc-item-location]");
-                mExamModels.clear();
-                if (!teacher.isEmpty() && isCaching) mDataLab.clearExamsCache();
-                for (int i = 0; i < teacher.size(); i++){
+                if (!title.isEmpty()) {
+                    mExamModels.clear();
+                    if (isCaching) mDataLab.clearExamsCache();
+                }
+                for (int i = 0; i < title.size(); i++) {
                     ExamModel model = new ExamModel(date.get(i).text(), day.get(i).text(), time.get(i).text(), title.get(i).text(),
                             teacher.get(i).select("span[class=sc-lecturer]").text(), room.get(i).text());
                     mExamModels.add(model);
                     if (isCaching) mDataLab.addExam(model);
                 }
-                size = teacher.size();
-            }catch (IOException e){
+                size = title.size();
+            } catch (IOException e) {
                 e.printStackTrace();
-            }catch (NullPointerException n){
+            } catch (NullPointerException n) {
                 return 0;
             }
             return size;
@@ -131,9 +140,10 @@ public class ExamItemFragment extends Fragment {
             if (integer == 0) {
                 if (getContext() != null) Toast.makeText(getContext(), R.string.error,
                         Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 mListView.setAdapter(mAdapter);
-                if (isCaching) Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
+                if (isCaching)
+                    Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -142,10 +152,11 @@ public class ExamItemFragment extends Fragment {
             mSwipeRefreshLayout.setRefreshing(true);
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        if(((MainActivity) getActivity()).examsNeedToUpdate) {
+        if (((MainActivity) getActivity()).examsNeedToUpdate) {
             mCurrentGroup = UserSettings.getGroup(getContext());
             new MyThread(true).execute();
             ((MainActivity) getActivity()).examsNeedToUpdate = false;
@@ -166,8 +177,8 @@ public class ExamItemFragment extends Fragment {
             i.putExtra(Intent.EXTRA_TEXT, mCurrentLink);
             i.putExtra(Intent.EXTRA_SUBJECT, mCurrentGroup);
             startActivity(Intent.createChooser(i, getString(R.string.share_exam_link)));
-        } else if (item.getItemId() == R.id.browser_button){
-            if (UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)){
+        } else if (item.getItemId() == R.id.browser_button) {
+            if (UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentLink));
                 startActivity(intent);
             } else {

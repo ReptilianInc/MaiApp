@@ -16,10 +16,13 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.mai.nix.maiapp.model.NewsModel;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,19 +41,20 @@ public class NewsFragment extends Fragment {
     private static final String APP_FRAGMENT_ID = "fragment_id";
     public static final byte NEWS_CODE = 0, EVENTS_CODE = 1, ANNOUNCEMENTS_CODE = 2;
     private final String mLinkMain = "https://mai.ru";
-    public static NewsFragment newInstance(byte code){
+
+    public static NewsFragment newInstance(byte code) {
         Bundle args = new Bundle();
         args.putSerializable(APP_FRAGMENT_ID, code);
         NewsFragment testFragment = new NewsFragment();
         testFragment.setArguments(args);
-        return  testFragment;
+        return testFragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mResult = (byte)getArguments().getSerializable(APP_FRAGMENT_ID);
-        switch (mResult){
+        mResult = (byte) getArguments().getSerializable(APP_FRAGMENT_ID);
+        switch (mResult) {
             case NEWS_CODE:
                 mLink = "http://mai.ru/press/news/";
                 break;
@@ -70,7 +74,7 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.student_orgs_layout, container, false);
-        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setRefreshing(true);
         mModels = new ArrayList<>();
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
@@ -101,29 +105,29 @@ public class NewsFragment extends Fragment {
         return v;
     }
 
-    private class MyThread extends AsyncTask<Integer, Void, Integer>{
+    private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Elements title1, title2, title3, links;
         private Document doc;
 
         @Override
         protected Integer doInBackground(Integer... integers) {
             int size = 0;
-            try{
+            try {
                 doc = Jsoup.connect(mLink).get();
                 title1 = doc.select("div[class = col-md-9] > h5");
                 links = doc.select("div[class = b-thumbnail]").select("a");
                 title2 = doc.select("div[class = col-md-9] > p[class = b-date]");
                 title3 = doc.select("img[class = img-responsive]");
-                mModels.clear();
-                for (int i = 0; i < title1.size(); i++){
+                if (!title1.isEmpty()) mModels.clear();
+                for (int i = 0; i < title1.size(); i++) {
                     mModels.add(new NewsModel(title1.get(i).text(), title2.get(i).text(),
                             mLinkMain.concat(title3.get(i).attr("src")), links.get(i).attr("abs:href")));
                     Log.d("suka blyat = ", links.get(i).attr("a[href]"));
                 }
                 size = title1.size();
-            }catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
-            }catch (NullPointerException n){
+            } catch (NullPointerException n) {
                 return 0;
             }
             return size;
@@ -132,26 +136,24 @@ public class NewsFragment extends Fragment {
         @Override
         protected void onPostExecute(Integer integer) {
             mSwipeRefreshLayout.setRefreshing(false);
-            if(integer == 0){
+            if (integer == 0) {
                 if (getContext() != null) Toast.makeText(getContext(), R.string.error,
                         Toast.LENGTH_LONG).show();
-            }else {
+            } else {
                 mListView.setAdapter(mAdapter);
             }
         }
     }
 
-    public static  byte[] getByteArrayFromImageView(ImageView imageView)
-    {
+    public static byte[] getByteArrayFromImageView(ImageView imageView) {
         BitmapDrawable bitmapDrawable = ((BitmapDrawable) imageView.getDrawable());
         Bitmap bitmap;
-        if(bitmapDrawable==null){
+        if (bitmapDrawable == null) {
             imageView.buildDrawingCache();
             bitmap = imageView.getDrawingCache();
             imageView.buildDrawingCache(false);
-        }else
-        {
-            bitmap = bitmapDrawable .getBitmap();
+        } else {
+            bitmap = bitmapDrawable.getBitmap();
         }
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);

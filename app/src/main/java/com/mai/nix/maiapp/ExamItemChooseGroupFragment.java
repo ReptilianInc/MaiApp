@@ -15,9 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mai.nix.maiapp.model.ExamModel;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -35,14 +37,15 @@ public class ExamItemChooseGroupFragment extends Fragment {
     private final String mLink = "http://mai.ru/education/schedule/session.php?group=";
     private String mSelectedGroup;
     private TextView mChoosenGroupTextView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.shedule_exams_layout, container, false);
         View header = inflater.inflate(R.layout.choose_group_ex_header, null);
         mButton = (TextView) header.findViewById(R.id.choose_view);
-        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
-        mChoosenGroupTextView = (TextView)header.findViewById(R.id.group_view) ;
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+        mChoosenGroupTextView = (TextView) header.findViewById(R.id.group_view);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,18 +61,20 @@ public class ExamItemChooseGroupFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(mSelectedGroup != null){
+                if (mSelectedGroup != null) {
                     new MyThread().execute();
-                }else{
+                } else {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
         return v;
     }
+
     private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Elements date, day, time, title, teacher, room;
         private Document doc;
+
         public MyThread() {
             super();
         }
@@ -91,15 +96,15 @@ public class ExamItemChooseGroupFragment extends Fragment {
                 title = doc.select("span[class=sc-title]");
                 teacher = doc.select("div[class=sc-table-col sc-item-title]");
                 room = doc.select("div[class=sc-table-col sc-item-location]");
-                mExamModels.clear();
-                for (int i = 0; i < teacher.size(); i++){
+                if (!title.isEmpty()) mExamModels.clear();
+                for (int i = 0; i < title.size(); i++) {
                     mExamModels.add(new ExamModel(date.get(i).text(), day.get(i).text(), time.get(i).text(), title.get(i).text(),
                             teacher.get(i).select("span[class=sc-lecturer]").text(), room.get(i).text()));
                 }
-                size = teacher.size();
-            }catch (IOException e){
+                size = title.size();
+            } catch (IOException e) {
                 e.printStackTrace();
-            }catch (NullPointerException n){
+            } catch (NullPointerException n) {
                 return 0;
             }
             return size;
@@ -111,7 +116,7 @@ public class ExamItemChooseGroupFragment extends Fragment {
             if (integer == 0) {
                 if (getContext() != null) Toast.makeText(getContext(), R.string.error,
                         Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 mListView.setAdapter(mAdapter);
             }
         }
