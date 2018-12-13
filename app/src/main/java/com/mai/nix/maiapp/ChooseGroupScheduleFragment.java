@@ -2,6 +2,7 @@ package com.mai.nix.maiapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -45,6 +49,12 @@ public class ChooseGroupScheduleFragment extends Fragment {
     private static final int REQUEST_CODE_GROUP = 0;
     private String mSelectedGroup;
     private TextView mChoosenGroupTextView;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Nullable
     @Override
@@ -174,9 +184,42 @@ public class ChooseGroupScheduleFragment extends Fragment {
             mChoosenGroupTextView.setText(mSelectedGroup);
             mGroups.clear();
             mAdapter.notifyDataSetChanged();
-            //mProgressBar.setVisibility(ProgressBar.VISIBLE);
             mSwipeRefreshLayout.setRefreshing(true);
             new MyThread().execute();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.action_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.share_button) {
+            if (mSelectedGroup != null) {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_TEXT, mLinkMain.concat(mSelectedGroup).concat(PLUS_WEEK).concat(ChosenWeek));
+                i.putExtra(Intent.EXTRA_SUBJECT, mSelectedGroup);
+                startActivity(Intent.createChooser(i, getString(R.string.share_subjects_link)));
+            } else {
+                Toast.makeText(getContext(), R.string.exception_group_null, Toast.LENGTH_SHORT).show();
+            }
+        } else if (item.getItemId() == R.id.browser_button) {
+            if (mSelectedGroup != null) {
+                if (UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mLinkMain.concat(mSelectedGroup).concat(PLUS_WEEK).concat(ChosenWeek)));
+                    startActivity(intent);
+                } else {
+                    Intent intent = WebViewActivity.newInstance(getContext(), Uri.parse(mLinkMain.concat(mSelectedGroup).concat(PLUS_WEEK).concat(ChosenWeek)));
+                    startActivity(intent);
+                }
+            } else {
+                Toast.makeText(getContext(), R.string.exception_group_null, Toast.LENGTH_SHORT).show();
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
