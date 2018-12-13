@@ -2,12 +2,16 @@ package com.mai.nix.maiapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -37,6 +41,12 @@ public class ExamItemChooseGroupFragment extends Fragment {
     private final String mLink = "http://mai.ru/education/schedule/session.php?group=";
     private String mSelectedGroup;
     private TextView mChoosenGroupTextView;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Nullable
     @Override
@@ -138,5 +148,37 @@ public class ExamItemChooseGroupFragment extends Fragment {
             mSwipeRefreshLayout.setRefreshing(true);
             new MyThread().execute();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.action_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (mSelectedGroup == null) {
+            Toast.makeText(getContext(), R.string.exception_group_null, Toast.LENGTH_SHORT).show();
+            return super.onOptionsItemSelected(item);
+        }
+
+        if (item.getItemId() == R.id.share_button) {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_TEXT, mLink.concat(mSelectedGroup));
+            i.putExtra(Intent.EXTRA_SUBJECT, mSelectedGroup);
+            startActivity(Intent.createChooser(i, getString(R.string.share_exam_link)));
+        } else if (item.getItemId() == R.id.browser_button) {
+            if (UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mLink.concat(mSelectedGroup)));
+                startActivity(intent);
+            } else {
+                Intent intent = WebViewActivity.newInstance(getContext(), Uri.parse(mLink.concat(mSelectedGroup)));
+                startActivity(intent);
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
