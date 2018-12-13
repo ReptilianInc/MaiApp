@@ -18,12 +18,15 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import com.mai.nix.maiapp.model.SubjectBody;
 import com.mai.nix.maiapp.model.SubjectHeader;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,12 +69,12 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         mGroups = new ArrayList<>();
         mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
         mCurrentGroup = UserSettings.getGroup(getContext());
-        mSpinner = (Spinner)header.findViewById(R.id.spinner);
-        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
+        mSpinner = (Spinner) header.findViewById(R.id.spinner);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(!((MainActivity) getActivity()).subjectsNeedToUpdate){
+                if (!((MainActivity) getActivity()).subjectsNeedToUpdate) {
                     if (i != 0) {
                         mWeek = Integer.toString(i);
                         mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
@@ -111,10 +114,10 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
 
             }
         });
-        mListView = (ExpandableListView)v.findViewById(R.id.exp);
+        mListView = (ExpandableListView) v.findViewById(R.id.exp);
         mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);
-        for(int i = 0; i < mGroups.size(); i++){
+        for (int i = 0; i < mGroups.size(); i++) {
             mListView.expandGroup(i);
         }
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -122,11 +125,11 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
             public void onRefresh() {
                 mSwipeRefreshLayout.setRefreshing(true);
 
-                if(mSpinner.getSelectedItemPosition() != 0){
+                if (mSpinner.getSelectedItemPosition() != 0) {
                     mWeek = Integer.toString(mSpinner.getSelectedItemPosition());
                     mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
                     new MyThread(mCurrentLink, false).execute();
-                }else {
+                } else {
                     mCurrentLink = mLink.concat(mCurrentGroup);
                     new MyThread(mCurrentLink, true).execute();
                 }
@@ -135,15 +138,18 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         });
         return v;
     }
+
     private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Document doc;
         private Elements primaries;
         private String final_link;
         private boolean isCaching;
+
         public MyThread() {
             super();
         }
-        public MyThread(String link, boolean cache){
+
+        public MyThread(String link, boolean cache) {
             final_link = link;
             isCaching = cache;
         }
@@ -160,11 +166,13 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                 doc = Jsoup.connect(final_link).get();
                 primaries = doc.select("div[class=sc-table sc-table-day]");
                 Log.d("link", final_link);
-                mGroups.clear();
-                if (!primaries.isEmpty() && isCaching) mDataLab.clearSubjectsCache();
-                for(Element prim : primaries){
+                if (!primaries.isEmpty()) {
+                    mGroups.clear();
+                    if (isCaching) mDataLab.clearSubjectsCache();
+                }
+                for (Element prim : primaries) {
                     String date = prim.select("div[class=sc-table-col sc-day-header sc-gray]").text();
-                    if(date.isEmpty()){
+                    if (date.isEmpty()) {
                         date = prim.select("div[class=sc-table-col sc-day-header sc-blue]").text();
                     }
                     String day = prim.select("span[class=sc-day]").text();
@@ -175,7 +183,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                     Elements titles = prim.select("span[class=sc-title]");
                     Elements teachers = prim.select("div[class=sc-table-col sc-item-title]");
                     Elements rooms = prim.select("div[class=sc-table-col sc-item-location]");
-                    for (int i = 0; i < times.size(); i++){
+                    for (int i = 0; i < times.size(); i++) {
                         SubjectBody body = new SubjectBody(titles.get(i).text(),
                                 teachers.get(i).select("span[class=sc-lecturer]").text(),
                                 types.get(i).text(), times.get(i).text(), rooms.get(i).text());
@@ -184,16 +192,16 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                     }
                     header.setChildren(bodies);
                     mGroups.add(header);
-                    if (isCaching){
+                    if (isCaching) {
                         mDataLab.addBodies(bodies);
                         mDataLab.addHeader(header);
                     }
                 }
                 size = primaries.size();
 
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
-            }catch (NullPointerException n){
+            } catch (NullPointerException n) {
                 return 0;
             }
             return size;
@@ -202,15 +210,16 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         @Override
         protected void onPostExecute(Integer i) {
             mSwipeRefreshLayout.setRefreshing(false);
-            if(i == 0){
+            if (i == 0) {
                 if (getContext() != null) Toast.makeText(getContext(), R.string.error,
                         Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 mListView.setAdapter(mAdapter);
-                for(int j = 0; j < mGroups.size(); j++){
+                for (int j = 0; j < mGroups.size(); j++) {
                     mListView.expandGroup(j);
                 }
-                if(isCaching)Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
+                if (isCaching)
+                    Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -219,11 +228,11 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (((MainActivity)getActivity()).subjectsNeedToUpdate){
+        if (((MainActivity) getActivity()).subjectsNeedToUpdate) {
             mCurrentGroup = UserSettings.getGroup(getContext());
             mCurrentLink = mLink.concat(mCurrentGroup);
             new MyThread(mCurrentLink, true).execute();
-            ((MainActivity)getActivity()).subjectsNeedToUpdate = false;
+            ((MainActivity) getActivity()).subjectsNeedToUpdate = false;
         }
     }
 
@@ -241,8 +250,8 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
             i.putExtra(Intent.EXTRA_TEXT, mCurrentLink);
             i.putExtra(Intent.EXTRA_SUBJECT, mCurrentGroup);
             startActivity(Intent.createChooser(i, getString(R.string.share_subjects_link)));
-        } else if (item.getItemId() == R.id.browser_button){
-            if (UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)){
+        } else if (item.getItemId() == R.id.browser_button) {
+            if (UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentLink));
                 startActivity(intent);
             } else {

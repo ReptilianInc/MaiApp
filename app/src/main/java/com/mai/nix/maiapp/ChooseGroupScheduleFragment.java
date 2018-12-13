@@ -16,12 +16,15 @@ import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mai.nix.maiapp.model.SubjectBody;
 import com.mai.nix.maiapp.model.SubjectHeader;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -42,14 +45,15 @@ public class ChooseGroupScheduleFragment extends Fragment {
     private static final int REQUEST_CODE_GROUP = 0;
     private String mSelectedGroup;
     private TextView mChoosenGroupTextView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.shedule_subjects_layout, container, false);
         View header = inflater.inflate(R.layout.choose_group_header, null);
-        mSpinner = (Spinner)header.findViewById(R.id.spinner);
-        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
-        mChoosenGroupTextView = (TextView)header.findViewById(R.id.group_view);
+        mSpinner = (Spinner) header.findViewById(R.id.spinner);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+        mChoosenGroupTextView = (TextView) header.findViewById(R.id.group_view);
         mButton = (TextView) header.findViewById(R.id.choose_view);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,8 +65,8 @@ public class ChooseGroupScheduleFragment extends Fragment {
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(mSelectedGroup != null){
-                    ChosenWeek = Integer.toString(i+1);
+                if (mSelectedGroup != null) {
+                    ChosenWeek = Integer.toString(i + 1);
                     mSwipeRefreshLayout.setRefreshing(true);
                     new MyThread().execute();
                 }
@@ -73,7 +77,7 @@ public class ChooseGroupScheduleFragment extends Fragment {
 
             }
         });
-        mListView = (ExpandableListView)v.findViewById(R.id.exp);
+        mListView = (ExpandableListView) v.findViewById(R.id.exp);
         mGroups = new ArrayList<>();
         mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
         mListView.addHeaderView(header);
@@ -81,9 +85,9 @@ public class ChooseGroupScheduleFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(mSelectedGroup != null){
+                if (mSelectedGroup != null) {
                     new MyThread().execute();
-                }else{
+                } else {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
 
@@ -95,6 +99,7 @@ public class ChooseGroupScheduleFragment extends Fragment {
     private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Document doc;
         private Elements primaries;
+
         public MyThread() {
             super();
         }
@@ -105,8 +110,8 @@ public class ChooseGroupScheduleFragment extends Fragment {
             try {
                 doc = Jsoup.connect(mLinkMain.concat(mSelectedGroup).concat(PLUS_WEEK).concat(ChosenWeek)).get();
                 primaries = doc.select("div[class=sc-table sc-table-day]");
-                mGroups.clear();
-                for(Element prim : primaries){
+                if (!primaries.isEmpty()) mGroups.clear();
+                for (Element prim : primaries) {
                     String date = prim.select("div[class=sc-table-col sc-day-header sc-gray]").text();
                     String day = prim.select("span[class=sc-day]").text();
                     SubjectHeader header = new SubjectHeader(date, day);
@@ -117,7 +122,7 @@ public class ChooseGroupScheduleFragment extends Fragment {
                     Elements teachers = prim.select("div[class=sc-table-col sc-item-title]");
                     Elements rooms = prim.select("div[class=sc-table-col sc-item-location]");
                     Log.d("date and titles", date + " " + Integer.toString(titles.size()));
-                    for (int i = 0; i < times.size(); i++){
+                    for (int i = 0; i < times.size(); i++) {
                         SubjectBody body = new SubjectBody(titles.get(i).text(),
                                 teachers.get(i).select("span[class=sc-lecturer]").text(),
                                 types.get(i).text(), times.get(i).text(), rooms.get(i).text());
@@ -127,9 +132,9 @@ public class ChooseGroupScheduleFragment extends Fragment {
                     mGroups.add(header);
                 }
                 size = primaries.size();
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
-            } catch (NullPointerException n){
+            } catch (NullPointerException n) {
                 return 0;
             }
             return size;
