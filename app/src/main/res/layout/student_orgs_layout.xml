@@ -9,7 +9,8 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/stud_org_listview">
+            android:id="@+id/stud_org_listview"
+            android:background="@color/colorPrimary">
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

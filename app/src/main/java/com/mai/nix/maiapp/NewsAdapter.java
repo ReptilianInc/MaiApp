@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.mai.nix.maiapp.model.NewsModel;
 import java.util.ArrayList;
 
@@ -53,6 +54,7 @@ public class NewsAdapter extends BaseAdapter {
         Glide
                 .with(mContext)
                 .load(url)
+                .apply(RequestOptions.circleCropTransform())
                 .into(imageView);
         return view;
     }

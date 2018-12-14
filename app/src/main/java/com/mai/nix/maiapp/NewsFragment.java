@@ -3,6 +3,7 @@ package com.mai.nix.maiapp;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -74,10 +75,10 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.student_orgs_layout, container, false);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout = v.findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setRefreshing(true);
         mModels = new ArrayList<>();
-        mListView = (ListView) v.findViewById(R.id.stud_org_listview);
+        mListView = v.findViewById(R.id.stud_org_listview);
         new MyThread().execute();
         mAdapter = new NewsAdapter(getContext(), mModels);
         mListView.setAdapter(mAdapter);
@@ -91,15 +92,13 @@ public class NewsFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                final ImageView imageView = (ImageView) view.findViewById(R.id.image);
-
-                Intent n = NewsItemActivity.newIntent(getContext(),
-                        mModels.get(i).getId(),
-                        mModels.get(i).getDate(),
-                        mModels.get(i).getText(),
-                        getByteArrayFromImageView(imageView));
-                startActivity(n);
+                if (UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mModels.get(i).getId()));
+                    startActivity(intent);
+                } else {
+                    Intent intent = WebViewActivity.newInstance(getContext(), Uri.parse(mModels.get(i).getId()));
+                    startActivity(intent);
+                }
             }
         });
         return v;
