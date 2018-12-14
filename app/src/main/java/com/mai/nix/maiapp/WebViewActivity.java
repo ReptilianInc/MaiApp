@@ -32,10 +32,12 @@ public class WebViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
-        mToolbar = (Toolbar) findViewById(R.id.web_toolbar);
+        mToolbar = findViewById(R.id.web_toolbar);
         setSupportActionBar(mToolbar);
-        mWebView = (WebView)findViewById(R.id.webview);
-        mProgressBar = (ProgressBar)findViewById(R.id.webview_progress_bar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        mWebView = findViewById(R.id.webview);
+        mProgressBar = findViewById(R.id.webview_progress_bar);
         mProgressBar.setMax(100);
         mUri = getIntent().getParcelableExtra(URI);
         mWebView.getSettings().setJavaScriptEnabled(true);
@@ -51,6 +53,7 @@ public class WebViewActivity extends AppCompatActivity {
             }
             public void onReceivedTitle(WebView webView, String title) {
                 WebViewActivity.this.setTitle(webView.getTitle());
+                mToolbar.setSubtitle(webView.getUrl());
             }
         });
 
@@ -60,5 +63,11 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
         mWebView.loadUrl(mUri.toString());
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }

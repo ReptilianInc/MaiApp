@@ -5,11 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.mai.nix.maiapp.model.NewsModel;
 import java.util.ArrayList;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Nix on 17.08.2017.
@@ -45,9 +45,9 @@ public class NewsAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.news_card, viewGroup, false);
         }
         String url = mModels.get(i).getLink();
-        CircleImageView imageView = (CircleImageView)view.findViewById(R.id.image);
-        TextView textView1 = (TextView)view.findViewById(R.id.date_textview);
-        TextView textView2 = (TextView)view.findViewById(R.id.header_textview);
+        ImageView imageView = view.findViewById(R.id.image);
+        TextView textView1 = view.findViewById(R.id.date_textview);
+        TextView textView2 = view.findViewById(R.id.header_textview);
         textView1.setText(mModels.get(i).getDate());
         textView2.setText(mModels.get(i).getText());
         Glide
