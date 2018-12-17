@@ -20,14 +20,14 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.map_fragment_layout, container, false);
-        mWebView = (WebView) v.findViewById(R.id.campus_view);
-        mActionButton = (FloatingActionButton)v.findViewById(R.id.legend_button);
+        mWebView = v.findViewById(R.id.campus_view);
+        mActionButton = v.findViewById(R.id.legend_button);
         mWebView.getSettings().setSupportZoom(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.setPadding(0, 0, 0, 0);
         mWebView.setScrollbarFadingEnabled(true);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        mWebView.loadUrl("file:///android_res/drawable/scheme_for_app.png");
+        mWebView.loadUrl("file:///android_asset/scheme_for_app.png");
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
