@@ -20,6 +20,7 @@ import com.mai.nix.maiapp.model.ExamModel;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -91,7 +92,7 @@ public class ExamItemFragment extends Fragment {
     }
 
     private class MyThread extends AsyncTask<Integer, Void, Integer> {
-        private Elements date, day, time, title, teacher, room;
+        private Elements date, day, container;
         private Document doc;
         private boolean isCaching;
 
@@ -111,21 +112,26 @@ public class ExamItemFragment extends Fragment {
                 doc = Jsoup.connect(mCurrentLink).get();
                 date = doc.select("div[class=sc-table-col sc-day-header sc-gray]");
                 day = doc.select("span[class=sc-day]");
-                time = doc.select("div[class=sc-table-col sc-item-time]");
-                title = doc.select("span[class=sc-title]");
-                teacher = doc.select("div[class=sc-table-col sc-item-title]");
-                room = doc.select("div[class=sc-table-col sc-item-location]");
-                if (!title.isEmpty()) {
+                container = doc.select("div[class=sc-table-col sc-table-detail-container]");
+                
+                if (!day.isEmpty()) {
                     mExamModels.clear();
                     if (isCaching) mDataLab.clearExamsCache();
                 }
-                for (int i = 0; i < title.size(); i++) {
-                    ExamModel model = new ExamModel(date.get(i).text(), day.get(i).text(), time.get(i).text(), title.get(i).text(),
-                            teacher.get(i).select("span[class=sc-lecturer]").text(), room.get(i).text());
-                    mExamModels.add(model);
-                    if (isCaching) mDataLab.addExam(model);
+
+                for (int i = 0; i < day.size(); i++) {
+                    Elements time = container.get(i).select("div[class=sc-table-col sc-item-time]");
+                    Elements title = container.get(i).select("span[class=sc-title]");
+                    Elements teacher = container.get(i).select("div[class=sc-table-col sc-item-title]");
+                    Elements room = container.get(i).select("div[class=sc-table-col sc-item-location]");
+                    for (int k = 0; k < time.size(); k++) {
+                        ExamModel model = new ExamModel(date.get(i).text(), day.get(i).text(), time.get(k).text(), title.get(k).text(),
+                                teacher.get(k).select("span[class=sc-lecturer]").text(), room.get(k).text());
+                        mExamModels.add(model);
+                        if (isCaching) mDataLab.addExam(model);
+                    }
                 }
-                size = title.size();
+                size = day.size();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NullPointerException n) {
