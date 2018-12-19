@@ -24,7 +24,7 @@
     <string name="freg_cache">Обновление кэша расписания пар</string>
     <string name="freg_cache_exams">Обновление кэша расписания экзаменов</string>
     <string name="title_app">Неофициальное приложение МАИ</string>
-    <string name="title_summary">Версия 0.8.4 Сборка от 18.12.2018</string>
+    <string name="title_summary">Версия 0.8.4 Сборка от 19.12.2018</string>
     <string name="site_mai">Перейти на сайт МАИ</string>
 
     <string-array name="freg_array">

@@ -113,7 +113,7 @@ public class ExamItemFragment extends Fragment {
                 date = doc.select("div[class=sc-table-col sc-day-header sc-gray]");
                 day = doc.select("span[class=sc-day]");
                 container = doc.select("div[class=sc-table-col sc-table-detail-container]");
-                
+
                 if (!day.isEmpty()) {
                     mExamModels.clear();
                     if (isCaching) mDataLab.clearExamsCache();

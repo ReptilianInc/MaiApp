@@ -53,9 +53,9 @@ public class ExamItemChooseGroupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.shedule_exams_layout, container, false);
         View header = inflater.inflate(R.layout.choose_group_ex_header, null);
-        mButton = (TextView) header.findViewById(R.id.choose_view);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
-        mChoosenGroupTextView = (TextView) header.findViewById(R.id.group_view);
+        mButton = header.findViewById(R.id.choose_view);
+        mSwipeRefreshLayout = v.findViewById(R.id.swiperefresh);
+        mChoosenGroupTextView = header.findViewById(R.id.group_view);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,7 +82,7 @@ public class ExamItemChooseGroupFragment extends Fragment {
     }
 
     private class MyThread extends AsyncTask<Integer, Void, Integer> {
-        private Elements date, day, time, title, teacher, room;
+        private Elements date, day, container;
         private Document doc;
 
         public MyThread() {
@@ -102,16 +102,24 @@ public class ExamItemChooseGroupFragment extends Fragment {
                 doc = Jsoup.connect(mLink.concat(mSelectedGroup)).get();
                 date = doc.select("div[class=sc-table-col sc-day-header sc-gray]");
                 day = doc.select("span[class=sc-day]");
-                time = doc.select("div[class=sc-table-col sc-item-time]");
-                title = doc.select("span[class=sc-title]");
-                teacher = doc.select("div[class=sc-table-col sc-item-title]");
-                room = doc.select("div[class=sc-table-col sc-item-location]");
-                if (!title.isEmpty()) mExamModels.clear();
-                for (int i = 0; i < title.size(); i++) {
-                    mExamModels.add(new ExamModel(date.get(i).text(), day.get(i).text(), time.get(i).text(), title.get(i).text(),
-                            teacher.get(i).select("span[class=sc-lecturer]").text(), room.get(i).text()));
+                container = doc.select("div[class=sc-table-col sc-table-detail-container]");
+
+                if (!day.isEmpty()) {
+                    mExamModels.clear();
                 }
-                size = title.size();
+
+                for (int i = 0; i < day.size(); i++) {
+                    Elements time = container.get(i).select("div[class=sc-table-col sc-item-time]");
+                    Elements title = container.get(i).select("span[class=sc-title]");
+                    Elements teacher = container.get(i).select("div[class=sc-table-col sc-item-title]");
+                    Elements room = container.get(i).select("div[class=sc-table-col sc-item-location]");
+                    for (int k = 0; k < time.size(); k++) {
+                        ExamModel model = new ExamModel(date.get(i).text(), day.get(i).text(), time.get(k).text(), title.get(k).text(),
+                                teacher.get(k).select("span[class=sc-lecturer]").text(), room.get(k).text());
+                        mExamModels.add(model);
+                    }
+                }
+                size = day.size();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NullPointerException n) {
