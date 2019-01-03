@@ -6,21 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.mai.nix.maiapp.MainActivity">
+
     <FrameLayout
         android:id="@+id/center_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        android:layout_marginBottom="60dp">
+        android:layout_marginBottom="60dp"
+        android:background="@color/colorPrimary">
     </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:menu="@menu/nav_menu"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="1dp"
         android:background="@color/colorPrimary"
-        android:elevation="6dp"/>
+        android:elevation="6dp"
+        app:menu="@menu/nav_menu"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/schedule_date_background"/>
 </android.support.design.widget.CoordinatorLayout>
