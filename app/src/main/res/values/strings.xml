@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">МАИ</string>
     <!-- navigation menu -->
-    <string name="menu_schedule">Расписание пар</string>
-    <string name="exam_schedule">Расписание сессии</string>
+    <string name="menu_schedule">Занятия</string>
+    <string name="exam_schedule">Сессия</string>
     <string name="menu_library">Библиотека</string>
     <string name="menu_campus">Кампус</string>
     <string name="menu_press_center">Пресс-центр</string>
