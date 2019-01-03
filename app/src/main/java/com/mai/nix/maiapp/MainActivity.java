@@ -2,24 +2,15 @@ package com.mai.nix.maiapp;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
-import com.mai.nix.maiapp.navigation_fragments.CampusFragment;
 import com.mai.nix.maiapp.navigation_fragments.ExamScheduleFragment;
-import com.mai.nix.maiapp.navigation_fragments.LifeFragment;
-import com.mai.nix.maiapp.navigation_fragments.PressCenterFragment;
 import com.mai.nix.maiapp.navigation_fragments.ScheduleFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,21 +21,40 @@ public class MainActivity extends AppCompatActivity {
     private Fragment mFragment;
     public boolean subjectsNeedToUpdate = false;
     public boolean examsNeedToUpdate = false;
-    private int mSelectedItemId = -999;
+
+    private BottomNavigationView mBottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mBottomNavigationView = findViewById(R.id.bottomNavigation);
         mFragmentManager = getSupportFragmentManager();
         mFragment = mFragmentManager.findFragmentById(R.id.center_view);
         mFragment = new ScheduleFragment();
         mFragmentManager.beginTransaction()
                 .add(R.id.center_view, mFragment)
                 .commit();
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_schedule:
+                        setFragment(new ScheduleFragment());
+                        break;
+                    case R.id.menu_exams:
+                        setFragment(new ExamScheduleFragment());
+                        break;
+                    case R.id.menu_more:
+                        setFragment(new TestFragment());
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
-    private void setFragment(String title, Fragment fragment) {
+    private void setFragment(Fragment fragment) {
         mFragmentManager.beginTransaction()
                 .remove(mFragment)
                 .commit();

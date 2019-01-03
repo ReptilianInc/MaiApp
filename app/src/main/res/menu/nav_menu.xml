@@ -2,20 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       android:checkableBehavior="single">
     <item
-        android:id="@+id/menu_sch"
+        android:id="@+id/menu_schedule"
         android:title="@string/menu_schedule"
-        android:icon="@drawable/ic_schedule"
+        android:icon="@drawable/ic_timetable"
         android:checkable="true"
         android:checked="true"/>
     <item
-        android:id="@+id/menu_sch_ex"
-        android:title="@string/exam_schedule"
-        android:icon="@drawable/ic_exam_schedule"
+        android:id="@+id/menu_exams"
+        android:title="@string/menu_exams"
+        android:icon="@drawable/ic_fire"
         android:checkable="true"/>
     <item
-        android:id="@+id/menu_campus"
-        android:title="@string/menu_campus"
-        android:icon="@drawable/ic_campus"
+        android:id="@+id/menu_more"
+        android:title="@string/menu_more"
+        android:icon="@drawable/ic_more"
         android:checkable="true"/>
-
 </menu>

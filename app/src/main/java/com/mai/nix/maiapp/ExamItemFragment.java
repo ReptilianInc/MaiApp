@@ -46,7 +46,6 @@ public class ExamItemFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -167,31 +166,5 @@ public class ExamItemFragment extends Fragment {
             new MyThread(true).execute();
             ((MainActivity) getActivity()).examsNeedToUpdate = false;
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.action_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.share_button) {
-            Intent i = new Intent(Intent.ACTION_SEND);
-            i.setType("text/plain");
-            i.putExtra(Intent.EXTRA_TEXT, mCurrentLink);
-            i.putExtra(Intent.EXTRA_SUBJECT, mCurrentGroup);
-            startActivity(Intent.createChooser(i, getString(R.string.share_exam_link)));
-        } else if (item.getItemId() == R.id.browser_button) {
-            if (UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentLink));
-                startActivity(intent);
-            } else {
-                Intent intent = WebViewActivity.newInstance(getContext(), Uri.parse(mCurrentLink));
-                startActivity(intent);
-            }
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

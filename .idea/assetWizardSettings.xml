@@ -97,8 +97,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_plane_shield" />
-                            <entry key="sourceFile" value="C:\Users\Nix\Desktop\plane-shield.svg" />
+                            <entry key="outputName" value="ic_more" />
+                            <entry key="sourceFile" value="C:\Users\Nix\Desktop\more.svg" />
                           </map>
                         </option>
                       </PersistentState>
