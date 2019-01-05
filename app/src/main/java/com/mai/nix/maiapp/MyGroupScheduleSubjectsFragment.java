@@ -1,5 +1,8 @@
 package com.mai.nix.maiapp;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 
 import com.mai.nix.maiapp.model.SubjectBody;
 import com.mai.nix.maiapp.model.SubjectHeader;
+import com.mai.nix.maiapp.viewmodels.SubjectsViewModel;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,6 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * Created by Nix on 02.08.2017.
@@ -69,16 +74,35 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         mGroups = new ArrayList<>();
         mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
         mCurrentGroup = UserSettings.getGroup(getContext());
-        mSpinner = (Spinner) header.findViewById(R.id.spinner);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+        mSpinner = header.findViewById(R.id.spinner);
+        mSwipeRefreshLayout = v.findViewById(R.id.swiperefresh);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (!((MainActivity) getActivity()).subjectsNeedToUpdate) {
                     if (i != 0) {
+                        mSwipeRefreshLayout.setRefreshing(true);
                         mWeek = Integer.toString(i);
                         mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
-                        new MyThread(mCurrentLink, false).execute();
+                        SubjectsViewModel model = ViewModelProviders.of(MyGroupScheduleSubjectsFragment.this)
+                                .get(SubjectsViewModel.class);
+                        model.initRepository(mCurrentLink);
+                        LiveData<List<SubjectHeader>> data = model.getData();
+                        if (!data.hasObservers()) {
+                            data.observe(MyGroupScheduleSubjectsFragment.this, new Observer<List<SubjectHeader>>() {
+                                @Override
+                                public void onChanged(@Nullable List<SubjectHeader> subjectHeaders) {
+                                    mSwipeRefreshLayout.setRefreshing(false);
+                                    mGroups.clear();
+                                    mGroups.addAll(subjectHeaders);
+                                    mListView.setAdapter(mAdapter);
+                                    for (int j = 0; j < mGroups.size(); j++) {
+                                        mListView.expandGroup(j);
+                                    }
+                                    Log.d("poisondart ", "onChanged");
+                                }
+                            });
+                        }
                     } else if (mDataLab.isSubjectsTablesEmpty()) {
                         mCurrentLink = mLink.concat(mCurrentGroup);
                         new MyThread(mCurrentLink, true).execute();
@@ -114,7 +138,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
 
             }
         });
-        mListView = (ExpandableListView) v.findViewById(R.id.exp);
+        mListView = v.findViewById(R.id.exp);
         mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);
         for (int i = 0; i < mGroups.size(); i++) {
