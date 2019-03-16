@@ -1,27 +1,47 @@
 package com.mai.nix.maiapp.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
 
 /**
  * Created by Nix on 02.08.2017.
  */
 
+@Entity(tableName = "days")
 public class SubjectHeader {
+    @ColumnInfo(name = "date")
     private String mDate;
+    @ColumnInfo(name = "day")
     private String mDay;
-    private UUID mUuid;
-    private ArrayList<SubjectBody> mChildren;
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    private long mId;
+    @Ignore
+    private List<SubjectBody> mChildren;
+
     public SubjectHeader(String date, String day) {
-        this(UUID.randomUUID());
         mDate = date;
         mDay = day;
         mChildren = new ArrayList<>();
     }
-    public SubjectHeader(UUID id){
-        mUuid = id;
+
+    public SubjectHeader() {
         mChildren = new ArrayList<>();
     }
+
+    public long getId() {
+        return mId;
+    }
+
+    public void setId(long id) {
+        mId = id;
+    }
+
     public String getDate() {
         return mDate;
     }
@@ -38,15 +58,12 @@ public class SubjectHeader {
         mDay = day;
     }
 
-    public ArrayList<SubjectBody> getChildren() {
+    public List<SubjectBody> getChildren() {
         return mChildren;
     }
 
-    public void setChildren(ArrayList<SubjectBody> children) {
+    public void setChildren(List<SubjectBody> children) {
         mChildren = children;
     }
 
-    public UUID getUuid() {
-        return mUuid;
-    }
 }

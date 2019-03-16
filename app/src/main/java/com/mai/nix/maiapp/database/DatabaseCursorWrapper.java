@@ -27,20 +27,20 @@ public class DatabaseCursorWrapper extends CursorWrapper {
         examModel.setRoom(getString(getColumnIndex(ExamTable.Cols.ROOM)));
         return examModel;
     }
-    public SubjectHeader getHeader(){
+    /*public SubjectHeader getHeader(){
         SubjectHeader header = new SubjectHeader(UUID.fromString(getString(getColumnIndex(HeadersTable.Cols.UUID))));
         header.setDate(getString(getColumnIndex(HeadersTable.Cols.DATE)));
         header.setDay(getString(getColumnIndex(HeadersTable.Cols.DAY)));
         return header;
-    }
-    public SubjectBody getBody(){
+    }*/
+    /*public SubjectBody getBody(){
         SubjectBody body = new SubjectBody();
-        body.setUuid(UUID.fromString(getString(getColumnIndex(BodiesTable.Cols.HEADER_UUID))));
+        body.setSubjectId(UUID.fromString(getString(getColumnIndex(BodiesTable.Cols.HEADER_UUID))));
         body.setTime(getString(getColumnIndex(BodiesTable.Cols.TIME)));
         body.setType(getString(getColumnIndex(BodiesTable.Cols.TYPE)));
         body.setTitle(getString(getColumnIndex(BodiesTable.Cols.TITLE)));
         body.setTeacher(getString(getColumnIndex(BodiesTable.Cols.TEACHER)));
         body.setRoom(getString(getColumnIndex(BodiesTable.Cols.ROOM)));
         return body;
-    }
+    }*/
 }

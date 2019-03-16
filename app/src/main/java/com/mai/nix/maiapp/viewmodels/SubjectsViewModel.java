@@ -20,16 +20,22 @@ public class SubjectsViewModel extends ViewModel {
     }
 
     public LiveData<List<SubjectHeader>> getData() {
-        loadData();
-        return mSubjects;
-    }
-
-    private void loadData() {
         mSubjectsRepository.loadData(new SubjectsRepository.LoadSubjectsCallback() {
             @Override
             public void onLoad(List<SubjectHeader> subjects) {
                 mSubjects.postValue(subjects);
             }
         });
+        return mSubjects;
+    }
+
+    public LiveData<List<SubjectHeader>> getCachedSubjectsData() {
+        mSubjectsRepository.loadCachedDataOrLoad(new SubjectsRepository.LoadSubjectsCallback() {
+            @Override
+            public void onLoad(List<SubjectHeader> subjects) {
+                mSubjects.postValue(subjects);
+            }
+        });
+        return mSubjects;
     }
 }

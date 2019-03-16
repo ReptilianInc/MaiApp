@@ -5,7 +5,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,18 +19,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import com.mai.nix.maiapp.model.SubjectBody;
 import com.mai.nix.maiapp.model.SubjectHeader;
 import com.mai.nix.maiapp.viewmodels.SubjectsViewModel;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -55,6 +44,9 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
     private String mWeek = "1";
     private final String PLUS_WEEK = "&week=";
 
+    private SubjectsViewModel mSubjectsViewModel;
+    private LiveData<List<SubjectHeader>> mLiveData;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,12 +62,33 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH);
         mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH);
         UserSettings.initialize(getContext());
-        mDataLab = DataLab.get(getContext());
         mGroups = new ArrayList<>();
         mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
         mCurrentGroup = UserSettings.getGroup(getContext());
         mSpinner = header.findViewById(R.id.spinner);
         mSwipeRefreshLayout = v.findViewById(R.id.swiperefresh);
+
+        mSubjectsViewModel = ViewModelProviders.of(MyGroupScheduleSubjectsFragment.this)
+                .get(SubjectsViewModel.class);
+        mCurrentLink = mLink.concat(mCurrentGroup);
+        mSubjectsViewModel.initRepository(mCurrentLink);
+        mLiveData = mSubjectsViewModel.getCachedSubjectsData();
+
+        mLiveData.observe(MyGroupScheduleSubjectsFragment.this, new Observer<List<SubjectHeader>>() {
+            @Override
+            public void onChanged(@Nullable List<SubjectHeader> subjectHeaders) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                mGroups.clear();
+                mGroups.addAll(subjectHeaders);
+                mListView.setAdapter(mAdapter);
+                for (int j = 0; j < mGroups.size(); j++) {
+                    mListView.expandGroup(j);
+                }
+                Log.d("poisondart ", "onChanged");
+            }
+        });
+
+
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -84,51 +97,25 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                         mSwipeRefreshLayout.setRefreshing(true);
                         mWeek = Integer.toString(i);
                         mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
-                        SubjectsViewModel model = ViewModelProviders.of(MyGroupScheduleSubjectsFragment.this)
-                                .get(SubjectsViewModel.class);
-                        model.initRepository(mCurrentLink);
-                        LiveData<List<SubjectHeader>> data = model.getData();
-                        if (!data.hasObservers()) {
-                            data.observe(MyGroupScheduleSubjectsFragment.this, new Observer<List<SubjectHeader>>() {
-                                @Override
-                                public void onChanged(@Nullable List<SubjectHeader> subjectHeaders) {
-                                    mSwipeRefreshLayout.setRefreshing(false);
-                                    mGroups.clear();
-                                    mGroups.addAll(subjectHeaders);
-                                    mListView.setAdapter(mAdapter);
-                                    for (int j = 0; j < mGroups.size(); j++) {
-                                        mListView.expandGroup(j);
-                                    }
-                                    Log.d("poisondart ", "onChanged");
-                                }
-                            });
-                        }
-                    } else if (mDataLab.isSubjectsTablesEmpty()) {
-                        mCurrentLink = mLink.concat(mCurrentGroup);
-                        new MyThread(mCurrentLink, true).execute();
+                        mSubjectsViewModel.initRepository(mCurrentLink);
+                        mLiveData = mSubjectsViewModel.getCachedSubjectsData();
                     } else if (UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
                             UserSettings.getDay(getContext()) != mCurrentDay) {
                         UserSettings.setDay(getContext(), mCurrentDay);
                         mCurrentLink = mLink.concat(mCurrentGroup);
-                        new MyThread(mCurrentLink, true).execute();
+                        mSubjectsViewModel.initRepository(mCurrentLink);
+                        mLiveData = mSubjectsViewModel.getData();
                     } else if (UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
                             UserSettings.getWeek(getContext()) != mCurrentWeek) {
                         UserSettings.setWeek(getContext(), mCurrentWeek);
                         mCurrentLink = mLink.concat(mCurrentGroup);
-                        new MyThread(mCurrentLink, true).execute();
+                        mSubjectsViewModel.initRepository(mCurrentLink);
+                        mLiveData = mSubjectsViewModel.getData();
                     } else {
-                        mGroups.clear();
-                        mCurrentLink = mLink.concat(mCurrentGroup);
-                        ArrayList<SubjectHeader> headers = new ArrayList<>();
-                        headers.addAll(mDataLab.getHeaders());
-                        for (SubjectHeader header : headers) {
-                            header.setChildren(mDataLab.getBodies(header.getUuid()));
-                        }
-                        mGroups.addAll(headers);
-                        for (int j = 0; j < mGroups.size(); j++) {
-                            mListView.expandGroup(j);
-                        }
-                        mAdapter.notifyDataSetChanged();
+                        //TODO Не будет работать пока
+                        //mCurrentLink = mLink.concat(mCurrentGroup);
+                        //mSubjectsViewModel.initRepository(mCurrentLink);
+                        //mLiveData = mSubjectsViewModel.getCachedSubjectsData();
                     }
                 }
             }
@@ -152,101 +139,17 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                 if (mSpinner.getSelectedItemPosition() != 0) {
                     mWeek = Integer.toString(mSpinner.getSelectedItemPosition());
                     mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
-                    new MyThread(mCurrentLink, false).execute();
+                    mSubjectsViewModel.initRepository(mCurrentLink);
+                    mLiveData = mSubjectsViewModel.getData();
                 } else {
                     mCurrentLink = mLink.concat(mCurrentGroup);
-                    new MyThread(mCurrentLink, true).execute();
+                    mSubjectsViewModel.initRepository(mCurrentLink);
+                    mLiveData = mSubjectsViewModel.getCachedSubjectsData();
                 }
 
             }
         });
         return v;
-    }
-
-    private class MyThread extends AsyncTask<Integer, Void, Integer> {
-        private Document doc;
-        private Elements primaries;
-        private String final_link;
-        private boolean isCaching;
-
-        public MyThread() {
-            super();
-        }
-
-        public MyThread(String link, boolean cache) {
-            final_link = link;
-            isCaching = cache;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            mSwipeRefreshLayout.setRefreshing(true);
-        }
-
-        @Override
-        protected Integer doInBackground(Integer... ints) {
-            int size = 0;
-            try {
-                doc = Jsoup.connect(final_link).get();
-                primaries = doc.select("div[class=sc-table sc-table-day]");
-                Log.d("link", final_link);
-                if (!primaries.isEmpty()) {
-                    mGroups.clear();
-                    if (isCaching) mDataLab.clearSubjectsCache();
-                }
-                for (Element prim : primaries) {
-                    String date = prim.select("div[class=sc-table-col sc-day-header sc-gray]").text();
-                    if (date.isEmpty()) {
-                        date = prim.select("div[class=sc-table-col sc-day-header sc-blue]").text();
-                    }
-                    String day = prim.select("span[class=sc-day]").text();
-                    SubjectHeader header = new SubjectHeader(date, day);
-                    ArrayList<SubjectBody> bodies = new ArrayList<>();
-                    Elements times = prim.select("div[class=sc-table-col sc-item-time]");
-                    Elements types = prim.select("div[class=sc-table-col sc-item-type]");
-                    Elements titles = prim.select("span[class=sc-title]");
-                    Elements teachers = prim.select("div[class=sc-table-col sc-item-title]");
-                    Elements rooms = prim.select("div[class=sc-table-col sc-item-location]");
-                    for (int i = 0; i < times.size(); i++) {
-                        SubjectBody body = new SubjectBody(titles.get(i).text(),
-                                teachers.get(i).select("span[class=sc-lecturer]").text(),
-                                types.get(i).text(), times.get(i).text(), rooms.get(i).text());
-                        body.setUuid(header.getUuid());
-                        bodies.add(body);
-                    }
-                    header.setChildren(bodies);
-                    mGroups.add(header);
-                    if (isCaching) {
-                        mDataLab.addBodies(bodies);
-                        mDataLab.addHeader(header);
-                    }
-                }
-                size = primaries.size();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NullPointerException n) {
-                return 0;
-            }
-            return size;
-        }
-
-        @Override
-        protected void onPostExecute(Integer i) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            if (i == 0) {
-                if (getContext() != null) Toast.makeText(getContext(), R.string.error,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                mListView.setAdapter(mAdapter);
-                for (int j = 0; j < mGroups.size(); j++) {
-                    mListView.expandGroup(j);
-                }
-                if (isCaching)
-                    Toast.makeText(getContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show();
-            }
-
-        }
     }
 
     @Override
@@ -255,7 +158,8 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         if (((MainActivity) getActivity()).subjectsNeedToUpdate) {
             mCurrentGroup = UserSettings.getGroup(getContext());
             mCurrentLink = mLink.concat(mCurrentGroup);
-            new MyThread(mCurrentLink, true).execute();
+            mSubjectsViewModel.initRepository(mCurrentLink);
+            mLiveData = mSubjectsViewModel.getCachedSubjectsData();
             ((MainActivity) getActivity()).subjectsNeedToUpdate = false;
         }
     }

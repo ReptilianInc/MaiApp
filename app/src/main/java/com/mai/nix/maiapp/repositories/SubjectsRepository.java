@@ -3,8 +3,11 @@ package com.mai.nix.maiapp.repositories;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.mai.nix.maiapp.MaiApp;
 import com.mai.nix.maiapp.model.SubjectBody;
 import com.mai.nix.maiapp.model.SubjectHeader;
+import com.mai.nix.maiapp.room.AppDatabase;
+import com.mai.nix.maiapp.room.SubjectsDao;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,6 +31,21 @@ public class SubjectsRepository {
 
     public interface LoadSubjectsCallback {
         void onLoad(List<SubjectHeader> subjects);
+    }
+
+    public void loadCachedDataOrLoad(LoadSubjectsCallback callback) {
+        AppDatabase appDatabase = MaiApp.getInstance().getDatabase();
+        SubjectsDao subjectsDao = appDatabase.subjectsDao();
+        List<SubjectHeader> subjectHeaders = subjectsDao.getAllSubjectHeaders();
+        if (!subjectHeaders.isEmpty()) {
+            for (SubjectHeader subjectHeader : subjectHeaders) {
+                subjectHeader.setChildren(subjectsDao.getById(subjectHeader.getId()));
+            }
+            callback.onLoad(subjectHeaders);
+        } else {
+            LoadSubjectsTask loadSubjectsTask = new LoadSubjectsTask(mLink, true, callback);
+            loadSubjectsTask.execute();
+        }
     }
 
     public void loadData(LoadSubjectsCallback callback) {
@@ -64,13 +82,11 @@ public class SubjectsRepository {
         @Override
         protected List<SubjectHeader> doInBackground(Integer... integers) {
             List<SubjectHeader> subjects = new ArrayList<>();
+
             try {
                 doc = Jsoup.connect(finalLink).get();
                 primaries = doc.select("div[class=sc-table sc-table-day]");
                 Log.d("link", finalLink);
-                if (!primaries.isEmpty()) {
-                    //if (isCaching) mDataLab.clearSubjectsCache();
-                }
                 for (Element prim : primaries) {
                     String date = prim.select("div[class=sc-table-col sc-day-header sc-gray]").text();
                     if (date.isEmpty()) {
@@ -88,16 +104,26 @@ public class SubjectsRepository {
                         SubjectBody body = new SubjectBody(titles.get(i).text(),
                                 teachers.get(i).select("span[class=sc-lecturer]").text(),
                                 types.get(i).text(), times.get(i).text(), rooms.get(i).text());
-                        body.setUuid(header.getUuid());
                         bodies.add(body);
                     }
                     header.setChildren(bodies);
                     subjects.add(header);
-                    if (isCaching) {
-                        //mDataLab.addBodies(bodies);
-                        //mDataLab.addHeader(header);
+                }
+
+                if (isCaching && !subjects.isEmpty()) {
+                    AppDatabase appDatabase = MaiApp.getInstance().getDatabase();
+                    SubjectsDao subjectsDao = appDatabase.subjectsDao();
+                    subjectsDao.clearSubjectHeaders(subjectsDao.getAllSubjectHeaders());
+                    subjectsDao.clearSubjectBodies(subjectsDao.getAllSubjectBodies());
+                    for (SubjectHeader header : subjects) {
+                        long id = subjectsDao.insertSubjectHeader(header);
+                        for (SubjectBody subjectBody : header.getChildren()) {
+                            subjectBody.setSubjectId(id);
+                            subjectsDao.insertSubjectBody(subjectBody);
+                        }
                     }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NullPointerException n) {

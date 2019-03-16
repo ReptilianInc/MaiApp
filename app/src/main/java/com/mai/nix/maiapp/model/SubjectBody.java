@@ -1,18 +1,33 @@
 package com.mai.nix.maiapp.model;
 
-import java.util.UUID;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
+
+import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 /**
  * Created by Nix on 02.08.2017.
  */
 
+@Entity(tableName = "subjects")
 public class SubjectBody {
+    @PrimaryKey (autoGenerate = true)
+    @ColumnInfo(name = "id")
+    private long mId;
+    @ColumnInfo(name = "title")
     private String mTitle;
+    @ColumnInfo(name = "teacher")
     private String mTeacher;
+    @ColumnInfo(name = "type")
     private String mType;
+    @ColumnInfo(name = "time")
     private String mTime;
+    @ColumnInfo(name = "room")
     private String mRoom;
-    private UUID mUuid;
+    @ColumnInfo(name = "subject_id")
+    private long mSubjectId;
 
     public SubjectBody(String title, String teacher, String type, String time, String room) {
         mTitle = title;
@@ -21,8 +36,18 @@ public class SubjectBody {
         mTime = time;
         mRoom = room;
     }
+
     public SubjectBody() {
     }
+
+    public long getId() {
+        return mId;
+    }
+
+    public void setId(long id) {
+        mId = id;
+    }
+
     public String getTitle() {
         return mTitle;
     }
@@ -63,11 +88,11 @@ public class SubjectBody {
         mRoom = room;
     }
 
-    public UUID getUuid() {
-        return mUuid;
+    public long getSubjectId() {
+        return mSubjectId;
     }
 
-    public void setUuid(UUID uuid) {
-        mUuid = uuid;
+    public void setSubjectId(long id) {
+        mSubjectId = id;
     }
 }
