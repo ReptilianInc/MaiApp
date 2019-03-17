@@ -17,10 +17,15 @@ public class WorkersAndGradsOrgsFragment extends SimpleListFragment {
 
     @Override
     public void releaseThread() {
-        new MyThread().execute();
+        //new MyThread().execute();
     }
 
-    private class MyThread extends AsyncTask<Integer, Void, Integer> {
+    @Override
+    public void setObserve() {
+
+    }
+
+    /*private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Document doc;
         private Element table;
         private Elements rows, cols;
@@ -36,10 +41,10 @@ public class WorkersAndGradsOrgsFragment extends SimpleListFragment {
                 table = doc.select("table[class=data-table]").first();
                 rows = table.select("th");
                 cols = table.select("td");
-                if (table != null) mOrgs.clear();
+                if (table != null) simpleListLiveData.clear();
                 int i = 0;
                 for(int j = 0; j < cols.size(); j+=3){
-                    mOrgs.add(new StudentOrgModel(rows.get(i).text(), cols.get(j).text(), cols.get(j+1).text(),
+                    simpleListLiveData.add(new StudentOrgModel(rows.get(i).text(), cols.get(j).text(), cols.get(j+1).text(),
                             cols.get(j+2).text()));
                     i++;
                 }
@@ -62,5 +67,5 @@ public class WorkersAndGradsOrgsFragment extends SimpleListFragment {
                 mListView.setAdapter(mAdapter);
             }
         }
-    }
+    }*/
 }

@@ -19,11 +19,16 @@ import java.io.IOException;
 public class CafesFragment extends SimpleListFragment {
 
     @Override
-    public void releaseThread() {
-        new MyThread().execute();
+    public void setObserve() {
+
     }
 
-    private class MyThread extends AsyncTask<Integer, Void, Integer> {
+    @Override
+    public void releaseThread() {
+        //new MyThread().execute();
+    }
+
+    /*private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Document doc;
         private Element table;
         private Elements rows;
@@ -49,10 +54,10 @@ public class CafesFragment extends SimpleListFragment {
                 doc = Jsoup.connect("http://mai.ru/common/campus/cafeteria/").get();
                 table = doc.select("table[class = table]").first();
                 rows = table.select("tr");
-                if (table != null) mOrgs.clear();
+                if (table != null) simpleListLiveData.clear();
                 for (int i = 1; i < rows.size(); i++) {
                     Elements el = rows.get(i).select("td");
-                    mOrgs.add(new StudentOrgModel(el.get(0).text(), el.get(1).text(), el.get(2).text()));
+                    simpleListLiveData.add(new StudentOrgModel(el.get(0).text(), el.get(1).text(), el.get(2).text()));
                 }
                 size = rows.size();
             } catch (IOException e) {
@@ -62,5 +67,5 @@ public class CafesFragment extends SimpleListFragment {
             }
             return size;
         }
-    }
+    }*/
 }

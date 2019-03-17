@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.mai.nix.maiapp.model.StudentOrgModel;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Nix on 10.08.2017.
@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 public class StudOrgAdapter extends BaseAdapter {
     private Context mContext;
-    private ArrayList<StudentOrgModel> mOrgModels;
-    public StudOrgAdapter(Context context, ArrayList<StudentOrgModel> models) {
+    private List<StudentOrgModel> mOrgModels;
+    public StudOrgAdapter(Context context, List<StudentOrgModel> models) {
         mContext = context;
         mOrgModels = models;
     }
@@ -43,10 +43,10 @@ public class StudOrgAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.stud_org_card, viewGroup, false);
         }
 
-        TextView text1 = (TextView)view.findViewById(R.id.title);
-        TextView text2 = (TextView)view.findViewById(R.id.leader);
-        TextView text3 = (TextView)view.findViewById(R.id.address);
-        TextView text4 = (TextView)view.findViewById(R.id.phone);
+        TextView text1 = view.findViewById(R.id.title);
+        TextView text2 = view.findViewById(R.id.leader);
+        TextView text3 = view.findViewById(R.id.address);
+        TextView text4 = view.findViewById(R.id.phone);
         text1.setText(mOrgModels.get(i).getTitle());
         text2.setText(mOrgModels.get(i).getLeader());
         text3.setText(mOrgModels.get(i).getAddress());

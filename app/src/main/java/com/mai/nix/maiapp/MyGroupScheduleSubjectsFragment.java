@@ -70,7 +70,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         mSubjectsViewModel = ViewModelProviders.of(MyGroupScheduleSubjectsFragment.this)
                 .get(SubjectsViewModel.class);
         mCurrentLink = mLink.concat(mCurrentGroup);
-        mSubjectsViewModel.initRepository(mCurrentLink);
+        mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
         mLiveData = mSubjectsViewModel.getCachedSubjectsData();
 
         mLiveData.observe(MyGroupScheduleSubjectsFragment.this, new Observer<List<SubjectHeader>>() {
@@ -96,24 +96,24 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                         mSwipeRefreshLayout.setRefreshing(true);
                         mWeek = Integer.toString(i);
                         mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
-                        mSubjectsViewModel.initRepository(mCurrentLink);
+                        mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
                         mLiveData = mSubjectsViewModel.getCachedSubjectsData();
                     } else if (UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
                             UserSettings.getDay(getContext()) != mCurrentDay) {
                         UserSettings.setDay(getContext(), mCurrentDay);
                         mCurrentLink = mLink.concat(mCurrentGroup);
-                        mSubjectsViewModel.initRepository(mCurrentLink);
+                        mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
                         mLiveData = mSubjectsViewModel.getData();
                     } else if (UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
                             UserSettings.getWeek(getContext()) != mCurrentWeek) {
                         UserSettings.setWeek(getContext(), mCurrentWeek);
                         mCurrentLink = mLink.concat(mCurrentGroup);
-                        mSubjectsViewModel.initRepository(mCurrentLink);
+                        mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
                         mLiveData = mSubjectsViewModel.getData();
                     } else {
                         //TODO Не будет работать пока
                         mCurrentLink = mLink.concat(mCurrentGroup);
-                        mSubjectsViewModel.initRepository(mCurrentLink);
+                        mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
                         mLiveData = mSubjectsViewModel.getCachedSubjectsData();
                     }
                 }
@@ -138,11 +138,11 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                 if (mSpinner.getSelectedItemPosition() != 0) {
                     mWeek = Integer.toString(mSpinner.getSelectedItemPosition());
                     mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
-                    mSubjectsViewModel.initRepository(mCurrentLink);
+                    mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
                     mLiveData = mSubjectsViewModel.getData();
                 } else {
                     mCurrentLink = mLink.concat(mCurrentGroup);
-                    mSubjectsViewModel.initRepository(mCurrentLink);
+                    mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
                     mLiveData = mSubjectsViewModel.getCachedSubjectsData();
                 }
 
@@ -157,7 +157,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         if (((MainActivity) getActivity()).subjectsNeedToUpdate) {
             mCurrentGroup = UserSettings.getGroup(getContext());
             mCurrentLink = mLink.concat(mCurrentGroup);
-            mSubjectsViewModel.initRepository(mCurrentLink);
+            mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
             mLiveData = mSubjectsViewModel.getCachedSubjectsData();
             ((MainActivity) getActivity()).subjectsNeedToUpdate = false;
         }
