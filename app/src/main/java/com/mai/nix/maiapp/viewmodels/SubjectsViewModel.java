@@ -8,13 +8,18 @@ import com.mai.nix.maiapp.model.StudentOrgModel;
 import com.mai.nix.maiapp.model.SubjectHeader;
 import com.mai.nix.maiapp.repositories.StudentOrgsRepository;
 import com.mai.nix.maiapp.repositories.SubjectsRepository;
+import com.mai.nix.maiapp.repositories.WorkersAndGradsRepository;
+
 import java.util.List;
 
 public class SubjectsViewModel extends ViewModel {
     private MutableLiveData<List<SubjectHeader>> mSubjects = new MutableLiveData<>();
     private MutableLiveData<List<StudentOrgModel>> mStudentOrgs = new MutableLiveData<>();
+    private MutableLiveData<List<StudentOrgModel>> mWorkersAndGradsOrgs = new MutableLiveData<>();
+
     private SubjectsRepository mSubjectsRepository;
     private StudentOrgsRepository mStudentOrgsRepository;
+    private WorkersAndGradsRepository mWorkersAndGradsRepository;
 
     public void initSubjectsRepository(String link) {
         if (mSubjectsRepository == null) {
@@ -32,11 +37,28 @@ public class SubjectsViewModel extends ViewModel {
         return mStudentOrgs;
     }
 
+    public LiveData<List<StudentOrgModel>> getWorkersAndGradsLiveData() {
+        if (mWorkersAndGradsRepository == null) {
+            mWorkersAndGradsRepository = new WorkersAndGradsRepository();
+            loadWorkersAndOrgsData();
+        }
+        return mWorkersAndGradsOrgs;
+    }
+
     public void loadStudentOrgsData() {
         mStudentOrgsRepository.loadData(new StudentOrgsRepository.LoadOrgsCallback() {
             @Override
             public void onLoad(List<StudentOrgModel> subjects) {
                 mStudentOrgs.postValue(subjects);
+            }
+        });
+    }
+
+    public void loadWorkersAndOrgsData() {
+        mWorkersAndGradsRepository.loadData(new WorkersAndGradsRepository.LoadOrgsCallback() {
+            @Override
+            public void onLoad(List<StudentOrgModel> subjects) {
+                mWorkersAndGradsOrgs.postValue(subjects);
             }
         });
     }
