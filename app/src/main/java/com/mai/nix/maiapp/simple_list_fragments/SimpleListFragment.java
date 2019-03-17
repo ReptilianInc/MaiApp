@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp;
+package com.mai.nix.maiapp.simple_list_fragments;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import com.mai.nix.maiapp.R;
+import com.mai.nix.maiapp.StudOrgAdapter;
 import com.mai.nix.maiapp.model.StudentOrgModel;
 import com.mai.nix.maiapp.viewmodels.ApplicationViewModel;
 

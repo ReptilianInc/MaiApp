@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp;
+package com.mai.nix.maiapp.simple_list_fragments;
 
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
