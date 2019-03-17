@@ -36,7 +36,6 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
     private SubjectsExpListAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Spinner mSpinner;
-    private DataLab mDataLab;
     private String mCurrentGroup, mCurrentLink;
     private int mCurrentDay, mCurrentWeek;
     private Calendar mCalendar;
@@ -113,9 +112,9 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                         mLiveData = mSubjectsViewModel.getData();
                     } else {
                         //TODO Не будет работать пока
-                        //mCurrentLink = mLink.concat(mCurrentGroup);
-                        //mSubjectsViewModel.initRepository(mCurrentLink);
-                        //mLiveData = mSubjectsViewModel.getCachedSubjectsData();
+                        mCurrentLink = mLink.concat(mCurrentGroup);
+                        mSubjectsViewModel.initRepository(mCurrentLink);
+                        mLiveData = mSubjectsViewModel.getCachedSubjectsData();
                     }
                 }
             }

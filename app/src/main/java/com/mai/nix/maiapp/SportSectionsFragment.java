@@ -44,9 +44,15 @@ public class SportSectionsFragment extends SimpleExpandableListFragment{
                 int j = 0;
                 for(int i = 1; i < rows.size(); i++){
                     Elements el = rows.get(i).select("td");
-                    if(!el.isEmpty()){
-                        SportSectionsBodies body = new SportSectionsBodies(el.get(0).text(), el.get(1).text(), el.get(2).text());
-                        mHeaders.get(j).addBody(body);
+                    if(!el.isEmpty()) {
+                        if (el.size() > 2) {
+                            SportSectionsBodies body = new SportSectionsBodies(el.get(0).text(), el.get(1).text(), el.get(2).text());
+                            mHeaders.get(j).addBody(body);
+                        } else {
+                            SportSectionsBodies body = new SportSectionsBodies(el.get(0).text(), el.get(1).text(), "");
+                            mHeaders.get(j).addBody(body);
+                        }
+
                     }else{
                         j++;
                     }

@@ -14,9 +14,7 @@ public class MaiApp extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        mAppDatabase = Room.databaseBuilder(this, AppDatabase.class, "mai_database")
-                .allowMainThreadQueries()
-                .build();
+        mAppDatabase = Room.databaseBuilder(this, AppDatabase.class, "mai_database").build();
     }
 
     public static MaiApp getInstance() {

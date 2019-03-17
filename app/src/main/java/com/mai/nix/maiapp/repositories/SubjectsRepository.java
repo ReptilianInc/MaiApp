@@ -34,22 +34,12 @@ public class SubjectsRepository {
     }
 
     public void loadCachedDataOrLoad(LoadSubjectsCallback callback) {
-        AppDatabase appDatabase = MaiApp.getInstance().getDatabase();
-        SubjectsDao subjectsDao = appDatabase.subjectsDao();
-        List<SubjectHeader> subjectHeaders = subjectsDao.getAllSubjectHeaders();
-        if (!subjectHeaders.isEmpty()) {
-            for (SubjectHeader subjectHeader : subjectHeaders) {
-                subjectHeader.setChildren(subjectsDao.getById(subjectHeader.getId()));
-            }
-            callback.onLoad(subjectHeaders);
-        } else {
-            LoadSubjectsTask loadSubjectsTask = new LoadSubjectsTask(mLink, true, callback);
-            loadSubjectsTask.execute();
-        }
+        LoadSubjectsTask loadSubjectsTask = new LoadSubjectsTask(mLink, true, callback, true);
+        loadSubjectsTask.execute();
     }
 
     public void loadData(LoadSubjectsCallback callback) {
-        LoadSubjectsTask loadSubjectsTask = new LoadSubjectsTask(mLink, false, callback);
+        LoadSubjectsTask loadSubjectsTask = new LoadSubjectsTask(mLink, false, callback, false);
         loadSubjectsTask.execute();
     }
 
@@ -57,13 +47,14 @@ public class SubjectsRepository {
         private Document doc;
         private Elements primaries;
         private String finalLink;
-        private boolean isCaching;
+        private boolean isCaching, loadFromCache;
         private final LoadSubjectsCallback callback;
 
-        public LoadSubjectsTask(String link, boolean isC, LoadSubjectsCallback clbck) {
+        public LoadSubjectsTask(String link, boolean isC, LoadSubjectsCallback clbck, boolean lFCache) {
             finalLink = link;
             isCaching = isC;
             callback = clbck;
+            loadFromCache = lFCache;
         }
 
         @Override
@@ -82,6 +73,17 @@ public class SubjectsRepository {
         @Override
         protected List<SubjectHeader> doInBackground(Integer... integers) {
             List<SubjectHeader> subjects = new ArrayList<>();
+            AppDatabase appDatabase = MaiApp.getInstance().getDatabase();
+            SubjectsDao subjectsDao = appDatabase.subjectsDao();
+
+            if (loadFromCache) {
+                subjects = subjectsDao.getAllSubjectHeaders();
+                for (SubjectHeader subjectHeader : subjects) {
+                    subjectHeader.setChildren(subjectsDao.getById(subjectHeader.getId()));
+                }
+
+                if (!subjects.isEmpty()) return subjects;
+            }
 
             try {
                 doc = Jsoup.connect(finalLink).get();
@@ -111,8 +113,6 @@ public class SubjectsRepository {
                 }
 
                 if (isCaching && !subjects.isEmpty()) {
-                    AppDatabase appDatabase = MaiApp.getInstance().getDatabase();
-                    SubjectsDao subjectsDao = appDatabase.subjectsDao();
                     subjectsDao.clearSubjectHeaders(subjectsDao.getAllSubjectHeaders());
                     subjectsDao.clearSubjectBodies(subjectsDao.getAllSubjectBodies());
                     for (SubjectHeader header : subjects) {
