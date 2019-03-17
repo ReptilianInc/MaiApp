@@ -6,20 +6,23 @@ import android.arch.lifecycle.ViewModel;
 
 import com.mai.nix.maiapp.model.StudentOrgModel;
 import com.mai.nix.maiapp.model.SubjectHeader;
+import com.mai.nix.maiapp.repositories.CafesRepository;
 import com.mai.nix.maiapp.repositories.StudentOrgsRepository;
 import com.mai.nix.maiapp.repositories.SubjectsRepository;
 import com.mai.nix.maiapp.repositories.WorkersAndGradsRepository;
 
 import java.util.List;
 
-public class SubjectsViewModel extends ViewModel {
+public class ApplicationViewModel extends ViewModel {
     private MutableLiveData<List<SubjectHeader>> mSubjects = new MutableLiveData<>();
-    private MutableLiveData<List<StudentOrgModel>> mStudentOrgs = new MutableLiveData<>();
-    private MutableLiveData<List<StudentOrgModel>> mWorkersAndGradsOrgs = new MutableLiveData<>();
+    private MutableLiveData<List<StudentOrgModel>> mStudentOrganizations = new MutableLiveData<>();
+    private MutableLiveData<List<StudentOrgModel>> mWorkersAndGradsOrganizations = new MutableLiveData<>();
+    private MutableLiveData<List<StudentOrgModel>> mCafes = new MutableLiveData<>();
 
     private SubjectsRepository mSubjectsRepository;
-    private StudentOrgsRepository mStudentOrgsRepository;
+    private StudentOrgsRepository mStudentOrganisationsRepository;
     private WorkersAndGradsRepository mWorkersAndGradsRepository;
+    private CafesRepository mCafesRepository;
 
     public void initSubjectsRepository(String link) {
         if (mSubjectsRepository == null) {
@@ -29,36 +32,53 @@ public class SubjectsViewModel extends ViewModel {
         }
     }
 
-    public LiveData<List<StudentOrgModel>> getStudentOrgsLiveData() {
-        if (mStudentOrgsRepository == null) {
-            mStudentOrgsRepository = new StudentOrgsRepository();
-            loadStudentOrgsData();
+    public LiveData<List<StudentOrgModel>> getStudentOrganisationsLiveData() {
+        if (mStudentOrganisationsRepository == null) {
+            mStudentOrganisationsRepository = new StudentOrgsRepository();
+            loadStudentOrganisationsData();
         }
-        return mStudentOrgs;
+        return mStudentOrganizations;
     }
 
     public LiveData<List<StudentOrgModel>> getWorkersAndGradsLiveData() {
         if (mWorkersAndGradsRepository == null) {
             mWorkersAndGradsRepository = new WorkersAndGradsRepository();
-            loadWorkersAndOrgsData();
+            loadWorkersAndOrganisationsData();
         }
-        return mWorkersAndGradsOrgs;
+        return mWorkersAndGradsOrganizations;
     }
 
-    public void loadStudentOrgsData() {
-        mStudentOrgsRepository.loadData(new StudentOrgsRepository.LoadOrgsCallback() {
+    public LiveData<List<StudentOrgModel>> getCafesLiveData() {
+        if (mCafesRepository == null) {
+            mCafesRepository = new CafesRepository();
+            loadCafesData();
+        }
+        return mCafes;
+    }
+
+    public void loadStudentOrganisationsData() {
+        mStudentOrganisationsRepository.loadData(new StudentOrgsRepository.LoadOrgsCallback() {
             @Override
             public void onLoad(List<StudentOrgModel> subjects) {
-                mStudentOrgs.postValue(subjects);
+                mStudentOrganizations.postValue(subjects);
             }
         });
     }
 
-    public void loadWorkersAndOrgsData() {
+    public void loadWorkersAndOrganisationsData() {
         mWorkersAndGradsRepository.loadData(new WorkersAndGradsRepository.LoadOrgsCallback() {
             @Override
             public void onLoad(List<StudentOrgModel> subjects) {
-                mWorkersAndGradsOrgs.postValue(subjects);
+                mWorkersAndGradsOrganizations.postValue(subjects);
+            }
+        });
+    }
+
+    public void loadCafesData() {
+        mCafesRepository.loadData(new CafesRepository.LoadCafesCallback() {
+            @Override
+            public void onLoad(List<StudentOrgModel> cafes) {
+                mCafes.postValue(cafes);
             }
         });
     }

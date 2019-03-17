@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import com.mai.nix.maiapp.model.StudentOrgModel;
-import com.mai.nix.maiapp.viewmodels.SubjectsViewModel;
+import com.mai.nix.maiapp.viewmodels.ApplicationViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public abstract class SimpleListFragment extends Fragment {
     protected ListView mListView;
     protected LiveData<List<StudentOrgModel>> simpleListLiveData;
     protected List<StudentOrgModel> mOrgModels;
-    protected SubjectsViewModel mSubjectsViewModel;
+    protected ApplicationViewModel mApplicationViewModel;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected StudOrgAdapter mAdapter;
     @Nullable
@@ -37,8 +37,8 @@ public abstract class SimpleListFragment extends Fragment {
         mSwipeRefreshLayout = v.findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setRefreshing(true);
         mListView = v.findViewById(R.id.stud_org_listview);
-        mSubjectsViewModel = ViewModelProviders.of(SimpleListFragment.this)
-                .get(SubjectsViewModel.class);
+        mApplicationViewModel = ViewModelProviders.of(SimpleListFragment.this)
+                .get(ApplicationViewModel.class);
         mOrgModels = new ArrayList<>();
         mAdapter = new StudOrgAdapter(getContext(), mOrgModels);
         setObserve();

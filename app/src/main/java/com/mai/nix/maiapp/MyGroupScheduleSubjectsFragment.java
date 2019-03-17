@@ -20,7 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import com.mai.nix.maiapp.model.SubjectHeader;
-import com.mai.nix.maiapp.viewmodels.SubjectsViewModel;
+import com.mai.nix.maiapp.viewmodels.ApplicationViewModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -43,7 +43,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
     private String mWeek = "1";
     private final String PLUS_WEEK = "&week=";
 
-    private SubjectsViewModel mSubjectsViewModel;
+    private ApplicationViewModel mApplicationViewModel;
     private LiveData<List<SubjectHeader>> mLiveData;
 
     @Override
@@ -67,11 +67,11 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         mSpinner = header.findViewById(R.id.spinner);
         mSwipeRefreshLayout = v.findViewById(R.id.swiperefresh);
 
-        mSubjectsViewModel = ViewModelProviders.of(MyGroupScheduleSubjectsFragment.this)
-                .get(SubjectsViewModel.class);
+        mApplicationViewModel = ViewModelProviders.of(MyGroupScheduleSubjectsFragment.this)
+                .get(ApplicationViewModel.class);
         mCurrentLink = mLink.concat(mCurrentGroup);
-        mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
-        mLiveData = mSubjectsViewModel.getCachedSubjectsData();
+        mApplicationViewModel.initSubjectsRepository(mCurrentLink);
+        mLiveData = mApplicationViewModel.getCachedSubjectsData();
 
         mLiveData.observe(MyGroupScheduleSubjectsFragment.this, new Observer<List<SubjectHeader>>() {
             @Override
@@ -96,25 +96,25 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                         mSwipeRefreshLayout.setRefreshing(true);
                         mWeek = Integer.toString(i);
                         mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
-                        mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
-                        mLiveData = mSubjectsViewModel.getCachedSubjectsData();
+                        mApplicationViewModel.initSubjectsRepository(mCurrentLink);
+                        mLiveData = mApplicationViewModel.getCachedSubjectsData();
                     } else if (UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
                             UserSettings.getDay(getContext()) != mCurrentDay) {
                         UserSettings.setDay(getContext(), mCurrentDay);
                         mCurrentLink = mLink.concat(mCurrentGroup);
-                        mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
-                        mLiveData = mSubjectsViewModel.getData();
+                        mApplicationViewModel.initSubjectsRepository(mCurrentLink);
+                        mLiveData = mApplicationViewModel.getData();
                     } else if (UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
                             UserSettings.getWeek(getContext()) != mCurrentWeek) {
                         UserSettings.setWeek(getContext(), mCurrentWeek);
                         mCurrentLink = mLink.concat(mCurrentGroup);
-                        mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
-                        mLiveData = mSubjectsViewModel.getData();
+                        mApplicationViewModel.initSubjectsRepository(mCurrentLink);
+                        mLiveData = mApplicationViewModel.getData();
                     } else {
                         //TODO Не будет работать пока
                         mCurrentLink = mLink.concat(mCurrentGroup);
-                        mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
-                        mLiveData = mSubjectsViewModel.getCachedSubjectsData();
+                        mApplicationViewModel.initSubjectsRepository(mCurrentLink);
+                        mLiveData = mApplicationViewModel.getCachedSubjectsData();
                     }
                 }
             }
@@ -138,12 +138,12 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                 if (mSpinner.getSelectedItemPosition() != 0) {
                     mWeek = Integer.toString(mSpinner.getSelectedItemPosition());
                     mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
-                    mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
-                    mLiveData = mSubjectsViewModel.getData();
+                    mApplicationViewModel.initSubjectsRepository(mCurrentLink);
+                    mLiveData = mApplicationViewModel.getData();
                 } else {
                     mCurrentLink = mLink.concat(mCurrentGroup);
-                    mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
-                    mLiveData = mSubjectsViewModel.getCachedSubjectsData();
+                    mApplicationViewModel.initSubjectsRepository(mCurrentLink);
+                    mLiveData = mApplicationViewModel.getCachedSubjectsData();
                 }
 
             }
@@ -157,8 +157,8 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         if (((MainActivity) getActivity()).subjectsNeedToUpdate) {
             mCurrentGroup = UserSettings.getGroup(getContext());
             mCurrentLink = mLink.concat(mCurrentGroup);
-            mSubjectsViewModel.initSubjectsRepository(mCurrentLink);
-            mLiveData = mSubjectsViewModel.getCachedSubjectsData();
+            mApplicationViewModel.initSubjectsRepository(mCurrentLink);
+            mLiveData = mApplicationViewModel.getCachedSubjectsData();
             ((MainActivity) getActivity()).subjectsNeedToUpdate = false;
         }
     }

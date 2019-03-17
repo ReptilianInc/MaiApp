@@ -13,12 +13,12 @@ public class WorkersAndGradsOrgsFragment extends SimpleListFragment {
 
     @Override
     public void releaseThread() {
-        mSubjectsViewModel.loadWorkersAndOrgsData();
+        mApplicationViewModel.loadWorkersAndOrganisationsData();
     }
 
     @Override
     public void setObserve() {
-        simpleListLiveData = mSubjectsViewModel.getWorkersAndGradsLiveData();
+        simpleListLiveData = mApplicationViewModel.getWorkersAndGradsLiveData();
         simpleListLiveData.observe(WorkersAndGradsOrgsFragment.this, new Observer<List<StudentOrgModel>>() {
             @Override
             public void onChanged(@Nullable List<StudentOrgModel> studentOrgModels) {

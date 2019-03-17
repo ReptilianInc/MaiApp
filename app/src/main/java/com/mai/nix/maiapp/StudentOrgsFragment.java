@@ -12,12 +12,12 @@ import java.util.List;
 public class StudentOrgsFragment extends SimpleListFragment {
     @Override
     public void releaseThread() {
-        mSubjectsViewModel.loadStudentOrgsData();
+        mApplicationViewModel.loadStudentOrganisationsData();
     }
 
     @Override
     public void setObserve() {
-        simpleListLiveData = mSubjectsViewModel.getStudentOrgsLiveData();
+        simpleListLiveData = mApplicationViewModel.getStudentOrganisationsLiveData();
         simpleListLiveData.observe(StudentOrgsFragment.this, new Observer<List<StudentOrgModel>>() {
             @Override
             public void onChanged(@Nullable List<StudentOrgModel> studentOrgModels) {

@@ -1,16 +1,11 @@
 package com.mai.nix.maiapp;
 
-import android.os.AsyncTask;
-import android.widget.Toast;
+import android.arch.lifecycle.Observer;
+import android.support.annotation.Nullable;
 
 import com.mai.nix.maiapp.model.StudentOrgModel;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Nix on 14.08.2017.
@@ -20,52 +15,21 @@ public class CafesFragment extends SimpleListFragment {
 
     @Override
     public void setObserve() {
+        simpleListLiveData = mApplicationViewModel.getCafesLiveData();
+        simpleListLiveData.observe(CafesFragment.this, new Observer<List<StudentOrgModel>>() {
+            @Override
+            public void onChanged(@Nullable List<StudentOrgModel> studentOrgModels) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                mOrgModels.clear();
+                mOrgModels.addAll(studentOrgModels);
+                mListView.setAdapter(mAdapter);
+            }
+        });
 
     }
 
     @Override
     public void releaseThread() {
-        //new MyThread().execute();
+        mApplicationViewModel.loadCafesData();
     }
-
-    /*private class MyThread extends AsyncTask<Integer, Void, Integer> {
-        private Document doc;
-        private Element table;
-        private Elements rows;
-
-        public MyThread() {
-        }
-
-        @Override
-        protected void onPostExecute(Integer s) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            if (s == 0) {
-                if (getContext() != null) Toast.makeText(getContext(), R.string.error,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                mListView.setAdapter(mAdapter);
-            }
-        }
-
-        @Override
-        protected Integer doInBackground(Integer... integers) {
-            int size = 0;
-            try {
-                doc = Jsoup.connect("http://mai.ru/common/campus/cafeteria/").get();
-                table = doc.select("table[class = table]").first();
-                rows = table.select("tr");
-                if (table != null) simpleListLiveData.clear();
-                for (int i = 1; i < rows.size(); i++) {
-                    Elements el = rows.get(i).select("td");
-                    simpleListLiveData.add(new StudentOrgModel(el.get(0).text(), el.get(1).text(), el.get(2).text()));
-                }
-                size = rows.size();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NullPointerException n) {
-                return 0;
-            }
-            return size;
-        }
-    }*/
 }
