@@ -35,7 +35,7 @@
         <item name="android:textColorPrimary">@color/colorText</item>
     </style>
     <style name="AppTheme.NavigationView" parent="Theme.AppCompat.Light.DarkActionBar">
-
+        <item name="android:fontFamily">@font/montserrat_font_family</item>
     </style>
 
     <!-- Основная тема для тестирования -->

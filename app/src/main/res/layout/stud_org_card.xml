@@ -55,6 +55,7 @@
         android:layout_below="@+id/leader"
         android:drawableLeft="@drawable/ic_place_black_24dp"
         android:fontFamily="@font/montserrat_font_family"
+        android:textIsSelectable="true"
         android:layout_marginTop="4dp"
         android:textSize="14sp"
         android:gravity="center_vertical"

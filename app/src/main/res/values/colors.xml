@@ -13,4 +13,5 @@
     <color name="colorPrimarySec">#003B6B</color>
     <color name="colorPrimaryDarkSec">#003B6B</color>
     <color name="colorAccentSec">#003B6B</color>
+    <color name="colorPrimarySecTransparent">#40003B6B</color>
 </resources>
