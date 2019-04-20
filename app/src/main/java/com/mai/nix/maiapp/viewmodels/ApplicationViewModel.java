@@ -10,6 +10,7 @@ import com.mai.nix.maiapp.model.SubjectHeader;
 import com.mai.nix.maiapp.repositories.BarracksRepository;
 import com.mai.nix.maiapp.repositories.CafesRepository;
 import com.mai.nix.maiapp.repositories.LibrariesRepository;
+import com.mai.nix.maiapp.repositories.SportSectionsRepository;
 import com.mai.nix.maiapp.repositories.StudentOrgsRepository;
 import com.mai.nix.maiapp.repositories.SubjectsRepository;
 import com.mai.nix.maiapp.repositories.WorkersAndGradsRepository;
@@ -23,6 +24,7 @@ public class ApplicationViewModel extends ViewModel {
     private MutableLiveData<List<StudentOrgModel>> mCafes = new MutableLiveData<>();
     private MutableLiveData<List<SportSectionsHeaders>> mBarracks = new MutableLiveData<>();
     private MutableLiveData<List<SportSectionsHeaders>> mLibraries = new MutableLiveData<>();
+    private MutableLiveData<List<SportSectionsHeaders>> mSportSections = new MutableLiveData<>();
 
     private SubjectsRepository mSubjectsRepository;
     private StudentOrgsRepository mStudentOrganisationsRepository;
@@ -30,6 +32,7 @@ public class ApplicationViewModel extends ViewModel {
     private CafesRepository mCafesRepository;
     private BarracksRepository mBarracksRepository;
     private LibrariesRepository mLibrariesRepository;
+    private SportSectionsRepository mSportSectionsRepository;
 
     public void initSubjectsRepository(String link) {
         if (mSubjectsRepository == null) {
@@ -79,6 +82,14 @@ public class ApplicationViewModel extends ViewModel {
         return mLibraries;
     }
 
+    public LiveData<List<SportSectionsHeaders>> getSportSectionsLiveData() {
+        if (mSportSectionsRepository == null) {
+            mSportSectionsRepository = new SportSectionsRepository();
+            loadSportSectionsData();
+        }
+        return mSportSections;
+    }
+
     public void loadStudentOrganisationsData() {
         mStudentOrganisationsRepository.loadData(new StudentOrgsRepository.LoadOrgsCallback() {
             @Override
@@ -111,6 +122,15 @@ public class ApplicationViewModel extends ViewModel {
             @Override
             public void loadBarracks(List<SportSectionsHeaders> barracks) {
                 mBarracks.postValue(barracks);
+            }
+        });
+    }
+
+    public void loadSportSectionsData() {
+        mSportSectionsRepository.loadData(new SportSectionsRepository.LoadSportSectionsCallback() {
+            @Override
+            public void loadSportSections(List<SportSectionsHeaders> sportSections) {
+                mSportSections.postValue(sportSections);
             }
         });
     }

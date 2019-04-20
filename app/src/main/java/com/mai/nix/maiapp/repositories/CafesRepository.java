@@ -50,12 +50,12 @@ public class CafesRepository {
             List<StudentOrgModel> cafes = new ArrayList<>();
             try {
                 doc = Jsoup.connect("http://mai.ru/common/campus/cafeteria/").get();
-                table = doc.select("table[class = table]").first();
+                table = doc.select("table[class = table table-bordered]").first();
                 rows = table.select("tr");
                 if (table != null) cafes.clear();
                 for (int i = 1; i < rows.size(); i++) {
                     Elements el = rows.get(i).select("td");
-                    cafes.add(new StudentOrgModel(el.get(0).text(), el.get(1).text(), el.get(2).text()));
+                    cafes.add(new StudentOrgModel(el.get(1).text(), "", el.get(2).text()));
                 }
             } catch (IOException e) {
                 e.printStackTrace();

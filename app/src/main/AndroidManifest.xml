@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_fake_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat"
+        android:usesCleartextTraffic="true"
         android:name=".MaiApp">
         <activity
             android:name=".MainActivity"

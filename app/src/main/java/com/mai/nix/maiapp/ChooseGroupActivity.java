@@ -61,9 +61,9 @@ public class ChooseGroupActivity extends AppCompatActivity{
         String[] mFacsArray = getResources().getStringArray(R.array.spinner_facs);
         String[] mStagesArray = getResources().getStringArray(R.array.spinner_stages);
         View header = View.inflate(this, R.layout.group_choosing_header, null);
-        mSpinnerFacs = (Spinner)header.findViewById(R.id.spinner_facs);
-        mSpinnerStages = (Spinner)header.findViewById(R.id.spinner_stages);
-        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swiperefresh_groups);
+        mSpinnerFacs = header.findViewById(R.id.spinner_facs);
+        mSpinnerStages = header.findViewById(R.id.spinner_stages);
+        mSwipeRefreshLayout = findViewById(R.id.swiperefresh_groups);
         HintAdapter hintAdapter = new HintAdapter(this, android.R.layout.simple_spinner_item, mFacsArray);
         hintAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -106,7 +106,7 @@ public class ChooseGroupActivity extends AppCompatActivity{
                 //do nothing
             }
         });
-        mListView = (ListView)findViewById(R.id.listview);
+        mListView = findViewById(R.id.listview);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, mGroups);
         mListView.addHeaderView(header);
@@ -153,10 +153,10 @@ public class ChooseGroupActivity extends AppCompatActivity{
         @Override
         protected Integer doInBackground(Integer... integers) {
             try {
-                doc = Jsoup.connect(LINK.concat(FAC_CODES[mCurrentFac]).concat(PLUS_COURSE)
-                        .concat(Integer.toString(mCurrentStage))).get();
-                Log.d("link = ", LINK.concat(FAC_CODES[mCurrentFac]).concat(PLUS_COURSE)
-                        .concat(Integer.toString(mCurrentStage)));
+                String link = LINK.concat(FAC_CODES[mCurrentFac]).concat(PLUS_COURSE)
+                        .concat(Integer.toString(mCurrentStage));
+                Log.d("ChooseGroupLink ", link);
+                doc = Jsoup.connect(link).get();
                 titles = doc.select("a[class = sc-group-item]");
                 if(titles == null) return 0;
                 if (titles.size() > 0){
