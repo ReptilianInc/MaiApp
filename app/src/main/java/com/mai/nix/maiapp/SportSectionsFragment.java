@@ -17,6 +17,11 @@ import java.io.IOException;
 public class SportSectionsFragment extends SimpleExpandableListFragment{
 
     @Override
+    protected void setObserve() {
+
+    }
+
+    @Override
     protected void releaseThread() {
         new MyThread().execute();
     }

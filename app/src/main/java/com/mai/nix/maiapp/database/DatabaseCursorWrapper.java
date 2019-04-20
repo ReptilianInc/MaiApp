@@ -12,7 +12,7 @@ import static com.mai.nix.maiapp.database.SubjectsDbSchema.*;
 /**
  * Created by Nix on 28.08.2017.
  */
-
+@Deprecated
 public class DatabaseCursorWrapper extends CursorWrapper {
     public DatabaseCursorWrapper(Cursor cursor) {
         super(cursor);

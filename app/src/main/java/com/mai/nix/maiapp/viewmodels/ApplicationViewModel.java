@@ -4,8 +4,10 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
+import com.mai.nix.maiapp.model.SportSectionsHeaders;
 import com.mai.nix.maiapp.model.StudentOrgModel;
 import com.mai.nix.maiapp.model.SubjectHeader;
+import com.mai.nix.maiapp.repositories.BarracksRepository;
 import com.mai.nix.maiapp.repositories.CafesRepository;
 import com.mai.nix.maiapp.repositories.StudentOrgsRepository;
 import com.mai.nix.maiapp.repositories.SubjectsRepository;
@@ -18,11 +20,13 @@ public class ApplicationViewModel extends ViewModel {
     private MutableLiveData<List<StudentOrgModel>> mStudentOrganizations = new MutableLiveData<>();
     private MutableLiveData<List<StudentOrgModel>> mWorkersAndGradsOrganizations = new MutableLiveData<>();
     private MutableLiveData<List<StudentOrgModel>> mCafes = new MutableLiveData<>();
+    private MutableLiveData<List<SportSectionsHeaders>> mBarracks = new MutableLiveData<>();
 
     private SubjectsRepository mSubjectsRepository;
     private StudentOrgsRepository mStudentOrganisationsRepository;
     private WorkersAndGradsRepository mWorkersAndGradsRepository;
     private CafesRepository mCafesRepository;
+    private BarracksRepository mBarracksRepository;
 
     public void initSubjectsRepository(String link) {
         if (mSubjectsRepository == null) {
@@ -56,6 +60,14 @@ public class ApplicationViewModel extends ViewModel {
         return mCafes;
     }
 
+    public LiveData<List<SportSectionsHeaders>> getBarracksLiveData() {
+        if (mBarracksRepository == null) {
+            mBarracksRepository = new BarracksRepository();
+            loadBarracksData();
+        }
+        return mBarracks;
+    }
+
     public void loadStudentOrganisationsData() {
         mStudentOrganisationsRepository.loadData(new StudentOrgsRepository.LoadOrgsCallback() {
             @Override
@@ -79,6 +91,15 @@ public class ApplicationViewModel extends ViewModel {
             @Override
             public void onLoad(List<StudentOrgModel> cafes) {
                 mCafes.postValue(cafes);
+            }
+        });
+    }
+
+    public void loadBarracksData() {
+        mBarracksRepository.loadData(new BarracksRepository.LoadBarracksCallback() {
+            @Override
+            public void loadBarracks(List<SportSectionsHeaders> barracks) {
+                mBarracks.postValue(barracks);
             }
         });
     }
