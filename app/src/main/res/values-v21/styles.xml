@@ -8,5 +8,14 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/colorPrimarySec</item>
     </style>
+
+    <style name="Splash" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimarySec</item>
+        <item name="colorPrimaryDark">@color/colorPrimarySec</item>
+        <item name="colorAccent">@color/colorAccentSec</item>
+        <item name="android:navigationBarColor">@color/colorPrimarySec</item>
+    </style>
+
 </resources>

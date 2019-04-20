@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp;
+package com.mai.nix.maiapp.simple_list_fragments;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.mai.nix.maiapp.R;
 import com.mai.nix.maiapp.model.StudentOrgModel;
 import java.util.List;
 

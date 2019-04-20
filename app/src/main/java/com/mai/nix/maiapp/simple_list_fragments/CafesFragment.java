@@ -22,7 +22,6 @@ public class CafesFragment extends SimpleListFragment {
                 mSwipeRefreshLayout.setRefreshing(false);
                 mOrgModels.clear();
                 mOrgModels.addAll(studentOrgModels);
-                mListView.setAdapter(mAdapter);
             }
         });
 

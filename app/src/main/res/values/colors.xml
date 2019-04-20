@@ -10,7 +10,7 @@
     <color name="schedule_date_background">#999999</color>
     <color name="colorBlack">#000000</color>
     ///
-    <color name="colorPrimarySec">#2196F3</color>
-    <color name="colorPrimaryDarkSec">#1E88E5</color>
-    <color name="colorAccentSec">#1E88E5</color>
+    <color name="colorPrimarySec">#003B6B</color>
+    <color name="colorPrimaryDarkSec">#003B6B</color>
+    <color name="colorAccentSec">#003B6B</color>
 </resources>
