@@ -9,6 +9,7 @@ import com.mai.nix.maiapp.model.StudentOrgModel;
 import com.mai.nix.maiapp.model.SubjectHeader;
 import com.mai.nix.maiapp.repositories.BarracksRepository;
 import com.mai.nix.maiapp.repositories.CafesRepository;
+import com.mai.nix.maiapp.repositories.LibrariesRepository;
 import com.mai.nix.maiapp.repositories.StudentOrgsRepository;
 import com.mai.nix.maiapp.repositories.SubjectsRepository;
 import com.mai.nix.maiapp.repositories.WorkersAndGradsRepository;
@@ -21,12 +22,14 @@ public class ApplicationViewModel extends ViewModel {
     private MutableLiveData<List<StudentOrgModel>> mWorkersAndGradsOrganizations = new MutableLiveData<>();
     private MutableLiveData<List<StudentOrgModel>> mCafes = new MutableLiveData<>();
     private MutableLiveData<List<SportSectionsHeaders>> mBarracks = new MutableLiveData<>();
+    private MutableLiveData<List<SportSectionsHeaders>> mLibraries = new MutableLiveData<>();
 
     private SubjectsRepository mSubjectsRepository;
     private StudentOrgsRepository mStudentOrganisationsRepository;
     private WorkersAndGradsRepository mWorkersAndGradsRepository;
     private CafesRepository mCafesRepository;
     private BarracksRepository mBarracksRepository;
+    private LibrariesRepository mLibrariesRepository;
 
     public void initSubjectsRepository(String link) {
         if (mSubjectsRepository == null) {
@@ -68,6 +71,14 @@ public class ApplicationViewModel extends ViewModel {
         return mBarracks;
     }
 
+    public LiveData<List<SportSectionsHeaders>> getLibrariesLiveData() {
+        if (mLibrariesRepository == null) {
+            mLibrariesRepository = new LibrariesRepository();
+            loadLibrariesData();
+        }
+        return mLibraries;
+    }
+
     public void loadStudentOrganisationsData() {
         mStudentOrganisationsRepository.loadData(new StudentOrgsRepository.LoadOrgsCallback() {
             @Override
@@ -100,6 +111,15 @@ public class ApplicationViewModel extends ViewModel {
             @Override
             public void loadBarracks(List<SportSectionsHeaders> barracks) {
                 mBarracks.postValue(barracks);
+            }
+        });
+    }
+
+    public void loadLibrariesData() {
+        mLibrariesRepository.loadData(new LibrariesRepository.LoadLibrariesCallback() {
+            @Override
+            public void loadLibraries(List<SportSectionsHeaders> libraries) {
+                mLibraries.postValue(libraries);
             }
         });
     }

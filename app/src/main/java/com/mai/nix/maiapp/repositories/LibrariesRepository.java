@@ -1,7 +1,6 @@
-package com.mai.nix.maiapp;
+package com.mai.nix.maiapp.repositories;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.mai.nix.maiapp.model.SportSectionsBodies;
 import com.mai.nix.maiapp.model.SportSectionsHeaders;
@@ -12,57 +11,40 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by Nix on 13.08.2017.
- */
-
-public class LibrariesFragment extends SimpleExpandableListFragment {
-
-    @Override
-    protected void setObserve() {
-
+public class LibrariesRepository {
+    public interface LoadLibrariesCallback {
+        void loadLibraries(List<SportSectionsHeaders> libraries);
     }
 
-    @Override
-    protected void releaseThread() {
-        new MyThread().execute();
+    public void loadData(LoadLibrariesCallback loadLibrariesCallback) {
+        LoadLibrariesTask loadLibrariesTask = new LoadLibrariesTask(loadLibrariesCallback);
+        loadLibrariesTask.execute();
     }
 
-    private class MyThread extends AsyncTask<Integer, Void, Integer> {
+    static class LoadLibrariesTask extends AsyncTask<Integer, Void, List<SportSectionsHeaders>> {
         private Document doc;
         private Element table;
         private Elements rows;
+        private final LoadLibrariesCallback mLoadLibrariesCallback;
 
-        public MyThread() {
-
+        public LoadLibrariesTask(LoadLibrariesCallback callback) {
+            mLoadLibrariesCallback = callback;
         }
 
         @Override
-        protected void onPostExecute(Integer s) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            if (s == 0) {
-                if (getContext() != null) Toast.makeText(getContext(), R.string.error,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                mExpandableListView.setAdapter(mAdapter);
-                for (int i = 0; i < mHeaders.size(); i++) {
-                    mExpandableListView.expandGroup(i);
-                }
-            }
-        }
-
-        @Override
-        protected Integer doInBackground(Integer... integers) {
-            int size = 0;
+        protected List<SportSectionsHeaders> doInBackground(Integer... integers) {
+            List<SportSectionsHeaders> libraries = new ArrayList<>();
             try {
                 doc = Jsoup.connect("http://mai.ru/common/campus/library/").get();
                 table = doc.select("table[class = table table-bordered table-hover]").first();
                 rows = doc.select("tr");
-                if (table != null) mHeaders.clear();
+                if (table != null) libraries.clear();
                 for (int i = 0; i < rows.size(); i++) {
                     if (rows.get(i).select("th").size() == 1) {
-                        mHeaders.add(new SportSectionsHeaders(rows.get(i).text()));
+                        libraries.add(new SportSectionsHeaders(rows.get(i).text()));
                     }
                 }
                 int j = 0;
@@ -72,18 +54,23 @@ public class LibrariesFragment extends SimpleExpandableListFragment {
                         SportSectionsBodies body = new SportSectionsBodies(
                                 el.get(0).text(),
                                 el.get(1).html());
-                        mHeaders.get(j).addBody(body);
+                        libraries.get(j).addBody(body);
                     } else if (rows.get(i).select("th").size() == 1) {
                         j++;
                     }
                 }
-                size = rows.size();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NullPointerException n) {
-                return 0;
+                return libraries;
             }
-            return size;
+            return libraries;
+        }
+
+        @Override
+        protected void onPostExecute(List<SportSectionsHeaders> sportSectionsHeaders) {
+            super.onPostExecute(sportSectionsHeaders);
+            if (mLoadLibrariesCallback != null) mLoadLibrariesCallback.loadLibraries(sportSectionsHeaders);
         }
     }
 }
