@@ -1,7 +1,10 @@
 package com.mai.nix.maiapp.simple_list_fragments;
 
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
+
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +35,15 @@ public abstract class SimpleListFragment extends Fragment {
     protected StudOrgAdapter mAdapter;
     protected SimpleListAdapter mSimpleListAdapter;
     protected RecyclerView mSimpleListRecyclerView;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(requireContext(), R.color.colorPrimarySec));
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
