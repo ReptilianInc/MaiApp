@@ -2,9 +2,7 @@ package com.mai.nix.maiapp.simple_list_fragments;
 
 import androidx.lifecycle.Observer;
 import androidx.annotation.Nullable;
-
 import com.mai.nix.maiapp.model.StudentOrgModel;
-
 import java.util.List;
 
 /**
@@ -20,8 +18,8 @@ public class CafesFragment extends SimpleListFragment {
             @Override
             public void onChanged(@Nullable List<StudentOrgModel> studentOrgModels) {
                 mSwipeRefreshLayout.setRefreshing(false);
-                mOrgModels.clear();
-                mOrgModels.addAll(studentOrgModels);
+                mSimpleListAdapter.setData(studentOrgModels);
+                mSimpleListAdapter.notifyDataSetChanged();
             }
         });
 

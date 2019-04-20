@@ -12,12 +12,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-
 import com.mai.nix.maiapp.R;
 import com.mai.nix.maiapp.model.StudentOrgModel;
 import com.mai.nix.maiapp.viewmodels.ApplicationViewModel;
-
 import java.util.ArrayList;
 import java.util.List;
 

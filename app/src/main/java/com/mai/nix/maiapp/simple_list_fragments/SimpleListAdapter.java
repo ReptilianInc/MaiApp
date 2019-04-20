@@ -48,9 +48,17 @@ public class SimpleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public void bindItem(StudentOrgModel model) {
             ((TextView) itemView.findViewById(R.id.title)).setText(model.getTitle());
-            ((TextView) itemView.findViewById(R.id.leader)).setText(model.getLeader());
+            if (model.getLeader() == null || model.getLeader().isEmpty()) {
+                itemView.findViewById(R.id.leader).setVisibility(View.GONE);
+            } else {
+                ((TextView) itemView.findViewById(R.id.leader)).setText(model.getLeader());
+            }
             ((TextView) itemView.findViewById(R.id.address)).setText(model.getAddress());
-            ((TextView) itemView.findViewById(R.id.phone)).setText(model.getPhone());
+            if (model.getPhone() == null || model.getPhone().isEmpty()) {
+                itemView.findViewById(R.id.phone).setVisibility(View.GONE);
+            } else {
+                ((TextView) itemView.findViewById(R.id.phone)).setText(model.getPhone());
+            }
         }
     }
 }
