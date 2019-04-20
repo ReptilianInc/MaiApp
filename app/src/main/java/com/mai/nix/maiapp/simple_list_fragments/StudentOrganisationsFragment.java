@@ -23,7 +23,7 @@ public class StudentOrganisationsFragment extends SimpleListFragment {
             public void onChanged(@Nullable List<StudentOrgModel> studentOrgModels) {
                 mSwipeRefreshLayout.setRefreshing(false);
                 mSimpleListAdapter.setData(studentOrgModels);
-                mSimpleListAdapter.notifyDataSetChanged();
+                mSimpleListAdapter.notifyItemRangeInserted(0, studentOrgModels.size());
             }
         });
     }

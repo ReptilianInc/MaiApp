@@ -22,6 +22,14 @@
         <item name="android:background">@color/colorPrimary</item>
     </style>
 
+    <style name="ToolbarFontTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:fontFamily">@font/montserrat_font_family</item>
+    </style>
+
+    <style name="TabsFontTheme" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/montserrat_font_family</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
         <item name="android:textColorPrimary">@color/colorText</item>
