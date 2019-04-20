@@ -1,7 +1,7 @@
 package com.mai.nix.maiapp;
 
 import android.app.Application;
-import android.arch.persistence.room.Room;
+import androidx.room.Room;
 
 import com.mai.nix.maiapp.room.AppDatabase;
 

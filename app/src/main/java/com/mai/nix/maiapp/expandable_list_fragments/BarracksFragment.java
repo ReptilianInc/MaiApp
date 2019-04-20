@@ -1,7 +1,7 @@
 package com.mai.nix.maiapp.expandable_list_fragments;
 
-import android.arch.lifecycle.Observer;
-import android.support.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.annotation.Nullable;
 import com.mai.nix.maiapp.SimpleExpandableListFragment;
 import com.mai.nix.maiapp.model.SportSectionsHeaders;
 import java.util.List;
