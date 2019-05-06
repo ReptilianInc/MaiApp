@@ -21,10 +21,15 @@
             android:layout_height="wrap_content"
             android:background="@color/colorOrange"
             android:fontFamily="@font/montserrat_font_family"
-            android:padding="6dp"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             android:textColor="@color/colorPrimary"
-            android:textSize="20sp"
-            tools:text="01.06 ЧТ"/>
+            android:textSize="16sp"
+            tools:text="01.06 ЧТ"
+            android:drawableLeft="@drawable/ic_date_range_black_24dp"
+            android:drawablePadding="6dp"/>
         <LinearLayout
             android:id="@+id/childItemsLayout"
             android:layout_width="match_parent"
