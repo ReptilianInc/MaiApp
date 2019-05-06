@@ -3,8 +3,10 @@ package com.mai.nix.maiapp.expandable_list_fragments;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mai.nix.maiapp.R;
+import com.mai.nix.maiapp.model.SubjectBody;
 import com.mai.nix.maiapp.model.SubjectHeader;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,19 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public void bindItem(SubjectHeader subjectHeader) {
             ((TextView) itemView.findViewById(R.id.dateTextView)).setText(subjectHeader.getDate());
+            LayoutInflater inflater = LayoutInflater.from(itemView.getContext());
+            LinearLayout container = itemView.findViewById(R.id.childItemsLayout);
+            List<SubjectBody> children = subjectHeader.getChildren();
+            for (int i = 0; i < children.size(); i++) {
+                View childView = inflater.inflate(R.layout.view_schedule_child_item, null);
+                ((TextView) childView.findViewById(R.id.timeTextView)).setText(children.get(i).getTime());
+                ((TextView) childView.findViewById(R.id.typeTextView)).setText(children.get(i).getType());
+                ((TextView) childView.findViewById(R.id.titleTextView)).setText(children.get(i).getTitle());
+                ((TextView) childView.findViewById(R.id.teacherTextView)).setText(children.get(i).getTeacher());
+                ((TextView) childView.findViewById(R.id.roomTextView)).setText(children.get(i).getRoom());
+                if (i == children.size() - 1) childView.findViewById(R.id.bottomDivider).setVisibility(View.GONE);
+                container.addView(childView);
+            }
         }
     }
 }
