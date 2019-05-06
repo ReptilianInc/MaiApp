@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDarkSec">
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:layout_height="match_parent"
+        android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
-        android:id="@+id/swiperefresh">
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
         <ExpandableListView
+            android:id="@+id/exp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/exp"
-            android:groupIndicator="@drawable/indicator_state">
+            android:groupIndicator="@drawable/indicator_state"
+            android:visibility="gone">
         </ExpandableListView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</RelativeLayout>
+
+    <include layout="@layout/view_bottom_sheet"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
