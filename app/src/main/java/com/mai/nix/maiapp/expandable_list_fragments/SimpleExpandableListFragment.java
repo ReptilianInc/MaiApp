@@ -1,7 +1,6 @@
-package com.mai.nix.maiapp;
+package com.mai.nix.maiapp.expandable_list_fragments;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -11,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+
+import com.mai.nix.maiapp.R;
+import com.mai.nix.maiapp.SportSectionsExpListAdapter;
 import com.mai.nix.maiapp.model.SportSectionsHeaders;
 import com.mai.nix.maiapp.viewmodels.ApplicationViewModel;
 

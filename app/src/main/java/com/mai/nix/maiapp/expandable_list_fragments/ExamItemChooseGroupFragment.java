@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp;
+package com.mai.nix.maiapp.expandable_list_fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mai.nix.maiapp.ChooseGroupActivity;
+import com.mai.nix.maiapp.ExamAdapter;
+import com.mai.nix.maiapp.R;
+import com.mai.nix.maiapp.UserSettings;
+import com.mai.nix.maiapp.WebViewActivity;
 import com.mai.nix.maiapp.model.ExamModel;
 
 import org.jsoup.Jsoup;

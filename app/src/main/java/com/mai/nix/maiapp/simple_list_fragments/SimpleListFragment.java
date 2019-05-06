@@ -32,7 +32,6 @@ public abstract class SimpleListFragment extends Fragment {
     protected List<StudentOrgModel> mOrgModels;
     protected ApplicationViewModel mApplicationViewModel;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
-    protected StudOrgAdapter mAdapter;
     protected SimpleListAdapter mSimpleListAdapter;
     protected RecyclerView mSimpleListRecyclerView;
 
@@ -54,7 +53,6 @@ public abstract class SimpleListFragment extends Fragment {
         mApplicationViewModel = ViewModelProviders.of(SimpleListFragment.this)
                 .get(ApplicationViewModel.class);
         mOrgModels = new ArrayList<>();
-        mAdapter = new StudOrgAdapter(getContext(), mOrgModels);
         mSimpleListAdapter = new SimpleListAdapter();
         mSimpleListRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         mSimpleListRecyclerView.setAdapter(mSimpleListAdapter);

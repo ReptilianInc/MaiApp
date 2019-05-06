@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp;
+package com.mai.nix.maiapp.expandable_list_fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,6 +21,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mai.nix.maiapp.ChooseGroupActivity;
+import com.mai.nix.maiapp.R;
+import com.mai.nix.maiapp.SubjectsExpListAdapter;
+import com.mai.nix.maiapp.UserSettings;
+import com.mai.nix.maiapp.WebViewActivity;
 import com.mai.nix.maiapp.model.SubjectBody;
 import com.mai.nix.maiapp.model.SubjectHeader;
 
@@ -37,9 +42,7 @@ import java.util.ArrayList;
  */
 
 public class ChooseGroupScheduleFragment extends Fragment {
-    private ExpandableListView mListView;
     private ArrayList<SubjectHeader> mGroups;
-    private SubjectsExpListAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Spinner mSpinner;
     private TextView mButton;
@@ -87,11 +90,7 @@ public class ChooseGroupScheduleFragment extends Fragment {
 
             }
         });
-        mListView = (ExpandableListView) v.findViewById(R.id.exp);
         mGroups = new ArrayList<>();
-        mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
-        mListView.addHeaderView(header);
-        mListView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -163,10 +162,7 @@ public class ChooseGroupScheduleFragment extends Fragment {
                 if (getContext() != null) Toast.makeText(getContext(), R.string.error,
                         Toast.LENGTH_LONG).show();
             } else {
-                mListView.setAdapter(mAdapter);
-                for (int i = 0; i < mGroups.size(); i++) {
-                    mListView.expandGroup(i);
-                }
+                //mListView.setAdapter(mAdapter);
             }
         }
     }
@@ -183,7 +179,7 @@ public class ChooseGroupScheduleFragment extends Fragment {
             mSelectedGroup = data.getStringExtra(ChooseGroupActivity.EXTRA_GROUP);
             mChoosenGroupTextView.setText(mSelectedGroup);
             mGroups.clear();
-            mAdapter.notifyDataSetChanged();
+            //mAdapter.notifyDataSetChanged();
             mSwipeRefreshLayout.setRefreshing(true);
             new MyThread().execute();
         }

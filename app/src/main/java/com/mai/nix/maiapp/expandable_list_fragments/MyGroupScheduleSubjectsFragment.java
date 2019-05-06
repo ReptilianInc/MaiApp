@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp;
+package com.mai.nix.maiapp.expandable_list_fragments;
 
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +20,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ExpandableListView;
-import android.widget.Spinner;
+import com.mai.nix.maiapp.MainActivity;
+import com.mai.nix.maiapp.R;
+import com.mai.nix.maiapp.UserSettings;
+import com.mai.nix.maiapp.WebViewActivity;
 import com.mai.nix.maiapp.model.SubjectHeader;
 import com.mai.nix.maiapp.viewmodels.ApplicationViewModel;
 import java.util.ArrayList;
@@ -33,11 +36,10 @@ import java.util.List;
  */
 
 public class MyGroupScheduleSubjectsFragment extends Fragment {
-    private ExpandableListView mListView;
     private ArrayList<SubjectHeader> mGroups;
-    private SubjectsExpListAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private Spinner mSpinner;
+    private RecyclerView mRecyclerView;
+    private ScheduleListAdapter mScheduleListAdapter;
     private String mCurrentGroup, mCurrentLink;
     private int mCurrentDay, mCurrentWeek;
     private Calendar mCalendar;
@@ -62,17 +64,17 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.shedule_subjects_layout, container, false);
-        View header = inflater.inflate(R.layout.spinner_header, null);
         mCalendar = new GregorianCalendar();
         mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH);
         mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH);
         UserSettings.initialize(getContext());
         mGroups = new ArrayList<>();
-        mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
         mCurrentGroup = UserSettings.getGroup(getContext());
-        mSpinner = header.findViewById(R.id.spinner);
         mSwipeRefreshLayout = v.findViewById(R.id.swiperefresh);
-
+        mRecyclerView = v.findViewById(R.id.scheduleRecyclerView);
+        mScheduleListAdapter = new ScheduleListAdapter();
+        mRecyclerView.setAdapter(mScheduleListAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mApplicationViewModel = ViewModelProviders.of(MyGroupScheduleSubjectsFragment.this)
                 .get(ApplicationViewModel.class);
         mCurrentLink = mLink.concat(mCurrentGroup);
@@ -85,16 +87,14 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(false);
                 mGroups.clear();
                 mGroups.addAll(subjectHeaders);
-                mListView.setAdapter(mAdapter);
-                for (int j = 0; j < mGroups.size(); j++) {
-                    mListView.expandGroup(j);
-                }
+                mScheduleListAdapter.setData(mGroups);
+                mScheduleListAdapter.notifyDataSetChanged();
                 Log.d("poisondart ", "onChanged");
             }
         });
 
 
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (!((MainActivity) getActivity()).subjectsNeedToUpdate) {
@@ -129,19 +129,13 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
-        });
-        mListView = v.findViewById(R.id.exp);
-        mListView.addHeaderView(header);
-        mListView.setAdapter(mAdapter);
-        for (int i = 0; i < mGroups.size(); i++) {
-            mListView.expandGroup(i);
-        }
+        });*/
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mSwipeRefreshLayout.setRefreshing(true);
 
-                if (mSpinner.getSelectedItemPosition() != 0) {
+                /*if (mSpinner.getSelectedItemPosition() != 0) {
                     mWeek = Integer.toString(mSpinner.getSelectedItemPosition());
                     mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
                     mApplicationViewModel.initSubjectsRepository(mCurrentLink);
@@ -150,7 +144,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                     mCurrentLink = mLink.concat(mCurrentGroup);
                     mApplicationViewModel.initSubjectsRepository(mCurrentLink);
                     mLiveData = mApplicationViewModel.getCachedSubjectsData();
-                }
+                }*/
 
             }
         });

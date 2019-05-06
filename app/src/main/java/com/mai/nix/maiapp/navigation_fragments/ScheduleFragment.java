@@ -2,9 +2,9 @@ package com.mai.nix.maiapp.navigation_fragments;
 
 import androidx.viewpager.widget.ViewPager;
 
-import com.mai.nix.maiapp.ChooseGroupScheduleFragment;
+import com.mai.nix.maiapp.expandable_list_fragments.ChooseGroupScheduleFragment;
 import com.mai.nix.maiapp.TabsFragment;
-import com.mai.nix.maiapp.MyGroupScheduleSubjectsFragment;
+import com.mai.nix.maiapp.expandable_list_fragments.MyGroupScheduleSubjectsFragment;
 import com.mai.nix.maiapp.ViewPagerAdapter;
 
 /**

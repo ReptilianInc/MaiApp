@@ -8,16 +8,16 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
-        <ExpandableListView
-            android:id="@+id/exp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:clipToPadding="false"
+            android:id="@+id/scheduleRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:groupIndicator="@drawable/indicator_state"
-            android:visibility="gone">
-        </ExpandableListView>
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"/>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include layout="@layout/view_bottom_sheet"/>

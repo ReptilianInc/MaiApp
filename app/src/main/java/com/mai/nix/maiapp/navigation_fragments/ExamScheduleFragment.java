@@ -1,8 +1,8 @@
 package com.mai.nix.maiapp.navigation_fragments;
 
 import androidx.viewpager.widget.ViewPager;
-import com.mai.nix.maiapp.ExamItemChooseGroupFragment;
-import com.mai.nix.maiapp.ExamItemFragment;
+import com.mai.nix.maiapp.expandable_list_fragments.ExamItemChooseGroupFragment;
+import com.mai.nix.maiapp.expandable_list_fragments.ExamItemFragment;
 import com.mai.nix.maiapp.TabsFragment;
 import com.mai.nix.maiapp.ViewPagerAdapter;
 

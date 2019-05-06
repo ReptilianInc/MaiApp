@@ -2,6 +2,8 @@ package com.mai.nix.maiapp;
 
 import androidx.lifecycle.Observer;
 import androidx.annotation.Nullable;
+
+import com.mai.nix.maiapp.expandable_list_fragments.SimpleExpandableListFragment;
 import com.mai.nix.maiapp.model.SportSectionsHeaders;
 import java.util.List;
 
@@ -9,7 +11,7 @@ import java.util.List;
  * Created by Nix on 11.08.2017.
  */
 
-public class SportSectionsFragment extends SimpleExpandableListFragment{
+public class SportSectionsFragment extends SimpleExpandableListFragment {
 
     @Override
     protected void setObserve() {
