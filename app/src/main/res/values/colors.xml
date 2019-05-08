@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#1E88E5</color>
+    <color name="colorAccent">#0D5392</color>
     <color name="colorText">#2196F3</color>
     <color name="colorBackground">#eeeeee</color>
     <color name="colorTextSecondary">#616161</color>
@@ -14,5 +14,6 @@
     <color name="colorPrimaryDarkSec">#003B6B</color>
     <color name="colorAccentSec">#003B6B</color>
     <color name="colorPrimarySecTransparent">#40003B6B</color>
-    <color name="colorOrange">#BF360C</color>
+    <color name="colorOrange">#86290D</color>
+    <color name="colorPrimaryLight">#0D5392</color>
 </resources>

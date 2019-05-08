@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimaryLight">
 
     <TextView
         android:id="@+id/timeTextView"
@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:text="09:00 – 10:30"
-        android:textColor="@color/colorBlack"
+        android:textColor="@color/colorPrimary"
         android:fontFamily="@font/montserrat_font_family"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="14dp"
@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         tools:text="ПЗ"
-        android:textColor="@color/colorBlack"
+        android:textColor="@color/colorPrimary"
         android:fontFamily="@font/montserrat_font_family"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="14dp"
@@ -45,11 +45,11 @@
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
         android:layout_marginTop="8dp"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:fontFamily="@font/montserrat_font_family"
         android:textStyle="bold"
         tools:text="Стандартизация и сертификация программных продуктов"
-        android:textColor="@color/colorBlack"/>
+        android:textColor="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/teacherTextView"
@@ -60,7 +60,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:fontFamily="@font/montserrat_font_family"
-        android:textColor="@color/colorBlack"
+        android:textColor="@color/colorPrimary"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
         android:layout_marginTop="8dp"
@@ -80,7 +80,7 @@
         android:layout_marginBottom="12dp"
         android:layout_marginTop="8dp"
         tools:text="609 (Орш. А)"
-        android:textColor="@color/colorBlack"
+        android:textColor="@color/colorPrimary"
         android:drawableLeft="@drawable/ic_place_black_24dp"
         android:drawablePadding="6dp"/>
 
@@ -88,7 +88,7 @@
         android:id="@+id/bottomDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorTextSecondary"
+        android:background="@color/colorPrimary"
         app:layout_constraintTop_toBottomOf="@id/roomTextView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

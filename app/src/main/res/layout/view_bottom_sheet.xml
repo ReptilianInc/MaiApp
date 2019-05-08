@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/mainBottomSheet"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/bottom_sheet_background"
     style="?attr/bottomSheetStyle"
-    app:behavior_peekHeight="100dp"
+    android:elevation="6dp"
+    app:behavior_peekHeight="60dp"
     app:behavior_hideable="false"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 </androidx.constraintlayout.widget.ConstraintLayout>
