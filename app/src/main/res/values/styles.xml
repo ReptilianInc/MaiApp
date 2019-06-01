@@ -57,12 +57,13 @@
         <item name="colorPrimaryDark">@color/colorPrimarySec</item>
         <item name="colorAccent">@color/colorAccentSec</item>
     </style>
-    <style name="WeekButton" parent="TextAppearance.AppCompat.Button">
+    <style name="WeekButton">
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:fontFamily">@font/montserrat_font_family</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_width">60dp</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:layout_gravity">fill</item>
-        <item name="android:layout_rowSpan">2</item>
+        <item name="android:gravity">center</item>
     </style>
 </resources>

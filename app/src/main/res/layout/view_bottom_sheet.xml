@@ -45,95 +45,73 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <GridLayout
+    <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/weekChooseLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="6dp"
         android:layout_marginTop="6dp"
-        android:columnCount="4"
-        android:orientation="horizontal"
+        app:flexDirection="row"
+        app:flexWrap="wrap"
+        app:justifyContent="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dividerView">
 
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="1"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="2"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="3"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="4"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="5"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="6"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="7"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="8"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="9"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="10"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="11"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="12"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="13"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="14"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="15"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
             android:text="16"/>
-
-        <Button
+        <TextView
             style="@style/WeekButton"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:background="@drawable/week_button_background"
-            android:textColor="@color/colorPrimary"
-            android:layout_columnSpan="4"
-            android:layout_rowSpan="2"
-            android:layout_column="0"
+            android:layout_width="match_parent"
             android:text="Текущая неделя"/>
 
-    </GridLayout>
+    </com.google.android.flexbox.FlexboxLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
