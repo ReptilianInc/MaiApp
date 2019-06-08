@@ -1,5 +1,7 @@
 package com.mai.nix.maiapp.expandable_list_fragments;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -20,6 +22,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.mai.nix.maiapp.MainActivity;
 import com.mai.nix.maiapp.R;
 import com.mai.nix.maiapp.UserSettings;
@@ -39,6 +47,9 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
     private ArrayList<SubjectHeader> mGroups;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
+    private BottomSheetBehavior mBottomSheetBehaviour;
+    private ConstraintLayout mBottomSheetLayout;
+    private ImageView mToogleButton;
     private ScheduleListAdapter mScheduleListAdapter;
     private String mCurrentGroup, mCurrentLink;
     private int mCurrentDay, mCurrentWeek;
@@ -71,7 +82,10 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         mGroups = new ArrayList<>();
         mCurrentGroup = UserSettings.getGroup(getContext());
         mSwipeRefreshLayout = v.findViewById(R.id.swiperefresh);
+        mToogleButton = v.findViewById(R.id.toggleButton);
         mRecyclerView = v.findViewById(R.id.scheduleRecyclerView);
+        mBottomSheetLayout = v.findViewById(R.id.mainBottomSheet);
+        mBottomSheetBehaviour = BottomSheetBehavior.from(mBottomSheetLayout);
         mScheduleListAdapter = new ScheduleListAdapter();
         mRecyclerView.setAdapter(mScheduleListAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -148,7 +162,47 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
 
             }
         });
+        mToogleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mBottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    mBottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                } else {
+                    mBottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+            }
+        });
+        mBottomSheetBehaviour.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    animateToggleButton(0.0f, -180.0f);
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    animateToggleButton(-180.0f, 0.0f);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
+        });
         return v;
+    }
+
+    private void animateToggleButton(float fromDegrees, float toDegrees) {
+        AnimationSet animSet = new AnimationSet(true);
+        animSet.setInterpolator(new DecelerateInterpolator());
+        animSet.setFillAfter(true);
+        animSet.setFillEnabled(true);
+
+        final RotateAnimation animRotate = new RotateAnimation(fromDegrees, toDegrees,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+
+        animRotate.setDuration(500);
+        animRotate.setFillAfter(true);
+        animSet.addAnimation(animRotate);
+
+        mToogleButton.startAnimation(animSet);
     }
 
     @Override
