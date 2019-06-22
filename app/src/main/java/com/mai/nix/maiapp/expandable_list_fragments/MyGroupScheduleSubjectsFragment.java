@@ -26,9 +26,10 @@ import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
-
+import android.widget.TextView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.mai.nix.maiapp.MainActivity;
+import com.mai.nix.maiapp.PeekWeekController;
 import com.mai.nix.maiapp.R;
 import com.mai.nix.maiapp.UserSettings;
 import com.mai.nix.maiapp.WebViewActivity;
@@ -43,21 +44,22 @@ import java.util.List;
  * Created by Nix on 02.08.2017.
  */
 
-public class MyGroupScheduleSubjectsFragment extends Fragment {
+public class MyGroupScheduleSubjectsFragment extends Fragment implements PeekWeekController.WeekButtonClickListener {
     private ArrayList<SubjectHeader> mGroups;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private BottomSheetBehavior mBottomSheetBehaviour;
     private ConstraintLayout mBottomSheetLayout;
-    private ImageView mToogleButton;
+    private ImageView mToggleButton;
+    private TextView mChosenWeekTextView;
     private ScheduleListAdapter mScheduleListAdapter;
+    private PeekWeekController mPeekWeekController;
     private String mCurrentGroup, mCurrentLink;
     private int mCurrentDay, mCurrentWeek;
     private Calendar mCalendar;
     private final String mLink = "https://mai.ru/education/schedule/detail.php?group=";
     private String mWeek = "1";
     private final String PLUS_WEEK = "&week=";
-
     private ApplicationViewModel mApplicationViewModel;
     private LiveData<List<SubjectHeader>> mLiveData;
 
@@ -79,16 +81,21 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH);
         mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH);
         UserSettings.initialize(getContext());
+        mChosenWeekTextView = v.findViewById(R.id.weekTextView);
         mGroups = new ArrayList<>();
         mCurrentGroup = UserSettings.getGroup(getContext());
         mSwipeRefreshLayout = v.findViewById(R.id.swiperefresh);
-        mToogleButton = v.findViewById(R.id.toggleButton);
+        mToggleButton = v.findViewById(R.id.toggleButton);
         mRecyclerView = v.findViewById(R.id.scheduleRecyclerView);
         mBottomSheetLayout = v.findViewById(R.id.mainBottomSheet);
         mBottomSheetBehaviour = BottomSheetBehavior.from(mBottomSheetLayout);
         mScheduleListAdapter = new ScheduleListAdapter();
         mRecyclerView.setAdapter(mScheduleListAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mPeekWeekController = new PeekWeekController(v, R.id.weekChooseLayout, this);
+        mPeekWeekController.initFirstClickedItem();
+
         mApplicationViewModel = ViewModelProviders.of(MyGroupScheduleSubjectsFragment.this)
                 .get(ApplicationViewModel.class);
         mCurrentLink = mLink.concat(mCurrentGroup);
@@ -162,7 +169,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
 
             }
         });
-        mToogleButton.setOnClickListener(new View.OnClickListener() {
+        mToggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mBottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_EXPANDED) {
@@ -202,7 +209,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         animRotate.setFillAfter(true);
         animSet.addAnimation(animRotate);
 
-        mToogleButton.startAnimation(animSet);
+        mToggleButton.startAnimation(animSet);
     }
 
     @Override
@@ -221,6 +228,16 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.action_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void weekButtonClicked(int chosenWeek) {
+        if (chosenWeek != 0) {
+            mChosenWeekTextView.setText(chosenWeek + " неделя");
+        } else {
+            mChosenWeekTextView.setText("Текущая неделя");
+        }
+        mBottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
     @Override
