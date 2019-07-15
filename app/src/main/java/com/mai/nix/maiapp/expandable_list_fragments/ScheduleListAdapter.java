@@ -48,6 +48,7 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((TextView) itemView.findViewById(R.id.dateTextView)).setText(subjectHeader.getDate());
             LayoutInflater inflater = LayoutInflater.from(itemView.getContext());
             LinearLayout container = itemView.findViewById(R.id.childItemsLayout);
+            container.removeAllViews();
             List<SubjectBody> children = subjectHeader.getChildren();
             for (int i = 0; i < children.size(); i++) {
                 View childView = inflater.inflate(R.layout.view_schedule_child_item, null);

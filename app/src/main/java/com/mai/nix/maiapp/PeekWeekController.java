@@ -13,6 +13,10 @@ public class PeekWeekController implements View.OnClickListener {
         void weekButtonClicked(int chosenWeek);
     }
 
+    public int getLastChosenWeek() {
+        return lastChosenWeek;
+    }
+
     public PeekWeekController(View rootView, int controllerViewId, WeekButtonClickListener listener) {
         weekControllerView = rootView.findViewById(controllerViewId);
         mCallback = listener;

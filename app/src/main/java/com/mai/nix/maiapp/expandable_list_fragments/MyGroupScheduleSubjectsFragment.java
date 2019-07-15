@@ -67,6 +67,8 @@ public class MyGroupScheduleSubjectsFragment extends Fragment implements PeekWee
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mApplicationViewModel = ViewModelProviders.of(MyGroupScheduleSubjectsFragment.this)
+                .get(ApplicationViewModel.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
             getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
@@ -92,16 +94,11 @@ public class MyGroupScheduleSubjectsFragment extends Fragment implements PeekWee
         mScheduleListAdapter = new ScheduleListAdapter();
         mRecyclerView.setAdapter(mScheduleListAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         mPeekWeekController = new PeekWeekController(v, R.id.weekChooseLayout, this);
         mPeekWeekController.initFirstClickedItem();
-
-        mApplicationViewModel = ViewModelProviders.of(MyGroupScheduleSubjectsFragment.this)
-                .get(ApplicationViewModel.class);
         mCurrentLink = mLink.concat(mCurrentGroup);
         mApplicationViewModel.initSubjectsRepository(mCurrentLink);
         mLiveData = mApplicationViewModel.getCachedSubjectsData();
-
         mLiveData.observe(MyGroupScheduleSubjectsFragment.this, new Observer<List<SubjectHeader>>() {
             @Override
             public void onChanged(@Nullable List<SubjectHeader> subjectHeaders) {
@@ -155,9 +152,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment implements PeekWee
             @Override
             public void onRefresh() {
                 mSwipeRefreshLayout.setRefreshing(true);
-
-                /*if (mSpinner.getSelectedItemPosition() != 0) {
-                    mWeek = Integer.toString(mSpinner.getSelectedItemPosition());
+                if (mPeekWeekController.getLastChosenWeek() != 0) {
                     mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
                     mApplicationViewModel.initSubjectsRepository(mCurrentLink);
                     mLiveData = mApplicationViewModel.getData();
@@ -165,7 +160,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment implements PeekWee
                     mCurrentLink = mLink.concat(mCurrentGroup);
                     mApplicationViewModel.initSubjectsRepository(mCurrentLink);
                     mLiveData = mApplicationViewModel.getCachedSubjectsData();
-                }*/
+                }
 
             }
         });
@@ -193,6 +188,19 @@ public class MyGroupScheduleSubjectsFragment extends Fragment implements PeekWee
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
         });
         return v;
+    }
+
+    @Override
+    public void weekButtonClicked(int chosenWeek) {
+        if (chosenWeek != 0) {
+            mChosenWeekTextView.setText(chosenWeek + " неделя");
+        } else {
+            mChosenWeekTextView.setText("Текущая неделя");
+        }
+        mSwipeRefreshLayout.setRefreshing(true);
+        mBottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mApplicationViewModel.initSubjectsRepository(mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(Integer.toString(chosenWeek)));
+        mLiveData = mApplicationViewModel.getData();
     }
 
     private void animateToggleButton(float fromDegrees, float toDegrees) {
@@ -228,16 +236,6 @@ public class MyGroupScheduleSubjectsFragment extends Fragment implements PeekWee
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.action_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void weekButtonClicked(int chosenWeek) {
-        if (chosenWeek != 0) {
-            mChosenWeekTextView.setText(chosenWeek + " неделя");
-        } else {
-            mChosenWeekTextView.setText("Текущая неделя");
-        }
-        mBottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
     @Override
