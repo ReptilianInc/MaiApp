@@ -3,7 +3,7 @@ package com.mai.nix.maiapp.repositories;
 import android.os.AsyncTask;
 
 import com.mai.nix.maiapp.model.SportSectionsBodies;
-import com.mai.nix.maiapp.model.SportSectionsHeaders;
+import com.mai.nix.maiapp.model.SportSectionsHeader;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,7 +17,7 @@ import java.util.List;
 public class BarracksRepository {
 
     public interface LoadBarracksCallback {
-        void loadBarracks(List<SportSectionsHeaders> barracks);
+        void loadBarracks(List<SportSectionsHeader> barracks);
     }
 
     public void loadData(LoadBarracksCallback loadBarracksCallback){
@@ -25,7 +25,7 @@ public class BarracksRepository {
         loadBarracksTask.execute();
     }
 
-    static class LoadBarracksTask extends AsyncTask<Integer, Void, List<SportSectionsHeaders>> {
+    static class LoadBarracksTask extends AsyncTask<Integer, Void, List<SportSectionsHeader>> {
         private Document doc;
         private Element table, stupid_header, header;
         private Elements rows;
@@ -36,8 +36,8 @@ public class BarracksRepository {
         }
 
         @Override
-        protected List<SportSectionsHeaders> doInBackground(Integer... integers) {
-            List<SportSectionsHeaders> sportSectionsHeaders = new ArrayList<>();
+        protected List<SportSectionsHeader> doInBackground(Integer... integers) {
+            List<SportSectionsHeader> sportSectionsHeaders = new ArrayList<>();
             try {
                 doc = Jsoup.connect("http://mai.ru/common/campus/dormitory.php").get();
                 table = doc.select("table[class=data-table]").first();
@@ -46,8 +46,8 @@ public class BarracksRepository {
                 header = table.select("th").first();
                 if (table != null) sportSectionsHeaders.clear();
 
-                sportSectionsHeaders.add(new SportSectionsHeaders(stupid_header.text()));
-                sportSectionsHeaders.add(new SportSectionsHeaders(header.text()));
+                sportSectionsHeaders.add(new SportSectionsHeader(stupid_header.text()));
+                sportSectionsHeaders.add(new SportSectionsHeader(header.text()));
 
                 int j = 0;
                 for (int i = 0; i < rows.size(); i++) {
@@ -70,7 +70,7 @@ public class BarracksRepository {
         }
 
         @Override
-        protected void onPostExecute(List<SportSectionsHeaders> sportSectionsHeaders) {
+        protected void onPostExecute(List<SportSectionsHeader> sportSectionsHeaders) {
             super.onPostExecute(sportSectionsHeaders);
             if (mLoadBarracksCallback != null) mLoadBarracksCallback.loadBarracks(sportSectionsHeaders);
         }

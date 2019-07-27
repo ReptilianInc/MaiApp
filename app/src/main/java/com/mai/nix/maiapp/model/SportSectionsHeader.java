@@ -6,11 +6,11 @@ import java.util.ArrayList;
  * Created by Nix on 11.08.2017.
  */
 
-public class SportSectionsHeaders {
+public class SportSectionsHeader {
     private String mTitle;
     private ArrayList<SportSectionsBodies> mBodies;
 
-    public SportSectionsHeaders(String title) {
+    public SportSectionsHeader(String title) {
         mTitle = title;
         mBodies = new ArrayList<>();
     }

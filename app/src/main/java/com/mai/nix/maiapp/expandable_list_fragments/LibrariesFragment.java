@@ -2,9 +2,7 @@ package com.mai.nix.maiapp.expandable_list_fragments;
 
 import androidx.lifecycle.Observer;
 import androidx.annotation.Nullable;
-
-import com.mai.nix.maiapp.model.SportSectionsHeaders;
-
+import com.mai.nix.maiapp.model.SportSectionsHeader;
 import java.util.List;
 
 /**
@@ -16,16 +14,15 @@ public class LibrariesFragment extends SimpleExpandableListFragment {
     @Override
     protected void setObserve() {
         mSportSectionsHeadersLiveData = mApplicationViewModel.getLibrariesLiveData();
-        mSportSectionsHeadersLiveData.observe(LibrariesFragment.this, new Observer<List<SportSectionsHeaders>>() {
+        mSportSectionsHeadersLiveData.observe(LibrariesFragment.this, new Observer<List<SportSectionsHeader>>() {
             @Override
-            public void onChanged(@Nullable List<SportSectionsHeaders> sportSectionsHeaders) {
+            public void onChanged(@Nullable List<SportSectionsHeader> sportSectionsHeaders) {
                 mSwipeRefreshLayout.setRefreshing(false);
                 mHeaders.clear();
                 mHeaders.addAll(sportSectionsHeaders);
-                mExpandableListView.setAdapter(mAdapter);
-                for(int i = 0; i < mHeaders.size(); i++){
-                    mExpandableListView.expandGroup(i);
-                }
+                mAdapter.setData(mHeaders);
+                mExpandableRecyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
             }
         });
     }

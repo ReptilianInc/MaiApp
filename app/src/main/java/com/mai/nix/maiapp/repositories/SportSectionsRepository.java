@@ -3,7 +3,7 @@ package com.mai.nix.maiapp.repositories;
 import android.os.AsyncTask;
 
 import com.mai.nix.maiapp.model.SportSectionsBodies;
-import com.mai.nix.maiapp.model.SportSectionsHeaders;
+import com.mai.nix.maiapp.model.SportSectionsHeader;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SportSectionsRepository {
     public interface LoadSportSectionsCallback {
-        void loadSportSections(List<SportSectionsHeaders> sportSections);
+        void loadSportSections(List<SportSectionsHeader> sportSections);
     }
 
     public void loadData(LoadSportSectionsCallback sportSectionsCallback) {
@@ -24,7 +24,7 @@ public class SportSectionsRepository {
         loadSportSectionsTask.execute();
     }
 
-    static class LoadSportSectionsTask extends AsyncTask<Integer, Void, List<SportSectionsHeaders>> {
+    static class LoadSportSectionsTask extends AsyncTask<Integer, Void, List<SportSectionsHeader>> {
         private Document doc;
         private Element table;
         private Elements rows, headers;
@@ -35,8 +35,8 @@ public class SportSectionsRepository {
         }
 
         @Override
-        protected List<SportSectionsHeaders> doInBackground(Integer... integers) {
-            List<SportSectionsHeaders> sportSections = new ArrayList<>();
+        protected List<SportSectionsHeader> doInBackground(Integer... integers) {
+            List<SportSectionsHeader> sportSections = new ArrayList<>();
             try {
                 doc = Jsoup.connect("http://www.mai.ru/life/sport/sections.php").get();
                 table = doc.select("table[class=data-table]").first();
@@ -44,7 +44,7 @@ public class SportSectionsRepository {
                 headers = table.select("th");
                 if (table != null) sportSections.clear();
                 for (int i = 0; i < headers.size(); i++) {
-                    sportSections.add(new SportSectionsHeaders(headers.get(i).text()));
+                    sportSections.add(new SportSectionsHeader(headers.get(i).text()));
                 }
                 int j = 0;
                 for (int i = 1; i < rows.size(); i++) {
@@ -71,7 +71,7 @@ public class SportSectionsRepository {
         }
 
         @Override
-        protected void onPostExecute(List<SportSectionsHeaders> sportSectionsHeaders) {
+        protected void onPostExecute(List<SportSectionsHeader> sportSectionsHeaders) {
             super.onPostExecute(sportSectionsHeaders);
             if (mLoadSportSectionsCallback != null)
                 mLoadSportSectionsCallback.loadSportSections(sportSectionsHeaders);

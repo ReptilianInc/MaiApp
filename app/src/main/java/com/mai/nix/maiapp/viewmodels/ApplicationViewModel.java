@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.mai.nix.maiapp.model.SportSectionsHeaders;
+import com.mai.nix.maiapp.model.SportSectionsHeader;
 import com.mai.nix.maiapp.model.StudentOrgModel;
 import com.mai.nix.maiapp.model.SubjectHeader;
 import com.mai.nix.maiapp.repositories.BarracksRepository;
@@ -22,9 +22,9 @@ public class ApplicationViewModel extends ViewModel {
     private MutableLiveData<List<StudentOrgModel>> mStudentOrganizations = new MutableLiveData<>();
     private MutableLiveData<List<StudentOrgModel>> mWorkersAndGradsOrganizations = new MutableLiveData<>();
     private MutableLiveData<List<StudentOrgModel>> mCafes = new MutableLiveData<>();
-    private MutableLiveData<List<SportSectionsHeaders>> mBarracks = new MutableLiveData<>();
-    private MutableLiveData<List<SportSectionsHeaders>> mLibraries = new MutableLiveData<>();
-    private MutableLiveData<List<SportSectionsHeaders>> mSportSections = new MutableLiveData<>();
+    private MutableLiveData<List<SportSectionsHeader>> mBarracks = new MutableLiveData<>();
+    private MutableLiveData<List<SportSectionsHeader>> mLibraries = new MutableLiveData<>();
+    private MutableLiveData<List<SportSectionsHeader>> mSportSections = new MutableLiveData<>();
 
     private SubjectsRepository mSubjectsRepository;
     private StudentOrgsRepository mStudentOrganisationsRepository;
@@ -66,7 +66,7 @@ public class ApplicationViewModel extends ViewModel {
         return mCafes;
     }
 
-    public LiveData<List<SportSectionsHeaders>> getBarracksLiveData() {
+    public LiveData<List<SportSectionsHeader>> getBarracksLiveData() {
         if (mBarracksRepository == null) {
             mBarracksRepository = new BarracksRepository();
             loadBarracksData();
@@ -74,7 +74,7 @@ public class ApplicationViewModel extends ViewModel {
         return mBarracks;
     }
 
-    public LiveData<List<SportSectionsHeaders>> getLibrariesLiveData() {
+    public LiveData<List<SportSectionsHeader>> getLibrariesLiveData() {
         if (mLibrariesRepository == null) {
             mLibrariesRepository = new LibrariesRepository();
             loadLibrariesData();
@@ -82,7 +82,7 @@ public class ApplicationViewModel extends ViewModel {
         return mLibraries;
     }
 
-    public LiveData<List<SportSectionsHeaders>> getSportSectionsLiveData() {
+    public LiveData<List<SportSectionsHeader>> getSportSectionsLiveData() {
         if (mSportSectionsRepository == null) {
             mSportSectionsRepository = new SportSectionsRepository();
             loadSportSectionsData();
@@ -120,7 +120,7 @@ public class ApplicationViewModel extends ViewModel {
     public void loadBarracksData() {
         mBarracksRepository.loadData(new BarracksRepository.LoadBarracksCallback() {
             @Override
-            public void loadBarracks(List<SportSectionsHeaders> barracks) {
+            public void loadBarracks(List<SportSectionsHeader> barracks) {
                 mBarracks.postValue(barracks);
             }
         });
@@ -129,7 +129,7 @@ public class ApplicationViewModel extends ViewModel {
     public void loadSportSectionsData() {
         mSportSectionsRepository.loadData(new SportSectionsRepository.LoadSportSectionsCallback() {
             @Override
-            public void loadSportSections(List<SportSectionsHeaders> sportSections) {
+            public void loadSportSections(List<SportSectionsHeader> sportSections) {
                 mSportSections.postValue(sportSections);
             }
         });
@@ -138,7 +138,7 @@ public class ApplicationViewModel extends ViewModel {
     public void loadLibrariesData() {
         mLibrariesRepository.loadData(new LibrariesRepository.LoadLibrariesCallback() {
             @Override
-            public void loadLibraries(List<SportSectionsHeaders> libraries) {
+            public void loadLibraries(List<SportSectionsHeader> libraries) {
                 mLibraries.postValue(libraries);
             }
         });

@@ -3,7 +3,7 @@ package com.mai.nix.maiapp.repositories;
 import android.os.AsyncTask;
 
 import com.mai.nix.maiapp.model.SportSectionsBodies;
-import com.mai.nix.maiapp.model.SportSectionsHeaders;
+import com.mai.nix.maiapp.model.SportSectionsHeader;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class LibrariesRepository {
     public interface LoadLibrariesCallback {
-        void loadLibraries(List<SportSectionsHeaders> libraries);
+        void loadLibraries(List<SportSectionsHeader> libraries);
     }
 
     public void loadData(LoadLibrariesCallback loadLibrariesCallback) {
@@ -24,7 +24,7 @@ public class LibrariesRepository {
         loadLibrariesTask.execute();
     }
 
-    static class LoadLibrariesTask extends AsyncTask<Integer, Void, List<SportSectionsHeaders>> {
+    static class LoadLibrariesTask extends AsyncTask<Integer, Void, List<SportSectionsHeader>> {
         private Document doc;
         private Element table;
         private Elements rows;
@@ -35,8 +35,8 @@ public class LibrariesRepository {
         }
 
         @Override
-        protected List<SportSectionsHeaders> doInBackground(Integer... integers) {
-            List<SportSectionsHeaders> libraries = new ArrayList<>();
+        protected List<SportSectionsHeader> doInBackground(Integer... integers) {
+            List<SportSectionsHeader> libraries = new ArrayList<>();
             try {
                 doc = Jsoup.connect("http://mai.ru/common/campus/library/").get();
                 table = doc.select("table[class = table table-bordered table-hover]").first();
@@ -44,7 +44,7 @@ public class LibrariesRepository {
                 if (table != null) libraries.clear();
                 for (int i = 0; i < rows.size(); i++) {
                     if (rows.get(i).select("th").size() == 1) {
-                        libraries.add(new SportSectionsHeaders(rows.get(i).text()));
+                        libraries.add(new SportSectionsHeader(rows.get(i).text()));
                     }
                 }
                 int j = 0;
@@ -68,7 +68,7 @@ public class LibrariesRepository {
         }
 
         @Override
-        protected void onPostExecute(List<SportSectionsHeaders> sportSectionsHeaders) {
+        protected void onPostExecute(List<SportSectionsHeader> sportSectionsHeaders) {
             super.onPostExecute(sportSectionsHeaders);
             if (mLoadLibrariesCallback != null) mLoadLibrariesCallback.loadLibraries(sportSectionsHeaders);
         }
