@@ -57,7 +57,6 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ((TextView) childView.findViewById(R.id.titleTextView)).setText(children.get(i).getTitle());
                 ((TextView) childView.findViewById(R.id.teacherTextView)).setText(children.get(i).getTeacher());
                 ((TextView) childView.findViewById(R.id.roomTextView)).setText(children.get(i).getRoom());
-                if (i == children.size() - 1) childView.findViewById(R.id.bottomDivider).setVisibility(View.GONE);
                 container.addView(childView);
             }
         }

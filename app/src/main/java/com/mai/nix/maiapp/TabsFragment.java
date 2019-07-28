@@ -27,7 +27,7 @@ public abstract class TabsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.test_tabs, container, false);
+        View v = inflater.inflate(R.layout.tabs_layout, container, false);
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
         viewPager.setOffscreenPageLimit(3);
         setupViewPager(viewPager);

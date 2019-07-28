@@ -38,9 +38,6 @@ public abstract class SimpleListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(requireContext(), R.color.colorPrimarySec));
-        }
     }
 
     @Nullable

@@ -69,10 +69,6 @@ public class MyGroupScheduleSubjectsFragment extends Fragment implements PeekWee
         setHasOptionsMenu(true);
         mApplicationViewModel = ViewModelProviders.of(MyGroupScheduleSubjectsFragment.this)
                 .get(ApplicationViewModel.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-            getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
-        }
     }
 
     @Nullable

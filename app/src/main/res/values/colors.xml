@@ -3,11 +3,11 @@
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#0D5392</color>
-    <color name="colorText">#2196F3</color>
+    <color name="colorText">#C92196F3</color>
     <color name="colorBackground">#eeeeee</color>
     <color name="colorTextSecondary">#616161</color>
     <color name="date_background">#e4e4e4</color>
-    <color name="schedule_date_background">#999999</color>
+    <color name="schedule_date_background">#D3D3D3</color>
     <color name="colorBlack">#000000</color>
     ///
     <color name="colorPrimarySec">#003B6B</color>
