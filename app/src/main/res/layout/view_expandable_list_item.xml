@@ -23,6 +23,8 @@
             android:padding="6dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
+            android:fontFamily="@font/montserrat_font_family"
             tools:text="Дирекция студенческого городка" />
 
         <LinearLayout
