@@ -17,10 +17,12 @@
 
     <style name="ToolbarFontTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:fontFamily">@font/montserrat_font_family</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TabsFontTheme" parent="@android:style/TextAppearance.Widget.TabWidget">
         <item name="android:fontFamily">@font/montserrat_font_family</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="AppTheme.NavigationView" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -48,7 +50,7 @@
         <item name="colorAccent">@color/colorAccentSec</item>
     </style>
     <style name="WeekButton">
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@color/colorText</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:fontFamily">@font/montserrat_font_family</item>
         <item name="android:layout_height">60dp</item>

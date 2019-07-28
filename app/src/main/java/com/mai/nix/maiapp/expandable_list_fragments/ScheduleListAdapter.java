@@ -11,6 +11,7 @@ import com.mai.nix.maiapp.model.SubjectHeader;
 import java.util.ArrayList;
 import java.util.List;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ScheduleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -58,6 +59,13 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ((TextView) childView.findViewById(R.id.teacherTextView)).setText(children.get(i).getTeacher());
                 ((TextView) childView.findViewById(R.id.roomTextView)).setText(children.get(i).getRoom());
                 container.addView(childView);
+                if (i != children.size() - 1) {
+                    View divider = new View(itemView.getContext());
+                    ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                    divider.setLayoutParams(layoutParams);
+                    divider.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.colorBlack));
+                    container.addView(divider);
+                }
             }
         }
     }

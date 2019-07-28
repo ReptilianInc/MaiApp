@@ -34,13 +34,11 @@ public class WeekButton extends AppCompatTextView {
 
     public void setState(boolean enabled) {
         if (enabled) {
-            setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
             if (mWeekNumber != 0)
                 setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.current_week_button_background));
             else
                 setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.week_button_background));
         } else {
-            setTextColor(ContextCompat.getColor(getContext(), R.color.colorBlack));
             setBackgroundDrawable(null);
         }
     }

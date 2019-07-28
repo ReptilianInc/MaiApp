@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mai.nix.maiapp.R;
 import com.mai.nix.maiapp.model.SportSectionsBodies;
@@ -60,6 +61,13 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     childView.findViewById(R.id.phoneTextView).setVisibility(View.GONE);
                 }
                 container.addView(childView);
+                if (i != children.size() - 1) {
+                    View divider = new View(itemView.getContext());
+                    ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                    divider.setLayoutParams(layoutParams);
+                    divider.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.colorBlack));
+                    container.addView(divider);
+                }
             }
         }
     }

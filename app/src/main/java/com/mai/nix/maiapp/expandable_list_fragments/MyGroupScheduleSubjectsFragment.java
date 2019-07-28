@@ -67,6 +67,9 @@ public class MyGroupScheduleSubjectsFragment extends Fragment implements PeekWee
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getActivity().getWindow().setNavigationBarColor(ContextCompat.getColor(getContext(), R.color.colorText));
+        }
         mApplicationViewModel = ViewModelProviders.of(MyGroupScheduleSubjectsFragment.this)
                 .get(ApplicationViewModel.class);
     }
