@@ -2,6 +2,8 @@ package com.mai.nix.maiapp;
 
 import android.content.Context;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +83,9 @@ public class SportSectionsExpListAdapter extends BaseExpandableListAdapter {
         textChild1.setText(mHeaders.get(i).getBodies().get(i1).getTitle());
         textChild2.setText(Html.fromHtml(mHeaders.get(i).getBodies().get(i1).getOwner()));
         if(mHeaders.get(i).getBodies().get(i1).getPhoneEtc() != null){
-            textChild3.setText(mHeaders.get(i).getBodies().get(i1).getPhoneEtc());
+            textChild3.setText(Html.fromHtml(mHeaders.get(i).getBodies().get(i1).getPhoneEtc()));
+            Linkify.addLinks(textChild3, Linkify.ALL);
+
         }else{
             textChild3.setHeight(0);
         }
