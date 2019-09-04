@@ -9,9 +9,13 @@ import com.mai.nix.maiapp.model.SportSectionsHeaders;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Nix on 11.08.2017.
@@ -33,6 +37,24 @@ public class SportSectionsFragment extends SimpleExpandableListFragment {
             super();
         }
 
+        private String getBr(Element element) {
+            List<Node> nodes = element.childNodes();
+            StringBuilder stringBuilder = new StringBuilder();
+            Iterator<Node> iter = nodes.iterator();
+            while (iter.hasNext()) {
+                Node n = iter.next();
+                if (n instanceof TextNode) {
+                    stringBuilder.append(((TextNode) n).text());
+                    stringBuilder.append("\n");
+                } else if (n instanceof Element) {
+                    stringBuilder.append(n.attr("href"));
+                    stringBuilder.append("\n");
+                }
+                //stringBuilder.append("\n");
+            }
+            return stringBuilder.toString();
+        }
+
         @Override
         protected Integer doInBackground(Integer... integers) {
             int size = 0;
@@ -50,7 +72,7 @@ public class SportSectionsFragment extends SimpleExpandableListFragment {
                     Elements el = rows.get(i).select("td");
                     if (!el.isEmpty()) {
                         if (el.size() > 2) {
-                            SportSectionsBodies body = new SportSectionsBodies(el.get(0).text(), el.get(1).text(), el.get(2).html());
+                            SportSectionsBodies body = new SportSectionsBodies(el.get(0).text(), el.get(1).text(), getBr(el.get(2)));
                             mHeaders.get(j).addBody(body);
                         } else {
                             SportSectionsBodies body = new SportSectionsBodies(el.get(0).text(), "", el.get(1).html());
