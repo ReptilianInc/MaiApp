@@ -1,13 +1,14 @@
 package com.mai.nix.maiapp;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -92,13 +93,11 @@ public class NewsFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mModels.get(i).getId()));
-                    startActivity(intent);
-                } else {
-                    Intent intent = WebViewActivity.newInstance(getContext(), Uri.parse(mModels.get(i).getId()));
-                    startActivity(intent);
-                }
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                builder.setShowTitle(true);
+                builder.setToolbarColor(ContextCompat.getColor(getContext(), R.color.colorText));
+                CustomTabsIntent customTabsIntent = builder.build();
+                customTabsIntent.launchUrl(getContext(), Uri.parse(mModels.get(i).getId()));
             }
         });
         return v;

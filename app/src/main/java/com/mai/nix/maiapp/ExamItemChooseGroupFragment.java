@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -179,13 +181,11 @@ public class ExamItemChooseGroupFragment extends Fragment {
             i.putExtra(Intent.EXTRA_SUBJECT, mSelectedGroup);
             startActivity(Intent.createChooser(i, getString(R.string.share_exam_link)));
         } else if (item.getItemId() == R.id.browser_button) {
-            if (UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mLink.concat(mSelectedGroup)));
-                startActivity(intent);
-            } else {
-                Intent intent = WebViewActivity.newInstance(getContext(), Uri.parse(mLink.concat(mSelectedGroup)));
-                startActivity(intent);
-            }
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            builder.setShowTitle(true);
+            builder.setToolbarColor(ContextCompat.getColor(getContext(), R.color.colorText));
+            CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.launchUrl(getContext(), Uri.parse(mLink.concat(mSelectedGroup)));
         }
         return super.onOptionsItemSelected(item);
     }

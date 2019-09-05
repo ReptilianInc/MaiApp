@@ -7,14 +7,6 @@
             android:title="@string/pref_group"
             android:summary="@string/pref_group_summary">
         </Preference>
-        <ListPreference
-            android:title="@string/pref_links"
-            android:key="links"
-            android:defaultValue="1"
-            android:summary="%s"
-            android:entries="@array/link_array"
-            android:entryValues="@array/link_values">
-        </ListPreference>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/cache_cath">

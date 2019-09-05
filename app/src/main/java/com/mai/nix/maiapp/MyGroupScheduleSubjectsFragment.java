@@ -5,7 +5,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,8 +71,8 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         mGroups = new ArrayList<>();
         mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);
         mCurrentGroup = UserSettings.getGroup(getContext());
-        mSpinner = (Spinner) header.findViewById(R.id.spinner);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+        mSpinner = header.findViewById(R.id.spinner);
+        mSwipeRefreshLayout = v.findViewById(R.id.swiperefresh);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -114,7 +116,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
 
             }
         });
-        mListView = (ExpandableListView) v.findViewById(R.id.exp);
+        mListView = v.findViewById(R.id.exp);
         mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);
         for (int i = 0; i < mGroups.size(); i++) {
@@ -251,13 +253,11 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
             i.putExtra(Intent.EXTRA_SUBJECT, mCurrentGroup);
             startActivity(Intent.createChooser(i, getString(R.string.share_subjects_link)));
         } else if (item.getItemId() == R.id.browser_button) {
-            if (UserSettings.getLinksPreference(getContext()).equals(UserSettings.ONLY_BROWSER)) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentLink));
-                startActivity(intent);
-            } else {
-                Intent intent = WebViewActivity.newInstance(getContext(), Uri.parse(mCurrentLink));
-                startActivity(intent);
-            }
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            builder.setShowTitle(true);
+            builder.setToolbarColor(ContextCompat.getColor(getContext(), R.color.colorText));
+            CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.launchUrl(getContext(), Uri.parse(mCurrentLink));
         }
         return super.onOptionsItemSelected(item);
     }

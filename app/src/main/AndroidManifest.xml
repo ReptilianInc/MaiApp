@@ -44,12 +44,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".WebViewActivity"
-                  android:configChanges="orientation|screenSize|keyboardHidden"
-                  android:label="@string/place_holder"
-                  android:theme="@style/WebViewTheme"
-                  android:screenOrientation="portrait">
-        </activity>
     </application>
 
 </manifest>
