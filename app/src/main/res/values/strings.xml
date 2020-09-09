@@ -95,7 +95,7 @@
     <string name="spinner_stage_title">Выберите курс</string>
     <string-array name="spinner_facs">
         <item>Выберите факультет</item>
-        <item>Интститут №1</item>
+        <item>Институт №1</item>
         <item>Институт №2</item>
         <item>Институт №3</item>
         <item>Институт №4</item>
