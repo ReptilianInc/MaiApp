@@ -24,7 +24,7 @@
     <string name="freg_cache">Обновление кэша расписания пар</string>
     <string name="freg_cache_exams">Обновление кэша расписания экзаменов</string>
     <string name="title_app">Неофициальное приложение МАИ</string>
-    <string name="title_summary">Версия 0.8.5 Сборка от 05.09.2019</string>
+    <string name="title_summary">Версия 0.8.6 Сборка от 09.09.2020</string>
     <string name="site_mai">Перейти на сайт МАИ</string>
 
     <string-array name="freg_array">
@@ -95,11 +95,11 @@
     <string name="spinner_stage_title">Выберите курс</string>
     <string-array name="spinner_facs">
         <item>Выберите факультет</item>
-        <item>Факультет №1</item>
+        <item>Интститут №1</item>
         <item>Институт №2</item>
         <item>Институт №3</item>
         <item>Институт №4</item>
-        <item>ИНЖЭКИН</item>
+        <item>Институт №5</item>
         <item>Институт №6</item>
         <item>Факультет №7</item>
         <item>Факультет №8</item>
@@ -107,8 +107,6 @@
         <item>Институт №10</item>
         <item>Институт №11</item>
         <item>Институт №12</item>
-        <item>Факультет \"ФИЯ\"</item>
-        <item>ИЗО</item>
     </string-array>
     <string-array name="spinner_stages">
         <item>Выберите курс</item>

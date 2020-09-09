@@ -23,13 +23,15 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ChooseGroupActivity extends AppCompatActivity{
+public class ChooseGroupActivity extends AppCompatActivity {
     private ListView mListView;
     private ArrayAdapter<String> mAdapter;
     private ArrayList<String> mGroups;
@@ -38,14 +40,14 @@ public class ChooseGroupActivity extends AppCompatActivity{
     private String mCurrentGroup;
     public static final String EXTRA_GROUP = "com.mai.nix.group_result";
     private static final String MODE = "com.mai.nix.maiapp.mode";
-    private String[] FAC_CODES = {"150", "153", "157", "149", "155", "160", "154", "151",
-            "152", "146", "165", "164", "168", "169"};
+    private String[] FAC_CODES = {"Институт №1", "Институт №2", "Институт №3", "Институт №4", "Институт №5", "Институт №6", "Институт №7", "Институт №8",
+            "Институт №9", "Институт №10", "Институт №1", "Институт №12"};
     private final String LINK = "http://mai.ru/education/schedule/?department=";
     private final String PLUS_COURSE = "&course=";
     private int mCurrentFac = -1, mCurrentStage = -1;
     private boolean isForSettings;
 
-    public static Intent newIntent(Context context, boolean mode){
+    public static Intent newIntent(Context context, boolean mode) {
         Intent intent = new Intent(context, ChooseGroupActivity.class);
         intent.putExtra(MODE, mode);
         return intent;
@@ -61,9 +63,9 @@ public class ChooseGroupActivity extends AppCompatActivity{
         String[] mFacsArray = getResources().getStringArray(R.array.spinner_facs);
         String[] mStagesArray = getResources().getStringArray(R.array.spinner_stages);
         View header = View.inflate(this, R.layout.group_choosing_header, null);
-        mSpinnerFacs = (Spinner)header.findViewById(R.id.spinner_facs);
-        mSpinnerStages = (Spinner)header.findViewById(R.id.spinner_stages);
-        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swiperefresh_groups);
+        mSpinnerFacs = (Spinner) header.findViewById(R.id.spinner_facs);
+        mSpinnerStages = (Spinner) header.findViewById(R.id.spinner_stages);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_groups);
         HintAdapter hintAdapter = new HintAdapter(this, android.R.layout.simple_spinner_item, mFacsArray);
         hintAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -75,10 +77,10 @@ public class ChooseGroupActivity extends AppCompatActivity{
         mSpinnerFacs.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i != 0){
-                    mCurrentFac = i-1;
+                if (i != 0) {
+                    mCurrentFac = i - 1;
                 }
-                if(mCurrentStage != -1){
+                if (mCurrentStage != -1) {
                     new MyThread().execute();
                 }
 
@@ -92,10 +94,10 @@ public class ChooseGroupActivity extends AppCompatActivity{
         mSpinnerStages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i != 0){
+                if (i != 0) {
                     mCurrentStage = i;
                 }
-                if(mCurrentFac != -1){
+                if (mCurrentFac != -1) {
                     new MyThread().execute();
                 }
 
@@ -106,7 +108,7 @@ public class ChooseGroupActivity extends AppCompatActivity{
                 //do nothing
             }
         });
-        mListView = (ListView)findViewById(R.id.listview);
+        mListView = (ListView) findViewById(R.id.listview);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, mGroups);
         mListView.addHeaderView(header);
@@ -114,22 +116,22 @@ public class ChooseGroupActivity extends AppCompatActivity{
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mCurrentGroup =  mGroups.get(i-1);
+                mCurrentGroup = mGroups.get(i - 1);
             }
         });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(mCurrentStage != -1 && mCurrentFac != -1) {
+                if (mCurrentStage != -1 && mCurrentFac != -1) {
                     new MyThread().execute();
-                }else{
+                } else {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
     }
 
-    private class MyThread extends AsyncTask<Integer, Void, Integer>{
+    private class MyThread extends AsyncTask<Integer, Void, Integer> {
         private Document doc;
         private Elements titles;
 
@@ -142,10 +144,10 @@ public class ChooseGroupActivity extends AppCompatActivity{
         @Override
         protected void onPostExecute(Integer s) {
             mSwipeRefreshLayout.setRefreshing(false);
-            if(s == 0){
+            if (s == 0) {
                 Toast.makeText(ChooseGroupActivity.this, R.string.error,
                         Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 mListView.setAdapter(mAdapter);
             }
         }
@@ -158,23 +160,25 @@ public class ChooseGroupActivity extends AppCompatActivity{
                 Log.d("link = ", LINK.concat(FAC_CODES[mCurrentFac]).concat(PLUS_COURSE)
                         .concat(Integer.toString(mCurrentStage)));
                 titles = doc.select("a[class = sc-group-item]");
-                if(titles == null) return 0;
-                if (titles.size() > 0){
+                if (titles == null) return 0;
+                if (titles.size() > 0) {
                     mGroups.clear();
-                    for(int i = 0; i < titles.size(); i++){
+                    for (int i = 0; i < titles.size(); i++) {
                         mGroups.add(titles.get(i).text());
                     }
                 }
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            if (titles != null) return titles.size(); else return 0;
+            if (titles != null) return titles.size();
+            else return 0;
         }
     }
 
-    private class HintAdapter extends ArrayAdapter<String>{
+    private class HintAdapter extends ArrayAdapter<String> {
         Context mContext;
+
         public HintAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull String[] objects) {
             super(context, resource, objects);
             this.mContext = context;
@@ -187,7 +191,7 @@ public class ChooseGroupActivity extends AppCompatActivity{
             View view = inflater.inflate(android.R.layout.simple_spinner_item, parent, false);
             TextView texview = (TextView) view.findViewById(android.R.id.text1);
 
-            if(position == 0) {
+            if (position == 0) {
                 texview.setText("");
                 texview.setHint(getItem(position)); //"Hint to be displayed"
             } else {
@@ -202,7 +206,7 @@ public class ChooseGroupActivity extends AppCompatActivity{
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             View view;
 
-            if(position == 0){
+            if (position == 0) {
                 view = inflater.inflate(R.layout.spinner_hint_list_item_layout, parent, false); // Hide first row
             } else {
                 view = inflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
@@ -222,23 +226,24 @@ public class ChooseGroupActivity extends AppCompatActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(mCurrentGroup != null){
-            if(isForSettings){
+        if (mCurrentGroup != null) {
+            if (isForSettings) {
                 UserSettings.setGroup(this, mCurrentGroup);
                 Intent i = new Intent(ChooseGroupActivity.this, MainActivity.class);
                 startActivity(i);
                 finish();
-            }else{
+            } else {
                 setGroupResult(mCurrentGroup);
                 this.finish();
             }
-        }else{
+        } else {
             Toast.makeText(this, R.string.exception_group_null, Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);
     }
-    private void setGroupResult(String group){
+
+    private void setGroupResult(String group) {
         Intent data = new Intent();
         data.putExtra(EXTRA_GROUP, group);
         setResult(RESULT_OK, data);

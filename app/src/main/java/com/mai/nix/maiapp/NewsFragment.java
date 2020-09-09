@@ -117,7 +117,7 @@ public class NewsFragment extends Fragment {
                 title2 = doc.select("div[class = col-md-9] > p[class = b-date]");
                 title3 = doc.select("img[class = img-responsive]");
                 if (!title1.isEmpty()) mModels.clear();
-                for (int i = 0; i < title1.size(); i++) {
+                for (int i = 0; i < title1.size() - 1; i++) {
                     mModels.add(new NewsModel(title1.get(i).text(), title2.get(i).text(),
                             mLinkMain.concat(title3.get(i).attr("src")), links.get(i).attr("abs:href")));
                     Log.d("suka blyat = ", links.get(i).attr("a[href]"));
