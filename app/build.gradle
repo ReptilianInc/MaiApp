@@ -5,8 +5,8 @@ android {
     defaultConfig {
         applicationId "com.mai.nix.maiapp"
         minSdkVersion 16
-        targetSdkVersion 28
-        versionCode 10
+        targetSdkVersion 29
+        versionCode 11
         versionName "0.8.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
