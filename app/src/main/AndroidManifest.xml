@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.mai.nix.maiapp"
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    package="com.mai.nix.maiapp"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -12,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_fake_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.AppCompat">
+        android:theme="@style/Theme.AppCompat"
+        tools:targetApi="m">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -35,7 +37,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".SplashActivity"
+            android:name=".NewSplashActivity"
             android:noHistory="true"
             android:theme="@style/Splash"
             android:screenOrientation="portrait">

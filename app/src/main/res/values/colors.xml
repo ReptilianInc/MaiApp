@@ -12,4 +12,9 @@
     <color name="colorPrimarySec">#2196F3</color>
     <color name="colorPrimaryDarkSec">#1E88E5</color>
     <color name="colorAccentSec">#1E88E5</color>
+
+
+
+    ///
+    <color name="backgroundSplash">#FFFFFF</color>
 </resources>
