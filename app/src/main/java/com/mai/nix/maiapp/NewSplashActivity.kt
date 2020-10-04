@@ -17,15 +17,23 @@ class NewSplashActivity : AppCompatActivity() {
     }
 
     private fun startAnimation() {
+        animateCenterTitle()
         skyView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                animate()
+                animateAirPlanes()
                 skyView.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
     }
 
-    private fun animate() {
+    private fun animateCenterTitle() {
+        centerTitle.animate()
+                .alpha(1.0f)
+                .setDuration(2500)
+                .setListener(null)
+    }
+
+    private fun animateAirPlanes() {
         val objectAnimator = ObjectAnimator
                 .ofFloat(planeView, "y", skyView.height.toFloat(), skyView.top.toFloat() - planeView.height)
                 .setDuration(3000)
