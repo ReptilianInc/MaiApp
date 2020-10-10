@@ -16,7 +16,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
-            android:name=".NewChooseGroupActivity"
+            android:name=".choose_groups.NewChooseGroupActivity"
             android:theme="@style/AppThemeTest" />
         <activity
             android:name=".MainActivity"
