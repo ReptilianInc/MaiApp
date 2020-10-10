@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import com.mai.nix.maiapp.ActivityChooseGroupPreferences
+import com.mai.nix.maiapp.ActivityChooseSingleItem
 import com.mai.nix.maiapp.Parser
 import com.mai.nix.maiapp.R
 import kotlinx.android.synthetic.main.activity_new_choose_group.*
@@ -72,10 +72,10 @@ class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, Group
             GroupsParsingThread(this).execute()
         }
         chooseFacultyButton.setOnClickListener {
-            ActivityChooseGroupPreferences.startActivity(this, faculties, FACULTIES_RESULT_CODE)
+            ActivityChooseSingleItem.startActivity(this, faculties, FACULTIES_RESULT_CODE)
         }
         chooseCourseButton.setOnClickListener {
-            ActivityChooseGroupPreferences.startActivity(this, courses, COURSES_RESULT_CODE)
+            ActivityChooseSingleItem.startActivity(this, courses, COURSES_RESULT_CODE)
         }
     }
 
@@ -98,7 +98,7 @@ class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, Group
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            val chosenIndex = data?.getIntExtra(ActivityChooseGroupPreferences.ITEMS_RESULT, 0)?: 0
+            val chosenIndex = data?.getIntExtra(ActivityChooseSingleItem.ITEMS_RESULT, 0)?: 0
             if (requestCode == FACULTIES_RESULT_CODE) {
                 currentFacultyIndex = chosenIndex
                 chooseFacultyButton.text = faculties[currentFacultyIndex]

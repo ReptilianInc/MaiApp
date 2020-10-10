@@ -48,7 +48,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ActivityChooseGroupPreferences"
+            android:name=".ActivityChooseSingleItem"
             android:screenOrientation="portrait"
             android:theme="@style/TransparentActivity" />
     </application>

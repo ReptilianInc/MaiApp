@@ -9,14 +9,14 @@ import android.support.v7.widget.LinearLayoutManager
 import com.mai.nix.maiapp.choose_groups.ItemsAdapter
 import kotlinx.android.synthetic.main.activity_choose_group_preference.*
 
-class ActivityChooseGroupPreferences: AppCompatActivity(), ItemsAdapter.OnItemClickListener {
+class ActivityChooseSingleItem: AppCompatActivity(), ItemsAdapter.OnItemClickListener {
 
     companion object {
         private const val ITEMS = "items"
         const val ITEMS_RESULT = "com.mai.nix.maiapp.items_result"
 
         fun startActivity(context: AppCompatActivity, items: Array<String>, requestCode: Int) {
-            val intent = Intent(context, ActivityChooseGroupPreferences::class.java)
+            val intent = Intent(context, ActivityChooseSingleItem::class.java)
             intent.putExtra(ITEMS, items)
             context.startActivityForResult(intent, requestCode)
         }
