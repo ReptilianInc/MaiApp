@@ -70,11 +70,12 @@
         app:layout_constraintRight_toRightOf="parent">
 
         <TextView
-            android:id="@+id/chooseGroupButton"
+            android:id="@+id/chooseFacultyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_margin="16dp"
+            android:background="?attr/selectableItemBackground"
             android:text="@string/choose_faculty_space"
             android:textColor="@color/mainTextColor"
             android:textSize="16sp"
@@ -86,6 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
             android:layout_margin="16dp"
+            android:background="?attr/selectableItemBackground"
             android:text="@string/choose_course_space"
             android:textColor="@color/mainTextColor"
             android:textSize="16sp"

@@ -1,5 +1,6 @@
 package com.mai.nix.maiapp.choose_groups
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import com.mai.nix.maiapp.ActivityChooseGroupPreferences
 import com.mai.nix.maiapp.Parser
 import com.mai.nix.maiapp.R
 import kotlinx.android.synthetic.main.activity_new_choose_group.*
@@ -16,6 +18,9 @@ import kotlinx.android.synthetic.main.activity_new_choose_group.*
 class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, GroupsAdapter.GroupChosenListener {
 
     companion object {
+        const val FACULTIES_RESULT_CODE = 23
+        const val COURSES_RESULT_CODE = 24
+
         const val EXTRA_GROUP = "com.mai.nix.maiapp.choose_groups.group_result"
         private const val MODE = "com.mai.nix.maiapp.choose_groups.maiapp.mode"
     }
@@ -35,7 +40,18 @@ class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, Group
             "Институт №12"
     )
 
+    private val courses = arrayOf(
+            "1 курс",
+            "2 курс",
+            "3 курс",
+            "4 курс",
+            "5 курс",
+            "6 курс"
+    )
+
     private var currentGroup = ""
+    private var currentFacultyIndex = -1
+    private var currentCourseIndex = -1
     private val groupsAdapter = GroupsAdapter()
     private var isForSettings = false
 
@@ -55,6 +71,12 @@ class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, Group
         chooseGroupSRL.setOnRefreshListener {
             GroupsParsingThread(this).execute()
         }
+        chooseFacultyButton.setOnClickListener {
+            ActivityChooseGroupPreferences.startActivity(this, faculties, FACULTIES_RESULT_CODE)
+        }
+        chooseCourseButton.setOnClickListener {
+            ActivityChooseGroupPreferences.startActivity(this, courses, COURSES_RESULT_CODE)
+        }
     }
 
     override fun onGroupChosen(group: String) {
@@ -73,6 +95,20 @@ class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, Group
         groupsAdapter.notifyDataSetChanged()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            val chosenIndex = data?.getIntExtra(ActivityChooseGroupPreferences.ITEMS_RESULT, 0)?: 0
+            if (requestCode == FACULTIES_RESULT_CODE) {
+                currentFacultyIndex = chosenIndex
+                chooseFacultyButton.text = faculties[currentFacultyIndex]
+            } else if (requestCode == COURSES_RESULT_CODE) {
+                currentCourseIndex = chosenIndex
+                chooseCourseButton.text = courses[currentCourseIndex]
+            }
+        }
+    }
+
     private fun prepareRecyclerView() {
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -82,7 +118,7 @@ class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, Group
         groupsRecyclerView.addItemDecoration(dividerItemDecoration)
     }
 
-    private class GroupsParsingThread(val callback: GroupsParsingCallback): AsyncTask<List<String>, Void, List<String>>() {
+    private class GroupsParsingThread(val callback: GroupsParsingCallback) : AsyncTask<List<String>, Void, List<String>>() {
 
         override fun onPreExecute() {
             super.onPreExecute()

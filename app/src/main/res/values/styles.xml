@@ -14,10 +14,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkSec</item>
         <item name="colorAccent">@color/colorAccentSec</item>
     </style>
+
     <style name="AppThemeSecondary.NoActionBar" parent="AppThemeSecondary">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="Widget.MyApp.Toolbar.Solid" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/colorPrimary</item>
     </style>
@@ -26,6 +28,7 @@
         <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
         <item name="android:textColorPrimary">@color/colorText</item>
     </style>
+
     <style name="AppTheme.NavigationView" parent="Theme.AppCompat.Light.DarkActionBar">
 
     </style>
@@ -36,6 +39,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkSec</item>
         <item name="colorAccent">@color/colorAccentSec</item>
     </style>
+
     <style name="Widget.Test.Toolbar.Solid" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/colorPrimarySec</item>
     </style>
@@ -44,8 +48,17 @@
         <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
         <item name="android:textColorPrimary">@color/colorPrimary</item>
     </style>
+
     <style name="Splash" parent="@style/Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
         <item name="android:colorBackground">@color/colorText</item>
+    </style>
+
+    <style name="TransparentActivity" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 </resources>
