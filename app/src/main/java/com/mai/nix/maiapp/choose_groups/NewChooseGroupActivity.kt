@@ -3,19 +3,25 @@ package com.mai.nix.maiapp.choose_groups
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import com.mai.nix.maiapp.ActivityChooseSingleItem
-import com.mai.nix.maiapp.Parser
 import com.mai.nix.maiapp.R
 import kotlinx.android.synthetic.main.activity_new_choose_group.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-
-class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, GroupsAdapter.GroupChosenListener {
+@ExperimentalCoroutinesApi
+class NewChooseGroupActivity : AppCompatActivity(),
+        GroupsAdapter.GroupChosenListener,
+        View.OnClickListener {
 
     companion object {
         const val FACULTIES_RESULT_CODE = 23
@@ -24,6 +30,8 @@ class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, Group
         const val EXTRA_GROUP = "com.mai.nix.maiapp.choose_groups.group_result"
         private const val MODE = "com.mai.nix.maiapp.choose_groups.maiapp.mode"
     }
+
+    private lateinit var groupsViewModel: GroupsViewModel
 
     private val faculties = arrayOf(
             "Институт №1",
@@ -67,32 +75,59 @@ class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, Group
         groupsAdapter.callback = this
         isForSettings = intent.getBooleanExtra(MODE, false)
         prepareRecyclerView()
-        GroupsParsingThread(this).execute()
+        setupViewModel()
+        observeViewModel()
+
         chooseGroupSRL.setOnRefreshListener {
-            GroupsParsingThread(this).execute()
+            startLoading()
         }
-        chooseFacultyButton.setOnClickListener {
-            ActivityChooseSingleItem.startActivity(this, faculties, FACULTIES_RESULT_CODE)
+
+        chooseFacultyButton.setOnClickListener(this)
+        chooseCourseButton.setOnClickListener(this)
+    }
+
+    override fun onClick(p0: View) {
+        when(p0.id) {
+            R.id.chooseFacultyButton -> {
+                ActivityChooseSingleItem.startActivity(this, faculties, FACULTIES_RESULT_CODE)
+            }
+
+            R.id.chooseCourseButton -> {
+                ActivityChooseSingleItem.startActivity(this, courses, COURSES_RESULT_CODE)
+            }
         }
-        chooseCourseButton.setOnClickListener {
-            ActivityChooseSingleItem.startActivity(this, courses, COURSES_RESULT_CODE)
+    }
+
+    private fun setupViewModel() {
+        groupsViewModel = ViewModelProviders.of(this, GroupsViewModelFactory()).get(GroupsViewModel::class.java)
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            groupsViewModel.state.collect {
+                when(it) {
+                    is GroupsState.Idle -> {}
+                    is GroupsState.Loading -> {
+                        chooseGroupSRL.isRefreshing = true
+                    }
+                    is GroupsState.Groups -> {
+                        chooseGroupSRL.isRefreshing = false
+                        groupsAdapter.setItems(it.groups)
+                        onGroupChosen("")
+                    }
+
+                    is GroupsState.Error -> {
+                        chooseGroupSRL.isRefreshing = false
+                        Toast.makeText(this@NewChooseGroupActivity, R.string.error, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
     override fun onGroupChosen(group: String) {
         currentGroup = group
         readyButton.visibility = if (group.isEmpty()) View.GONE else View.VISIBLE
-    }
-
-    override fun startLoad() {
-        chooseGroupSRL.isRefreshing = true
-    }
-
-    override fun endLoad(groups: List<String>) {
-        chooseGroupSRL.isRefreshing = false
-        groupsAdapter.groups.clear()
-        groupsAdapter.groups.addAll(groups)
-        groupsAdapter.notifyDataSetChanged()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -102,36 +137,27 @@ class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, Group
             if (requestCode == FACULTIES_RESULT_CODE) {
                 currentFacultyIndex = chosenIndex
                 chooseFacultyButton.text = faculties[currentFacultyIndex]
+                if (currentFacultyIndex >= 0 && currentCourseIndex >= 0) startLoading()
             } else if (requestCode == COURSES_RESULT_CODE) {
                 currentCourseIndex = chosenIndex
                 chooseCourseButton.text = courses[currentCourseIndex]
+                if (currentFacultyIndex >= 0 && currentCourseIndex >= 0) startLoading()
             }
         }
     }
 
     private fun prepareRecyclerView() {
-        val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
-        linearLayoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
+        val linearLayoutManager = LinearLayoutManager(this)
+        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         groupsRecyclerView.layoutManager = linearLayoutManager
         groupsRecyclerView.adapter = groupsAdapter
-        val dividerItemDecoration = androidx.recyclerview.widget.DividerItemDecoration(this, linearLayoutManager.orientation)
+        val dividerItemDecoration = DividerItemDecoration(this, linearLayoutManager.orientation)
         groupsRecyclerView.addItemDecoration(dividerItemDecoration)
     }
 
-    private class GroupsParsingThread(val callback: GroupsParsingCallback) : AsyncTask<List<String>, Void, List<String>>() {
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-            callback.startLoad()
-        }
-
-        override fun doInBackground(vararg params: List<String>): List<String> {
-            return Parser.parseGroups("Институт №1", 1)
-        }
-
-        override fun onPostExecute(result: List<String>) {
-            super.onPostExecute(result)
-            callback.endLoad(result)
+    private fun startLoading() {
+        lifecycleScope.launch {
+            groupsViewModel.groupsIntent.send(GroupsIntent.FetchGroups(faculties[currentFacultyIndex], courses[currentCourseIndex]))
         }
     }
 }
