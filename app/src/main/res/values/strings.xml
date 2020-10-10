@@ -72,6 +72,8 @@
     </string-array>
     <string name="choose_group_button">НАСТРОИТЬ</string>
     <string name="choose_group_space">Группа не выбрана</string>
+    <string name="choose_faculty_space">Факультет не выбран</string>
+    <string name="choose_course_space">Курс не выбран</string>
     <string-array name="spinner_items_two">
         <item>1 неделя</item>
         <item>2 неделя</item>

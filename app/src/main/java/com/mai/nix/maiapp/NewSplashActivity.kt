@@ -52,11 +52,13 @@ class NewSplashActivity : AppCompatActivity() {
     }
 
     private fun launchApp() {
-        val intent = if (UserSettings.getGroup(this@NewSplashActivity) == null) {
-            ChooseGroupActivity.newIntent(this@NewSplashActivity, true)
-        } else {
-            Intent(this@NewSplashActivity, MainActivity::class.java)
-        }
+        //val intent = if (UserSettings.getGroup(this@NewSplashActivity) == null) {
+            //ChooseGroupActivity.newIntent(this@NewSplashActivity, true)
+
+        //} else {
+            //Intent(this@NewSplashActivity, MainActivity::class.java)
+        //}
+        val intent = Intent(this, NewChooseGroupActivity::class.java)
         startActivity(intent)
         finish()
     }
