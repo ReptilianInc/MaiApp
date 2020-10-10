@@ -7,12 +7,13 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import com.mai.nix.maiapp.Parser
 import com.mai.nix.maiapp.R
 import kotlinx.android.synthetic.main.activity_new_choose_group.*
 
 
-class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback {
+class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, GroupsAdapter.GroupChosenListener {
 
     companion object {
         const val EXTRA_GROUP = "com.mai.nix.maiapp.choose_groups.group_result"
@@ -47,12 +48,18 @@ class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_choose_group)
+        groupsAdapter.callback = this
         isForSettings = intent.getBooleanExtra(MODE, false)
         prepareRecyclerView()
         GroupsParsingThread(this).execute()
         chooseGroupSRL.setOnRefreshListener {
             GroupsParsingThread(this).execute()
         }
+    }
+
+    override fun onGroupChosen(group: String) {
+        currentGroup = group
+        readyButton.visibility = if (group.isEmpty()) View.GONE else View.VISIBLE
     }
 
     override fun startLoad() {
