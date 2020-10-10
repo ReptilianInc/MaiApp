@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import com.mai.nix.maiapp.ActivityChooseSingleItem
 import com.mai.nix.maiapp.Parser
@@ -110,11 +110,11 @@ class NewChooseGroupActivity : AppCompatActivity(), GroupsParsingCallback, Group
     }
 
     private fun prepareRecyclerView() {
-        val linearLayoutManager = LinearLayoutManager(this)
-        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        linearLayoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
         groupsRecyclerView.layoutManager = linearLayoutManager
         groupsRecyclerView.adapter = groupsAdapter
-        val dividerItemDecoration = DividerItemDecoration(this, linearLayoutManager.orientation)
+        val dividerItemDecoration = androidx.recyclerview.widget.DividerItemDecoration(this, linearLayoutManager.orientation)
         groupsRecyclerView.addItemDecoration(dividerItemDecoration)
     }
 

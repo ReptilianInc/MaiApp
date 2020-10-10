@@ -4,7 +4,7 @@ import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.ViewTreeObserver
 import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
 import kotlinx.android.synthetic.main.activity_new_splash.*

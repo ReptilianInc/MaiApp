@@ -3,9 +3,9 @@ package com.mai.nix.maiapp
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.choose_groups.ItemsAdapter
 import kotlinx.android.synthetic.main.activity_choose_group_preference.*
 
@@ -36,11 +36,11 @@ class ActivityChooseSingleItem: AppCompatActivity(), ItemsAdapter.OnItemClickLis
     }
 
     private fun prepareRecyclerView(items: Array<String>) {
-        val linearLayoutManager = LinearLayoutManager(this)
-        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        linearLayoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
         itemsList.layoutManager = linearLayoutManager
         itemsList.adapter = itemsAdapter
-        val dividerItemDecoration = DividerItemDecoration(this, linearLayoutManager.orientation)
+        val dividerItemDecoration = androidx.recyclerview.widget.DividerItemDecoration(this, linearLayoutManager.orientation)
         itemsList.addItemDecoration(dividerItemDecoration)
         itemsAdapter.items.addAll(items)
     }
