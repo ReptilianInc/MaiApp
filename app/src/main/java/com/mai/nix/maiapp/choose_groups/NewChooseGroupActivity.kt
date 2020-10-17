@@ -58,8 +58,6 @@ class NewChooseGroupActivity : AppCompatActivity(),
     )
 
     private var currentGroup = ""
-    private var currentFacultyIndex = -1
-    private var currentCourseIndex = -1
     private val groupsAdapter = GroupsAdapter()
     private var isForSettings = false
 
@@ -79,7 +77,7 @@ class NewChooseGroupActivity : AppCompatActivity(),
         observeViewModel()
 
         chooseGroupSRL.setOnRefreshListener {
-            startLoading()
+            refresh()
         }
 
         chooseFacultyButton.setOnClickListener(this)
@@ -105,6 +103,8 @@ class NewChooseGroupActivity : AppCompatActivity(),
     private fun observeViewModel() {
         lifecycleScope.launch {
             groupsViewModel.state.collect {
+                chooseFacultyButton.text = if (it.faculty.isNotEmpty()) it.faculty else getString(R.string.choose_faculty_space)
+                chooseCourseButton.text = if (it.course.isNotEmpty()) it.course else getString(R.string.choose_course_space)
                 chooseGroupSRL.isRefreshing = it.loading
                 groupsAdapter.setItems(it.groups)
                 if (it.error != null) {
@@ -124,13 +124,13 @@ class NewChooseGroupActivity : AppCompatActivity(),
         if (resultCode == Activity.RESULT_OK) {
             val chosenIndex = data?.getIntExtra(ActivityChooseSingleItem.ITEMS_RESULT, 0) ?: 0
             if (requestCode == FACULTIES_RESULT_CODE) {
-                currentFacultyIndex = chosenIndex
-                chooseFacultyButton.text = faculties[currentFacultyIndex]
-                if (currentFacultyIndex >= 0 && currentCourseIndex >= 0) startLoading()
+                lifecycleScope.launch {
+                    groupsViewModel.intent.send(GroupsIntent.SetFaculty(faculties[chosenIndex]))
+                }
             } else if (requestCode == COURSES_RESULT_CODE) {
-                currentCourseIndex = chosenIndex
-                chooseCourseButton.text = courses[currentCourseIndex]
-                if (currentFacultyIndex >= 0 && currentCourseIndex >= 0) startLoading()
+                lifecycleScope.launch {
+                    groupsViewModel.intent.send(GroupsIntent.SetCourse(courses[chosenIndex]))
+                }
             }
         }
     }
@@ -144,9 +144,9 @@ class NewChooseGroupActivity : AppCompatActivity(),
         groupsRecyclerView.addItemDecoration(dividerItemDecoration)
     }
 
-    private fun startLoading() {
+    private fun refresh() {
         lifecycleScope.launch {
-            groupsViewModel.intent.send(GroupsIntent.FetchGroups(faculties[currentFacultyIndex], courses[currentCourseIndex]))
+            groupsViewModel.intent.send(GroupsIntent.UpdateGroups)
         }
     }
 }
