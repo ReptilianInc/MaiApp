@@ -4,15 +4,17 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.ActivityChooseSingleItem
+import com.mai.nix.maiapp.MainActivity
 import com.mai.nix.maiapp.R
+import com.mai.nix.maiapp.UserSettings
 import kotlinx.android.synthetic.main.activity_new_choose_group.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -29,6 +31,12 @@ class NewChooseGroupActivity : AppCompatActivity(),
 
         const val EXTRA_GROUP = "com.mai.nix.maiapp.choose_groups.group_result"
         private const val MODE = "com.mai.nix.maiapp.choose_groups.maiapp.mode"
+
+        fun newIntent(context: Context, mode: Boolean): Intent {
+            val intent = Intent(context, NewChooseGroupActivity::class.java)
+            intent.putExtra(MODE, mode)
+            return intent
+        }
     }
 
     private lateinit var groupsViewModel: GroupsViewModel
@@ -60,12 +68,6 @@ class NewChooseGroupActivity : AppCompatActivity(),
     private val groupsAdapter = GroupsAdapter()
     private var isForSettings = false
 
-    fun newIntent(context: Context, mode: Boolean): Intent {
-        val intent = Intent(context, NewChooseGroupActivity::class.java)
-        intent.putExtra(MODE, mode)
-        return intent
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_choose_group)
@@ -81,6 +83,7 @@ class NewChooseGroupActivity : AppCompatActivity(),
 
         chooseFacultyButton.setOnClickListener(this)
         chooseCourseButton.setOnClickListener(this)
+        readyButton.setOnClickListener(this)
     }
 
     override fun onClick(p0: View) {
@@ -92,7 +95,25 @@ class NewChooseGroupActivity : AppCompatActivity(),
             R.id.chooseCourseButton -> {
                 ActivityChooseSingleItem.startActivity(this, courses, COURSES_RESULT_CODE)
             }
+
+            R.id.readyButton -> {
+                if (!isForSettings) {
+                    UserSettings.setGroup(this, groupsViewModel.state.value.chosenGroup)
+                    val i = Intent(this, MainActivity::class.java)
+                    startActivity(i)
+                    finish()
+                } else {
+                    setGroupResult(groupsViewModel.state.value.chosenGroup)
+                    finish()
+                }
+            }
         }
+    }
+
+    private fun setGroupResult(group: String) {
+        val data = Intent()
+        data.putExtra(EXTRA_GROUP, group)
+        setResult(RESULT_OK, data)
     }
 
     private fun setupViewModel() {

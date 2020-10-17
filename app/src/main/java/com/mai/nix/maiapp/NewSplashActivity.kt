@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.ViewTreeObserver
 import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
 import kotlinx.android.synthetic.main.activity_new_splash.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class NewSplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,14 +53,13 @@ class NewSplashActivity : AppCompatActivity() {
         })
     }
 
+    @ExperimentalCoroutinesApi
     private fun launchApp() {
-        //val intent = if (UserSettings.getGroup(this@NewSplashActivity) == null) {
-            //ChooseGroupActivity.newIntent(this@NewSplashActivity, true)
-
-        //} else {
-            //Intent(this@NewSplashActivity, MainActivity::class.java)
-        //}
-        val intent = Intent(this, NewChooseGroupActivity::class.java)
+        val intent = if (UserSettings.getGroup(this@NewSplashActivity) == null) {
+            NewChooseGroupActivity.newIntent(this@NewSplashActivity, true)
+        } else {
+            Intent(this@NewSplashActivity, MainActivity::class.java)
+        }
         startActivity(intent)
         finish()
     }
