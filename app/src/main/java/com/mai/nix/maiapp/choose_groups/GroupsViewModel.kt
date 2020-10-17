@@ -108,8 +108,8 @@ class GroupsViewModel(private val groupsRepository: GroupsRepository) : ViewMode
                         null,
                         _state.value.faculty,
                         _state.value.course,
-                        _state.value.chosenGroup,
-                        _state.value.index
+                        "",
+                        -1
                 )
             } catch (e: Exception) {
                 GroupsState(
