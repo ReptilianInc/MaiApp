@@ -12,10 +12,18 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 @ExperimentalCoroutinesApi
-class GroupsViewModel(private val groupsRepository: GroupsRepository): ViewModel() {
+class GroupsViewModel(private val groupsRepository: GroupsRepository) : ViewModel() {
     val intent = Channel<GroupsIntent>(Channel.UNLIMITED)
-    private val _state = MutableStateFlow(GroupsState(loading = false, groups = arrayListOf(), error = null, "", ""))
-    val state : StateFlow<GroupsState> get() = _state
+    private val _state = MutableStateFlow(GroupsState(
+            false,
+            arrayListOf(),
+            null,
+            "",
+            "",
+            "",
+            -1
+    ))
+    val state: StateFlow<GroupsState> get() = _state
 
     init {
         handleIntent()
@@ -24,18 +32,41 @@ class GroupsViewModel(private val groupsRepository: GroupsRepository): ViewModel
     private fun handleIntent() {
         viewModelScope.launch {
             intent.consumeAsFlow().collect {
-                when(it) {
+                when (it) {
                     is GroupsIntent.SetFaculty -> setFaculty(it.faculty)
                     is GroupsIntent.SetCourse -> setCourse(it.course)
                     is GroupsIntent.UpdateGroups -> fetchData()
+                    is GroupsIntent.SetChosenGroup -> setChosenGroup(it.group, it.index)
                 }
             }
         }
     }
 
+    private fun setChosenGroup(chosenGroup: String, index: Int) {
+        viewModelScope.launch {
+            _state.value = GroupsState(
+                    _state.value.loading,
+                    _state.value.groups,
+                    _state.value.error,
+                    _state.value.faculty,
+                    _state.value.course,
+                    chosenGroup,
+                    index
+            )
+        }
+    }
+
     private fun setFaculty(faculty: String) {
         viewModelScope.launch {
-            _state.value = GroupsState(false, _state.value.groups, _state.value.error, faculty, _state.value.course)
+            _state.value = GroupsState(
+                    false,
+                    _state.value.groups,
+                    _state.value.error,
+                    faculty,
+                    _state.value.course,
+                    _state.value.chosenGroup,
+                    _state.value.index
+            )
             if (_state.value.isValid()) {
                 fetchData()
             }
@@ -44,7 +75,15 @@ class GroupsViewModel(private val groupsRepository: GroupsRepository): ViewModel
 
     private fun setCourse(course: String) {
         viewModelScope.launch {
-            _state.value = GroupsState(false, _state.value.groups, _state.value.error, _state.value.faculty, course)
+            _state.value = GroupsState(
+                    false,
+                    _state.value.groups,
+                    _state.value.error,
+                    _state.value.faculty,
+                    course,
+                    _state.value.chosenGroup,
+                    _state.value.index
+            )
             if (_state.value.isValid()) {
                 fetchData()
             }
@@ -53,11 +92,35 @@ class GroupsViewModel(private val groupsRepository: GroupsRepository): ViewModel
 
     private fun fetchData() {
         viewModelScope.launch {
-            _state.value = GroupsState(loading = true, groups = _state.value.groups, error = null, _state.value.faculty, _state.value.course)
+            _state.value = GroupsState(
+                    true,
+                    _state.value.groups,
+                    null,
+                    _state.value.faculty,
+                    _state.value.course,
+                    _state.value.chosenGroup,
+                    _state.value.index
+            )
             _state.value = try {
-                GroupsState(loading = false, groupsRepository.getGroups(_state.value.faculty, _state.value.course), error = null, _state.value.faculty, _state.value.course)
+                GroupsState(
+                        false,
+                        groupsRepository.getGroups(_state.value.faculty, _state.value.course),
+                        null,
+                        _state.value.faculty,
+                        _state.value.course,
+                        _state.value.chosenGroup,
+                        _state.value.index
+                )
             } catch (e: Exception) {
-                GroupsState(loading = false, arrayListOf(), error = e.localizedMessage, _state.value.faculty, _state.value.course)
+                GroupsState(
+                        false,
+                        arrayListOf(),
+                        e.localizedMessage,
+                        _state.value.faculty,
+                        _state.value.course,
+                        _state.value.chosenGroup,
+                        _state.value.index
+                )
             }
         }
     }

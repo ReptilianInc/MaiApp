@@ -5,7 +5,9 @@ data class GroupsState (
     val groups: List<String>,
     val error: String?,
     val faculty: String,
-    val course: String
+    val course: String,
+    val chosenGroup: String,
+    val index: Int
 ) {
     fun isValid() = faculty.isNotEmpty() && course.isNotEmpty()
 }

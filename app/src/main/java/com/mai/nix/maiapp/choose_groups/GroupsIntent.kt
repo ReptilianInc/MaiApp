@@ -4,4 +4,5 @@ sealed class GroupsIntent {
     object UpdateGroups : GroupsIntent()
     data class SetFaculty(val faculty: String) : GroupsIntent()
     data class SetCourse(val course: String) : GroupsIntent()
+    data class SetChosenGroup(val group: String, val index: Int) : GroupsIntent()
 }

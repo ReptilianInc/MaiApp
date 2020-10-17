@@ -57,7 +57,6 @@ class NewChooseGroupActivity : AppCompatActivity(),
             "6 курс"
     )
 
-    private var currentGroup = ""
     private val groupsAdapter = GroupsAdapter()
     private var isForSettings = false
 
@@ -106,7 +105,8 @@ class NewChooseGroupActivity : AppCompatActivity(),
                 chooseFacultyButton.text = if (it.faculty.isNotEmpty()) it.faculty else getString(R.string.choose_faculty_space)
                 chooseCourseButton.text = if (it.course.isNotEmpty()) it.course else getString(R.string.choose_course_space)
                 chooseGroupSRL.isRefreshing = it.loading
-                groupsAdapter.setItems(it.groups)
+                groupsAdapter.setItems(it.groups, it.index)
+                readyButton.visibility = if (it.chosenGroup.isEmpty()) View.GONE else View.VISIBLE
                 if (it.error != null) {
                     Toast.makeText(this@NewChooseGroupActivity, R.string.error, Toast.LENGTH_SHORT).show()
                 }
@@ -114,9 +114,8 @@ class NewChooseGroupActivity : AppCompatActivity(),
         }
     }
 
-    override fun onGroupChosen(group: String) {
-        currentGroup = group
-        readyButton.visibility = if (group.isEmpty()) View.GONE else View.VISIBLE
+    override fun onGroupChosen(group: String, index: Int) {
+        setGroup(group, index)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -147,6 +146,12 @@ class NewChooseGroupActivity : AppCompatActivity(),
     private fun refresh() {
         lifecycleScope.launch {
             groupsViewModel.intent.send(GroupsIntent.UpdateGroups)
+        }
+    }
+
+    private fun setGroup(group: String, index: Int) {
+        lifecycleScope.launch {
+            groupsViewModel.intent.send(GroupsIntent.SetChosenGroup(group, index))
         }
     }
 }

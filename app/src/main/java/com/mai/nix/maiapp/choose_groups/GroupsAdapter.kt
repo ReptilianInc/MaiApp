@@ -13,15 +13,15 @@ class GroupsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var callback: GroupChosenListener? = null
     private var lastChosenPosition = -1
 
-    fun setItems(g: List<String>) {
+    fun setItems(g: List<String>, index: Int) {
         groups.clear()
         groups.addAll(g)
         notifyDataSetChanged()
-        lastChosenPosition = -1
+        lastChosenPosition = index
     }
 
     interface GroupChosenListener {
-        fun onGroupChosen(group: String)
+        fun onGroupChosen(group: String, index: Int)
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
@@ -44,7 +44,7 @@ class GroupsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         override fun onClick(v: View) {
             if (adapterPosition != -1) lastChosenPosition = adapterPosition
-            callback?.onGroupChosen(groups[lastChosenPosition])
+            callback?.onGroupChosen(groups[lastChosenPosition], lastChosenPosition)
             notifyDataSetChanged()
         }
     }
