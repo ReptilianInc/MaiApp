@@ -87,7 +87,7 @@ class NewChooseGroupActivity : AppCompatActivity(),
     }
 
     override fun onClick(p0: View) {
-        when(p0.id) {
+        when (p0.id) {
             R.id.chooseFacultyButton -> {
                 ActivityChooseSingleItem.startActivity(this, faculties, FACULTIES_RESULT_CODE)
             }
@@ -105,21 +105,10 @@ class NewChooseGroupActivity : AppCompatActivity(),
     private fun observeViewModel() {
         lifecycleScope.launch {
             groupsViewModel.state.collect {
-                when(it) {
-                    is GroupsState.Idle -> {}
-                    is GroupsState.Loading -> {
-                        chooseGroupSRL.isRefreshing = true
-                    }
-                    is GroupsState.Groups -> {
-                        chooseGroupSRL.isRefreshing = false
-                        groupsAdapter.setItems(it.groups)
-                        onGroupChosen("")
-                    }
-
-                    is GroupsState.Error -> {
-                        chooseGroupSRL.isRefreshing = false
-                        Toast.makeText(this@NewChooseGroupActivity, R.string.error, Toast.LENGTH_SHORT).show()
-                    }
+                chooseGroupSRL.isRefreshing = it.loading
+                groupsAdapter.setItems(it.groups)
+                if (it.error != null) {
+                    Toast.makeText(this@NewChooseGroupActivity, R.string.error, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -133,7 +122,7 @@ class NewChooseGroupActivity : AppCompatActivity(),
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            val chosenIndex = data?.getIntExtra(ActivityChooseSingleItem.ITEMS_RESULT, 0)?: 0
+            val chosenIndex = data?.getIntExtra(ActivityChooseSingleItem.ITEMS_RESULT, 0) ?: 0
             if (requestCode == FACULTIES_RESULT_CODE) {
                 currentFacultyIndex = chosenIndex
                 chooseFacultyButton.text = faculties[currentFacultyIndex]
@@ -157,7 +146,7 @@ class NewChooseGroupActivity : AppCompatActivity(),
 
     private fun startLoading() {
         lifecycleScope.launch {
-            groupsViewModel.groupsIntent.send(GroupsIntent.FetchGroups(faculties[currentFacultyIndex], courses[currentCourseIndex]))
+            groupsViewModel.intent.send(GroupsIntent.FetchGroups(faculties[currentFacultyIndex], courses[currentCourseIndex]))
         }
     }
 }

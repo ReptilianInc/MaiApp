@@ -13,31 +13,31 @@ import java.lang.Exception
 
 @ExperimentalCoroutinesApi
 class GroupsViewModel(private val groupsRepository: GroupsRepository): ViewModel() {
-    val groupsIntent = Channel<GroupsIntent>(Channel.UNLIMITED)
-    private val _state = MutableStateFlow<GroupsState>(GroupsState.Idle)
+    val intent = Channel<GroupsIntent>(Channel.UNLIMITED)
+    private val _state = MutableStateFlow(GroupsState(loading = false, groups = arrayListOf(), error = null))
     val state : StateFlow<GroupsState> get() = _state
 
     init {
-        handleGroups()
+        handleIntent()
     }
 
-    private fun handleGroups() {
+    private fun handleIntent() {
         viewModelScope.launch {
-            groupsIntent.consumeAsFlow().collect {
+            intent.consumeAsFlow().collect {
                 when(it) {
-                    is GroupsIntent.FetchGroups -> fetchGroups(it.faculty, it.course)
+                    is GroupsIntent.FetchGroups -> fetchData(it.faculty, it.course)
                 }
             }
         }
     }
 
-    private fun fetchGroups(facultyCode: String, course: String) {
+    private fun fetchData(facultyCode: String, course: String) {
         viewModelScope.launch {
-            _state.value = GroupsState.Loading
+            _state.value = GroupsState(loading = true, groups = _state.value.groups, error = null)
             _state.value = try {
-                GroupsState.Groups(groupsRepository.getGroups(facultyCode, course))
+                GroupsState(loading = false, groupsRepository.getGroups(facultyCode, course), error = null)
             } catch (e: Exception) {
-                GroupsState.Error(e.localizedMessage)
+                GroupsState(loading = false, arrayListOf(), error = e.localizedMessage)
             }
         }
     }
