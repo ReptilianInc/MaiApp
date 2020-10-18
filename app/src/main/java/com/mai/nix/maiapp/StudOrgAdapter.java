@@ -40,7 +40,7 @@ public class StudOrgAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.stud_org_card, viewGroup, false);
+            view = inflater.inflate(R.layout.view_simple_list_item, viewGroup, false);
         }
 
         TextView text1 = (TextView)view.findViewById(R.id.title);
