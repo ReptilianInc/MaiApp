@@ -24,7 +24,6 @@
             android:theme="@style/AppThemeTest" />
         <activity
             android:name=".SettingsActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppThemeSecondary" />
         <activity

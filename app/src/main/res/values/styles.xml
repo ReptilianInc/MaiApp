@@ -9,7 +9,7 @@
         <item name="android:textColorPrimary">@color/colorText</item>
     </style>
 
-    <style name="AppThemeSecondary" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppThemeSecondary" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimarySec</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkSec</item>
         <item name="colorAccent">@color/colorAccentSec</item>
