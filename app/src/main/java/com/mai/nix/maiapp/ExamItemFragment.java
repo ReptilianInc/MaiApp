@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.mai.nix.maiapp.helpers.UserSettings;
 import com.mai.nix.maiapp.model.ExamModel;
 
 import org.jsoup.Jsoup;
@@ -57,7 +58,6 @@ public class ExamItemFragment extends Fragment {
         mCalendar = new GregorianCalendar();
         mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH);
         mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH);
-        UserSettings.initialize(getContext());
         mCurrentGroup = UserSettings.getGroup(getContext());
         mCurrentLink = mLink.concat(mCurrentGroup);
         mDataLab = DataLab.get(getContext());

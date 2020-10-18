@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.mai.nix.maiapp.ChooseGroupActivity;
 import com.mai.nix.maiapp.DataLab;
 import com.mai.nix.maiapp.R;
-import com.mai.nix.maiapp.UserSettings;
+import com.mai.nix.maiapp.helpers.UserSettings;
 
 /**
  * Created by Nix on 03.08.2017.
@@ -45,7 +45,6 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        UserSettings.initialize(getActivity());
         mDataLab = DataLab.get(getActivity());
         mGroupPreference = getPreferenceManager().findPreference("pref_group");
         mClearSubjectsCache = getPreferenceScreen().findPreference("clear_cache_subj");

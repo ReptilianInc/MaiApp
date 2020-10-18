@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.ViewTreeObserver
 import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
+import com.mai.nix.maiapp.helpers.UserSettings
 import kotlinx.android.synthetic.main.activity_new_splash.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.ActivityChooseSingleItem
 import com.mai.nix.maiapp.MainActivity
 import com.mai.nix.maiapp.R
-import com.mai.nix.maiapp.UserSettings
+import com.mai.nix.maiapp.helpers.UserSettings
 import kotlinx.android.synthetic.main.activity_new_choose_group.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect

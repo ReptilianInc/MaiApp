@@ -21,6 +21,7 @@ import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.mai.nix.maiapp.helpers.UserSettings;
 import com.mai.nix.maiapp.model.SubjectBody;
 import com.mai.nix.maiapp.model.SubjectHeader;
 
@@ -66,7 +67,6 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         mCalendar = new GregorianCalendar();
         mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH);
         mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH);
-        UserSettings.initialize(getContext());
         mDataLab = DataLab.get(getContext());
         mGroups = new ArrayList<>();
         mAdapter = new SubjectsExpListAdapter(getContext(), mGroups);

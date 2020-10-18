@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp
+package com.mai.nix.maiapp.helpers
 
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
