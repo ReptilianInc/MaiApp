@@ -18,4 +18,5 @@
     ///
     <color name="backgroundSplash">#FFFFFF</color>
     <color name="mainTextColor">#1E88E5</color>
+    <color name="secondaryTextColor">#616161</color>
 </resources>

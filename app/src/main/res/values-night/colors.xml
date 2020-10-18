@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="backgroundSplash">#000000</color>
+    <color name="backgroundSplash">#252525</color>
     <color name="mainTextColor">#FFFFFF</color>
+    <color name="secondaryTextColor">#FFFFFF</color>
 
     ///
     <color name="colorPrimarySec">#1C1C1C</color>

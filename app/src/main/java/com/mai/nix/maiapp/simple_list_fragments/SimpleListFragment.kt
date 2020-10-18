@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.R
-import kotlinx.android.synthetic.main.student_orgs_layout.*
+import kotlinx.android.synthetic.main.fragment_simple_list.*
 
 /**
  * Created by Nix on 13.09.2017.
@@ -19,7 +19,7 @@ abstract class SimpleListFragment : Fragment() {
     protected var adapter = SimpleListAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.student_orgs_layout, container, false)
+        return inflater.inflate(R.layout.fragment_simple_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

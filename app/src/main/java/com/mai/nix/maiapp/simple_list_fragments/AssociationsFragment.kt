@@ -5,7 +5,7 @@ import android.widget.Toast
 import com.mai.nix.maiapp.R
 import com.mai.nix.maiapp.helpers.Parser
 import com.mai.nix.maiapp.model.SimpleListModel
-import kotlinx.android.synthetic.main.student_orgs_layout.*
+import kotlinx.android.synthetic.main.fragment_simple_list.*
 
 /**
  * Created by Nix on 11.08.2017.
