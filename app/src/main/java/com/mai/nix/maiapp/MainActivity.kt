@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -24,12 +25,13 @@ class MainActivity : AppCompatActivity() {
     private var mSelectedItemId = -999
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         setContentView(R.layout.activity_main)
         toolbar = findViewById(R.id.kek)
         setSupportActionBar(toolbar)
         supportActionBar!!.setTitle(R.string.menu_schedule)
         drawerLayout = findViewById(R.id.drawer_layout)
-        fragment = supportFragmentManager.findFragmentById(R.id.center_view) ?: ScheduleFragment()
+        fragment = ScheduleFragment()
         supportFragmentManager.beginTransaction()
                 .add(R.id.center_view, fragment)
                 .commit()
@@ -75,8 +77,8 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == UPDATE_SCHEDULE) {
-            subjectsNeedToUpdate = true
-            examsNeedToUpdate = true
+            //subjectsNeedToUpdate = true
+            //examsNeedToUpdate = true
         }
     }
 

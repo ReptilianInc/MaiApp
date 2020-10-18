@@ -6,19 +6,23 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.ViewTreeObserver
+import androidx.appcompat.app.AppCompatDelegate
 import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
 import com.mai.nix.maiapp.helpers.UserSettings
 import kotlinx.android.synthetic.main.activity_new_splash.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class NewSplashActivity : AppCompatActivity() {
+    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         setContentView(R.layout.activity_new_splash)
         UserSettings.initialize(this)
         startAnimation()
     }
 
+    @ExperimentalCoroutinesApi
     private fun startAnimation() {
         animateCenterTitle()
         skyView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
@@ -36,6 +40,7 @@ class NewSplashActivity : AppCompatActivity() {
                 .setListener(null)
     }
 
+    @ExperimentalCoroutinesApi
     private fun animateAirPlanes() {
         val objectAnimator = ObjectAnimator
                 .ofFloat(planeView, "y", skyView.height.toFloat(), skyView.top.toFloat() - planeView.height)
