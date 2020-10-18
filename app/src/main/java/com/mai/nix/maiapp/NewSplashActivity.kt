@@ -56,7 +56,7 @@ class NewSplashActivity : AppCompatActivity() {
     @ExperimentalCoroutinesApi
     private fun launchApp() {
         val intent = if (UserSettings.getGroup(this@NewSplashActivity) == null) {
-            NewChooseGroupActivity.newIntent(this@NewSplashActivity, true)
+            NewChooseGroupActivity.newIntent(this@NewSplashActivity, false)
         } else {
             Intent(this@NewSplashActivity, MainActivity::class.java)
         }
