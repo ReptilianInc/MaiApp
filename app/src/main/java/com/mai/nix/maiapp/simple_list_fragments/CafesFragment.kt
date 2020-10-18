@@ -19,39 +19,40 @@ class CafesFragment : SimpleListFragment() {
         MyThread().execute()
     }
 
-    private inner class MyThread : AsyncTask<Int?, Void?, Int>() {
+    private inner class MyThread : AsyncTask<List<SimpleListModel>, Void?, List<SimpleListModel>>() {
         private var doc: Document? = null
         private var table: Element? = null
         private var rows: Elements? = null
 
-        override fun onPostExecute(s: Int) {
+        override fun onPostExecute(list: List<SimpleListModel>) {
             simpleListSwipeRefreshLayout.isRefreshing = false
-            if (s == 0) {
+            if (list.isEmpty()) {
                 if (context != null) Toast.makeText(context, R.string.error,
                         Toast.LENGTH_LONG).show()
             } else {
-                simpleListView.adapter = mAdapter
+                adapter.simpleListModels.addAll(list)
+                adapter.notifyDataSetChanged()
             }
         }
 
-        override fun doInBackground(vararg p0: Int?): Int {
-            var size = 0
+        override fun doInBackground(vararg p0: List<SimpleListModel>): List<SimpleListModel> {
+            val list = mutableListOf<SimpleListModel>()
             try {
                 doc = Jsoup.connect("http://mai.ru/common/campus/cafeteria/").get()
                 table = doc?.select("table[class = table table-bordered]")?.first()
                 rows = table?.select("tr")
-                if (table != null) simpleListCollection!!.clear()
+                if (table == null) return list
                 for (i in 1 until rows!!.size) {
                     val el = rows!!.get(i).select("td")
-                    simpleListCollection!!.add(SimpleListModel(el[1].text(), el[2].text(), null, el[3].text()))
+                    list.add(SimpleListModel(el[1].text(), el[2].text(), null, el[3].text()))
                 }
-                size = rows!!.size
             } catch (e: IOException) {
                 e.printStackTrace()
+                return list
             } catch (n: NullPointerException) {
-                return 0
+                return list
             }
-            return size
+            return list
         }
     }
 }
