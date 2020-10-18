@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawer_layout)
         fragment = ScheduleFragment()
         supportFragmentManager.beginTransaction()
-                .add(R.id.center_view, fragment)
+                .replace(R.id.center_view, fragment)
                 .commit()
         val toggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_schedule,
                 R.string.menu_schedule) {
@@ -62,13 +62,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFragment(title: String, fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-                .remove(this.fragment)
-                .commit()
         toolbar!!.title = title
         this.fragment = fragment
         supportFragmentManager.beginTransaction()
-                .add(R.id.center_view, this.fragment)
+                .replace(R.id.center_view, this.fragment)
                 .commit()
     }
 
