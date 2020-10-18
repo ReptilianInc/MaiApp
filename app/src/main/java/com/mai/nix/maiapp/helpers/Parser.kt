@@ -14,10 +14,12 @@ object Parser {
 
     private const val GROUPS = "groups"
     private const val ASSOCIATIONS = "associations"
+    private const val STUDENT_ORGANISATIONS = "student_organisations"
 
     private val links = mapOf(
             GROUPS to "http://mai.ru/education/schedule/?department=",
-            ASSOCIATIONS to "http://www.mai.ru/life/associations/"
+            ASSOCIATIONS to "http://www.mai.ru/life/associations/",
+            STUDENT_ORGANISATIONS to "http://www.mai.ru/life/join/index.php"
     )
 
     suspend fun parseGroups(facultyCode: String, currentCourse: String): List<String> {
@@ -50,10 +52,31 @@ object Parser {
                 i++
                 j += 3
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             e.printStackTrace()
             return list
-        } catch (n: NullPointerException) {
+        }
+        return list
+    }
+
+    fun parseStudentOrganisations(): List<SimpleListModel> {
+        val list = mutableListOf<SimpleListModel>()
+        try {
+            val doc = Jsoup.connect(links[STUDENT_ORGANISATIONS]).get()
+            val table = doc?.select("table[class=data-table]")?.first()
+            val rows = table?.select("th")
+            val cols = table?.select("td")
+            if (rows == null || cols == null) return list
+            var i = 0
+            var j = 0
+            while (j < cols.size) {
+                list.add(SimpleListModel(rows[i].text(), cols[j].text(), cols[j + 1].text(),
+                        cols[j + 2].text()))
+                i++
+                j += 3
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
             return list
         }
         return list
