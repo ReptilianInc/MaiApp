@@ -1,23 +1,61 @@
 package com.mai.nix.maiapp.helpers
 
 import android.util.Log
+import com.mai.nix.maiapp.model.SimpleListModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
+import java.io.IOException
 
 object Parser {
-    private val links = mapOf("groups" to "http://mai.ru/education/schedule/?department=")
+
+    private const val GROUPS = "groups"
+    private const val ASSOCIATIONS = "associations"
+
+    private val links = mapOf(
+            GROUPS to "http://mai.ru/education/schedule/?department=",
+            ASSOCIATIONS to "http://www.mai.ru/life/associations/"
+    )
 
     suspend fun parseGroups(facultyCode: String, currentCourse: String): List<String> {
+        val connectLink = links[GROUPS] + facultyCode + "&course=" + currentCourse
         val groups = mutableListOf<String>()
         val doc = withContext(Dispatchers.IO) {
-            Jsoup.connect(links["groups"] + facultyCode + "&course=" + currentCourse).get()
+            Jsoup.connect(connectLink).get()
         }
-        Log.d("parseGroups() link = ", links["groups"] + facultyCode + "&course=" + currentCourse)
+        Log.d("parseGroups() link = ", connectLink)
         val titles = doc.select("a[class = sc-group-item]") ?: return groups
         titles.forEach {
             groups.add(it.text())
         }
         return groups
+    }
+
+    fun parseAssociations(): List<SimpleListModel> {
+        val list = mutableListOf<SimpleListModel>()
+        try {
+            val doc = Jsoup.connect(links[ASSOCIATIONS]).get()
+            val table = doc?.select("table[class=data-table]")?.first()
+            val rows = table?.select("th")
+            val cols = table?.select("td")
+            if (rows == null || cols == null) return list
+            var i = 0
+            var j = 0
+            while (j < cols.size) {
+                list.add(SimpleListModel(rows[i].text(), cols[j].text(), cols[j + 1].text(),
+                        cols[j + 2].text()))
+                i++
+                j += 3
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return list
+        } catch (n: NullPointerException) {
+            return list
+        }
+        return list
     }
 }
