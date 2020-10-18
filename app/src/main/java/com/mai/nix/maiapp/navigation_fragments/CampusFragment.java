@@ -5,7 +5,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 
 import com.mai.nix.maiapp.BarracksFragment;
-import com.mai.nix.maiapp.CafesFragment;
+import com.mai.nix.maiapp.simple_list_fragments.CafesFragment;
 import com.mai.nix.maiapp.LibrariesFragment;
 import com.mai.nix.maiapp.MapFragment;
 import com.mai.nix.maiapp.TabsFragment;

@@ -3,10 +3,10 @@ package com.mai.nix.maiapp.navigation_fragments;
 import androidx.viewpager.widget.ViewPager;
 
 import com.mai.nix.maiapp.SportSectionsFragment;
-import com.mai.nix.maiapp.StudentOrgsFragment;
+import com.mai.nix.maiapp.simple_list_fragments.StudentOrgsFragment;
 import com.mai.nix.maiapp.TabsFragment;
 import com.mai.nix.maiapp.ViewPagerAdapter;
-import com.mai.nix.maiapp.WorkersAndGradsOrgsFragment;
+import com.mai.nix.maiapp.simple_list_fragments.WorkersAndGradsOrgsFragment;
 
 /**
  * Created by Nix on 01.08.2017.
