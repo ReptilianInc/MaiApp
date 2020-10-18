@@ -3,7 +3,7 @@ package com.mai.nix.maiapp.simple_list_fragments
 import android.os.AsyncTask
 import android.widget.Toast
 import com.mai.nix.maiapp.R
-import com.mai.nix.maiapp.model.StudentOrgModel
+import com.mai.nix.maiapp.model.SimpleListModel
 import kotlinx.android.synthetic.main.student_orgs_layout.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -46,7 +46,7 @@ class StudentOrgsFragment : SimpleListFragment() {
                 var i = 0
                 var j = 0
                 while (j < cols!!.size) {
-                    simpleListCollection!!.add(StudentOrgModel(rows!!.get(i).text(), cols!!.get(j).text(), cols!!.get(j + 1).text(),
+                    simpleListCollection!!.add(SimpleListModel(rows!!.get(i).text(), cols!!.get(j).text(), cols!!.get(j + 1).text(),
                             cols!!.get(j + 2).text()))
                     i++
                     j += 3

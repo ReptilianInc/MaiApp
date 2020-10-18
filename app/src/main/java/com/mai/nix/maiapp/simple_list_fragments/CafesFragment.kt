@@ -3,7 +3,7 @@ package com.mai.nix.maiapp.simple_list_fragments
 import android.os.AsyncTask
 import android.widget.Toast
 import com.mai.nix.maiapp.R
-import com.mai.nix.maiapp.model.StudentOrgModel
+import com.mai.nix.maiapp.model.SimpleListModel
 import kotlinx.android.synthetic.main.student_orgs_layout.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -43,7 +43,7 @@ class CafesFragment : SimpleListFragment() {
                 if (table != null) simpleListCollection!!.clear()
                 for (i in 1 until rows!!.size) {
                     val el = rows!!.get(i).select("td")
-                    simpleListCollection!!.add(StudentOrgModel(el[1].text(), el[2].text(), el[3].text()))
+                    simpleListCollection!!.add(SimpleListModel(el[1].text(), el[2].text(), null, el[3].text()))
                 }
                 size = rows!!.size
             } catch (e: IOException) {

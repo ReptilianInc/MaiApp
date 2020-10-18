@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mai.nix.maiapp.R
 import com.mai.nix.maiapp.StudOrgAdapter
-import com.mai.nix.maiapp.model.StudentOrgModel
+import com.mai.nix.maiapp.model.SimpleListModel
 import kotlinx.android.synthetic.main.student_orgs_layout.*
 import java.util.*
 
@@ -18,7 +18,7 @@ abstract class SimpleListFragment : Fragment() {
     abstract fun releaseThread()
 
     @JvmField
-    protected var simpleListCollection: ArrayList<StudentOrgModel>? = null
+    protected var simpleListCollection: ArrayList<SimpleListModel>? = null
 
     @JvmField
     protected var mAdapter: StudOrgAdapter? = null

@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import com.mai.nix.maiapp.model.StudentOrgModel;
+import com.mai.nix.maiapp.model.SimpleListModel;
 import java.util.ArrayList;
 
 /**
@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 public class StudOrgAdapter extends BaseAdapter {
     private Context mContext;
-    private ArrayList<StudentOrgModel> mOrgModels;
-    public StudOrgAdapter(Context context, ArrayList<StudentOrgModel> models) {
+    private ArrayList<SimpleListModel> mOrgModels;
+    public StudOrgAdapter(Context context, ArrayList<SimpleListModel> models) {
         mContext = context;
         mOrgModels = models;
     }
