@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-import com.mai.nix.maiapp.model.SportSectionsHeaders;
+import com.mai.nix.maiapp.model.ExpandableItemHeader;
 import java.util.ArrayList;
 
 /**
@@ -16,10 +16,10 @@ import java.util.ArrayList;
  */
 
 public class SportSectionsExpListAdapter extends BaseExpandableListAdapter {
-    private ArrayList<SportSectionsHeaders> mHeaders;
+    private ArrayList<ExpandableItemHeader> mHeaders;
     private Context mContext;
 
-    public SportSectionsExpListAdapter(Context context, ArrayList<SportSectionsHeaders> headers) {
+    public SportSectionsExpListAdapter(Context context, ArrayList<ExpandableItemHeader> headers) {
         mHeaders = headers;
         mContext = context;
     }
