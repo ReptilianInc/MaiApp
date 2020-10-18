@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp;
+package com.mai.nix.maiapp.expandable_list_fragments;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+
+import com.mai.nix.maiapp.R;
+import com.mai.nix.maiapp.SportSectionsExpListAdapter;
 import com.mai.nix.maiapp.model.SportSectionsHeaders;
 import java.util.ArrayList;
 
@@ -15,7 +18,7 @@ import java.util.ArrayList;
  * Created by Nix on 13.09.2017.
  */
 
-public abstract class SimpleExpandableListFragment extends Fragment {
+public abstract class ExpandableListFragment extends Fragment {
     protected abstract void releaseThread();
     protected ExpandableListView mExpandableListView;
     protected ArrayList<SportSectionsHeaders> mHeaders;
@@ -24,9 +27,9 @@ public abstract class SimpleExpandableListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.exp_list_test, container, false);
-        mExpandableListView = (ExpandableListView)v.findViewById(R.id.exp);
-        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
+        View v = inflater.inflate(R.layout.fragment_expandable_list, container, false);
+        mExpandableListView = (ExpandableListView)v.findViewById(R.id.expandableRecyclerView);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.expandableListSwipeRefreshLayout);
         mSwipeRefreshLayout.setRefreshing(true);
         mHeaders = new ArrayList<>();
         mAdapter = new SportSectionsExpListAdapter(getContext(), mHeaders);

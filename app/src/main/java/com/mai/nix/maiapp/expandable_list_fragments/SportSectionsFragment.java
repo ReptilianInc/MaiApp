@@ -1,8 +1,9 @@
-package com.mai.nix.maiapp;
+package com.mai.nix.maiapp.expandable_list_fragments;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.mai.nix.maiapp.R;
 import com.mai.nix.maiapp.model.SportSectionsBodies;
 import com.mai.nix.maiapp.model.SportSectionsHeaders;
 
@@ -21,7 +22,7 @@ import java.util.List;
  * Created by Nix on 11.08.2017.
  */
 
-public class SportSectionsFragment extends SimpleExpandableListFragment {
+public class SportSectionsFragment extends ExpandableListFragment {
 
     @Override
     protected void releaseThread() {

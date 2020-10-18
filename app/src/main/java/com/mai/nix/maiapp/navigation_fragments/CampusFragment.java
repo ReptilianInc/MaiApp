@@ -4,9 +4,9 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-import com.mai.nix.maiapp.BarracksFragment;
+import com.mai.nix.maiapp.expandable_list_fragments.BarracksFragment;
 import com.mai.nix.maiapp.simple_list_fragments.CafesFragment;
-import com.mai.nix.maiapp.LibrariesFragment;
+import com.mai.nix.maiapp.expandable_list_fragments.LibrariesFragment;
 import com.mai.nix.maiapp.MapFragment;
 import com.mai.nix.maiapp.TabsFragment;
 import com.mai.nix.maiapp.ViewPagerAdapter;

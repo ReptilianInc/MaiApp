@@ -2,7 +2,7 @@ package com.mai.nix.maiapp.navigation_fragments;
 
 import androidx.viewpager.widget.ViewPager;
 
-import com.mai.nix.maiapp.SportSectionsFragment;
+import com.mai.nix.maiapp.expandable_list_fragments.SportSectionsFragment;
 import com.mai.nix.maiapp.simple_list_fragments.StudentOrganisationsFragment;
 import com.mai.nix.maiapp.TabsFragment;
 import com.mai.nix.maiapp.ViewPagerAdapter;
