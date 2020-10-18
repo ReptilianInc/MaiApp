@@ -1,50 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
-        android:title="@string/common_cath">
+    <PreferenceCategory android:title="@string/common_cath">
+
         <Preference
             android:key="pref_group"
-            android:title="@string/pref_group"
-            android:summary="@string/pref_group_summary">
-        </Preference>
+            android:summary="@string/pref_group_summary"
+            android:title="@string/pref_group" />
+
+        <ListPreference
+            android:defaultValue="-1"
+            android:entries="@array/themes_array"
+            android:entryValues="@array/themes_values"
+            android:key="pref_theme"
+            android:summary="%s"
+            android:title="@string/pref_theme" />
+
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/cache_cath">
+
+    <PreferenceCategory android:title="@string/cache_cath">
+
         <Preference
             android:key="clear_cache_subj"
-            android:title="@string/clear_cache_sub">
-        </Preference>
+            android:title="@string/clear_cache_sub" />
+
         <Preference
             android:key="clear_cache_ex"
-            android:title="@string/clear_cache_ex">
-        </Preference>
+            android:title="@string/clear_cache_ex" />
+
         <ListPreference
-            android:title="@string/freg_cache"
+            android:defaultValue="1"
+            android:entries="@array/freg_array"
+            android:entryValues="@array/freg_values"
             android:key="freg"
-            android:defaultValue="1"
             android:summary="%s"
-            android:entries="@array/freg_array"
-            android:entryValues="@array/freg_values">
-        </ListPreference>
+            android:title="@string/freg_cache" />
+
         <ListPreference
-            android:title="@string/freg_cache_exams"
-            android:key="freg_ex"
             android:defaultValue="1"
-            android:summary="%s"
             android:entries="@array/freg_array"
-            android:entryValues="@array/freg_values">
-        </ListPreference>
+            android:entryValues="@array/freg_values"
+            android:key="freg_ex"
+            android:summary="%s"
+            android:title="@string/freg_cache_exams" />
+
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/about_cath">
+
+    <PreferenceCategory android:title="@string/about_cath">
+
         <Preference
             android:key="about"
-            android:title="@string/title_app"
-            android:summary="@string/title_summary">
-        </Preference>
+            android:summary="@string/title_summary"
+            android:title="@string/title_app" />
         <Preference
             android:key="go_mai"
-            android:title="@string/site_mai">
-        </Preference>
+            android:title="@string/site_mai" />
+
     </PreferenceCategory>
 </PreferenceScreen>

@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +34,7 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
     private Preference mClearExamsCache;
     private ListPreference mFregSubjects;
     private ListPreference mFregExams;
+    private ListPreference mTheme;
     private Preference mAbout;
     private Preference mMAI;
     private static final int REQUEST_CODE_GROUP = 0;
@@ -51,6 +55,7 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
         mClearExamsCache = getPreferenceScreen().findPreference("clear_cache_ex");
         mFregSubjects = (ListPreference) getPreferenceScreen().findPreference("freg");
         mFregExams = (ListPreference) getPreferenceScreen().findPreference("freg_ex");
+        mTheme = (ListPreference) getPreferenceScreen().findPreference("pref_theme");
         mGroupPreference.setSummary(UserSettings.getGroup(getActivity()));
         mFregSubjects.setValue(UserSettings.getSubjectsUpdateFrequency(getActivity()));
         mFregExams.setValue(UserSettings.getExamsUpdateFrequency(getActivity()));
@@ -63,6 +68,7 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
         mMAI.setOnPreferenceClickListener(this);
         mFregSubjects.setOnPreferenceChangeListener(this);
         mFregExams.setOnPreferenceChangeListener(this);
+        mTheme.setOnPreferenceChangeListener(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -103,6 +109,10 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
                 break;
             case "freg_ex":
                 UserSettings.setExamsUpdateFrequency(getActivity(), (String) newValue);
+                break;
+            case "pref_theme":
+                UserSettings.setTheme(getActivity(), (int) newValue);
+                AppCompatDelegate.setDefaultNightMode((int) newValue);
                 break;
         }
         return true;

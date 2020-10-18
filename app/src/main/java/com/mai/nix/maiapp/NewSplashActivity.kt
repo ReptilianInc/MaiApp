@@ -16,9 +16,9 @@ class NewSplashActivity : AppCompatActivity() {
     @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        setContentView(R.layout.activity_new_splash)
         UserSettings.initialize(this)
+        AppCompatDelegate.setDefaultNightMode(UserSettings.getTheme(this))
+        setContentView(R.layout.activity_new_splash)
         startAnimation()
     }
 

@@ -10,10 +10,17 @@ import com.mai.nix.maiapp.R
 object UserSettings {
     private var sSharedPreferences: SharedPreferences? = null
     private var sEditor: SharedPreferences.Editor? = null
+
     const val EVERY_DAY = "1"
     const val EVERY_WEEK = "2"
     const val ONLY_FORCIBLY = "3"
+
+    const val LIGHT = 1
+    const val DARK = 2
+    const val SYSTEM = -1
+
     private const val PREF_TITLE = "mai_app"
+
     @JvmStatic
     fun initialize(context: Context) {
         sSharedPreferences = context.getSharedPreferences(PREF_TITLE, Context.MODE_PRIVATE)
@@ -79,5 +86,17 @@ object UserSettings {
     @JvmStatic
     fun getWeek(context: Context): Int {
         return sSharedPreferences!!.getInt(context.getString(R.string.week_pref), 0)
+    }
+
+    @JvmStatic
+    fun getTheme(context: Context) : Int {
+        return sSharedPreferences!!.getInt(context.getString(R.string.pref_theme), LIGHT)
+    }
+
+    @JvmStatic
+    fun setTheme(context: Context, value: Int) {
+        sEditor = sSharedPreferences?.edit()
+        sEditor?.putInt(context.getString(R.string.pref_theme), value)
+        sEditor?.apply()
     }
 }

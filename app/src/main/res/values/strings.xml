@@ -18,6 +18,7 @@
     <!-- Settings -->
     <string name="pref_group">Группа</string>
     <string name="pref_links">Просмотр ссылок</string>
+    <string name="pref_theme">Оформление</string>
     <string name="pref_group_summary">Выберите группу</string>
     <string name="clear_cache_sub">Очистить кэш расписания пар</string>
     <string name="clear_cache_ex">Очистить кэш расписания экзаменов</string>
@@ -45,6 +46,16 @@
     <string-array name="link_values">
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="themes_array">
+        <item>Светлое</item>
+        <item>Тёмное</item>
+        <item>Тема системы</item>
+    </string-array>
+    <string-array name="themes_values">
+        <item>1</item>
+        <item>2</item>
+        <item>-1</item>
     </string-array>
     <!-- Settings Cathegories -->
     <string name="common_cath">Общие</string>
