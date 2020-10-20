@@ -4,16 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.preference.ListPreference
-import android.preference.Preference
-import android.preference.PreferenceFragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import com.mai.nix.maiapp.ChooseGroupActivity
 import com.mai.nix.maiapp.DataLab
 import com.mai.nix.maiapp.R
@@ -29,46 +25,62 @@ import com.mai.nix.maiapp.helpers.UserSettings.setSubjectsUpdateFrequency
  * Created by Nix on 03.08.2017.
  */
 
-// TODO: Либо убрать, либо сильно переделать, сейчас это кринж
+class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+    private lateinit var groupPreference: Preference
+    private lateinit var chosenGroup: String
+    private lateinit var dataLab: DataLab
 
-class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
-    private var mGroupPreference: Preference? = null
-    private var mClearSubjectsCache: Preference? = null
-    private var mClearExamsCache: Preference? = null
-    private var mFregSubjects: ListPreference? = null
-    private var mFregExams: ListPreference? = null
-    private var mTheme: ListPreference? = null
-    private var mAbout: Preference? = null
-    private var mMAI: Preference? = null
-    private var mChoosenGroup: String? = null
-    private var mDataLab: DataLab? = null
+    companion object {
+        private const val REQUEST_CODE_GROUP = 0
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.app_prefs)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mDataLab = DataLab.get(activity)
-        mGroupPreference = preferenceManager.findPreference("pref_group")
-        mClearSubjectsCache = preferenceScreen.findPreference("clear_cache_subj")
-        mClearExamsCache = preferenceScreen.findPreference("clear_cache_ex")
-        mFregSubjects = preferenceScreen.findPreference("freg") as ListPreference
-        mFregExams = preferenceScreen.findPreference("freg_ex") as ListPreference
-        mTheme = preferenceScreen.findPreference("pref_theme") as ListPreference
-        mGroupPreference!!.summary = getGroup(activity)
-        mFregSubjects!!.value = getSubjectsUpdateFrequency(activity)
-        mFregExams!!.value = getExamsUpdateFrequency(activity)
-        mAbout = preferenceScreen.findPreference("about")
-        mMAI = preferenceScreen.findPreference("go_mai")
-        mGroupPreference!!.onPreferenceClickListener = this
-        mClearSubjectsCache!!.setOnPreferenceClickListener(this)
-        mClearExamsCache!!.setOnPreferenceClickListener(this)
-        mAbout!!.setOnPreferenceClickListener(this)
-        mMAI!!.setOnPreferenceClickListener(this)
-        mFregSubjects!!.onPreferenceChangeListener = this
-        mFregExams!!.onPreferenceChangeListener = this
-        mTheme!!.onPreferenceChangeListener = this
-        return super.onCreateView(inflater, container, savedInstanceState)
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.app_prefs, rootKey)
+        dataLab = DataLab.get(activity)
+        groupPreference = findPreference("pref_group")!!
+        val clearSubjectsCache = findPreference<Preference>("clear_cache_subj")
+        val clearExamsCache = findPreference<Preference>("clear_cache_ex")
+        val frequencySubjects = findPreference<androidx.preference.ListPreference>("frequency_update_subjects")
+        val frequencyExams = findPreference<androidx.preference.ListPreference>("frequency_update_exams")
+        val theme = findPreference<androidx.preference.ListPreference>("pref_theme")
+        val about = findPreference<Preference>("about")
+        val mai = findPreference<Preference>("go_mai")
+
+        groupPreference.summary = getGroup(requireContext())
+        frequencySubjects?.value = getSubjectsUpdateFrequency(requireContext())
+        frequencyExams?.value = getExamsUpdateFrequency(requireContext())
+
+        groupPreference.onPreferenceClickListener = this
+        clearSubjectsCache?.onPreferenceClickListener = this
+        clearExamsCache?.onPreferenceClickListener = this
+        about?.onPreferenceClickListener = this
+        mai?.onPreferenceClickListener = this
+        frequencySubjects?.onPreferenceChangeListener = this
+        frequencyExams?.onPreferenceChangeListener = this
+        theme?.onPreferenceChangeListener = this
+    }
+
+    private fun convertThemeValue(value: Any): Int {
+        val i = value as String
+        return i.toInt()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+        if (requestCode == REQUEST_CODE_GROUP && data != null) {
+            chosenGroup = data.getStringExtra(ChooseGroupActivity.EXTRA_GROUP)
+                    ?: throw Exception("No group found")
+            setGroup(requireContext(), chosenGroup)
+            groupPreference.summary = chosenGroup
+            requireActivity().setResult(Activity.RESULT_OK)
+        }
     }
 
     override fun onPreferenceClick(preference: Preference): Boolean {
@@ -78,20 +90,20 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
                 startActivityForResult(i, REQUEST_CODE_GROUP)
             }
             "clear_cache_subj" -> {
-                mDataLab!!.clearSubjectsCache()
+                dataLab.clearSubjectsCache()
                 Toast.makeText(activity, R.string.clear_cache_subj_toast, Toast.LENGTH_SHORT).show()
             }
             "clear_cache_ex" -> {
-                mDataLab!!.clearExamsCache()
+                dataLab.clearExamsCache()
                 Toast.makeText(activity, R.string.clear_cache_exams_toast, Toast.LENGTH_SHORT).show()
             }
             "about" -> Toast.makeText(activity, R.string.author, Toast.LENGTH_SHORT).show()
             "go_mai" -> {
                 val builder = CustomTabsIntent.Builder()
                 builder.setShowTitle(true)
-                builder.setToolbarColor(ContextCompat.getColor(activity, R.color.colorText))
+                builder.setToolbarColor(ContextCompat.getColor(requireContext(), R.color.colorText))
                 val customTabsIntent = builder.build()
-                customTabsIntent.launchUrl(activity, Uri.parse("http://mai.ru/"))
+                customTabsIntent.launchUrl(requireContext(), Uri.parse("http://mai.ru/"))
             }
         }
         return true
@@ -99,35 +111,14 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
 
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
         when (preference.key) {
-            "freg" -> setSubjectsUpdateFrequency(activity, newValue as String)
-            "freg_ex" -> setExamsUpdateFrequency(activity, newValue as String)
+            "frequency_update_subjects" -> setSubjectsUpdateFrequency(requireContext(), newValue as String)
+            "frequency_update_exams" -> setExamsUpdateFrequency(requireContext(), newValue as String)
             "pref_theme" -> {
                 val value = convertThemeValue(newValue)
-                UserSettings.setTheme(activity, value)
+                UserSettings.setTheme(requireContext(), value)
                 AppCompatDelegate.setDefaultNightMode(value)
             }
         }
         return true
-    }
-
-    private fun convertThemeValue(value : Any): Int {
-        val i = value as String
-        return i.toInt()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (resultCode != Activity.RESULT_OK) {
-            return
-        }
-        if (requestCode == REQUEST_CODE_GROUP) {
-            mChoosenGroup = data.getStringExtra(ChooseGroupActivity.EXTRA_GROUP)
-            setGroup(activity, mChoosenGroup)
-            mGroupPreference!!.summary = mChoosenGroup
-            activity.setResult(Activity.RESULT_OK)
-        }
-    }
-
-    companion object {
-        private const val REQUEST_CODE_GROUP = 0
     }
 }

@@ -1,59 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/common_cath">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/common_cath">
 
         <Preference
-            android:key="pref_group"
-            android:summary="@string/pref_group_summary"
-            android:title="@string/pref_group" />
+            app:iconSpaceReserved="false"
+            app:key="pref_group"
+            app:summary="@string/pref_group_summary"
+            app:title="@string/pref_group" />
 
         <ListPreference
-            android:defaultValue="-1"
-            android:entries="@array/themes_array"
-            android:entryValues="@array/themes_values"
-            android:key="pref_theme"
-            android:summary="%s"
-            android:title="@string/pref_theme" />
+            app:defaultValue="-1"
+            app:entries="@array/themes_array"
+            app:entryValues="@array/themes_values"
+            app:iconSpaceReserved="false"
+            app:key="pref_theme"
+            app:summary="%s"
+            app:title="@string/pref_theme" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/cache_cath">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/cache_cath">
 
         <Preference
-            android:key="clear_cache_subj"
-            android:title="@string/clear_cache_sub" />
+            app:iconSpaceReserved="false"
+            app:key="clear_cache_subj"
+            app:title="@string/clear_cache_sub" />
 
         <Preference
-            android:key="clear_cache_ex"
-            android:title="@string/clear_cache_ex" />
+            app:iconSpaceReserved="false"
+            app:key="clear_cache_ex"
+            app:title="@string/clear_cache_ex" />
 
         <ListPreference
-            android:defaultValue="1"
-            android:entries="@array/freg_array"
-            android:entryValues="@array/freg_values"
-            android:key="freg"
-            android:summary="%s"
-            android:title="@string/freg_cache" />
+            app:defaultValue="1"
+            app:entries="@array/freg_array"
+            app:entryValues="@array/freg_values"
+            app:iconSpaceReserved="false"
+            app:key="freg"
+            app:summary="%s"
+            app:title="@string/freg_cache" />
 
         <ListPreference
-            android:defaultValue="1"
-            android:entries="@array/freg_array"
-            android:entryValues="@array/freg_values"
-            android:key="freg_ex"
-            android:summary="%s"
-            android:title="@string/freg_cache_exams" />
+            app:defaultValue="1"
+            app:entries="@array/freg_array"
+            app:entryValues="@array/freg_values"
+            app:iconSpaceReserved="false"
+            app:key="freg_ex"
+            app:summary="%s"
+            app:title="@string/freg_cache_exams" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/about_cath">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/about_cath">
 
         <Preference
-            android:key="about"
-            android:summary="@string/title_summary"
-            android:title="@string/title_app" />
+            app:iconSpaceReserved="false"
+            app:key="about"
+            app:summary="@string/title_summary"
+            app:title="@string/title_app" />
         <Preference
-            android:key="go_mai"
-            android:title="@string/site_mai" />
+            app:iconSpaceReserved="false"
+            app:key="go_mai"
+            app:title="@string/site_mai" />
 
     </PreferenceCategory>
 </PreferenceScreen>
