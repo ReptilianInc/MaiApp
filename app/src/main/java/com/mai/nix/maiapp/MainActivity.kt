@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
                 when (mSelectedItemId) {
                     R.id.menu_sch -> setFragment("Расписание пар", ScheduleFragment())
                     R.id.menu_sch_ex -> setFragment("Расписание сессии", ExamScheduleFragment())
-                    R.id.press -> setFragment("Пресс-центр", PressCenterFragment())
                     R.id.menu_campus -> setFragment("Кампус", CampusFragment())
                     R.id.life -> setFragment("Жизнь", LifeFragment())
                     R.id.menu_settings -> {
