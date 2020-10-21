@@ -1,10 +1,15 @@
 package com.mai.nix.maiapp.helpers
 
 import android.util.Log
+import com.mai.nix.maiapp.model.ExpandableItemBody
+import com.mai.nix.maiapp.model.ExpandableItemHeader
 import com.mai.nix.maiapp.model.SimpleListModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import org.jsoup.nodes.Node
+import org.jsoup.nodes.TextNode
 import java.io.IOException
 
 object Parser {
@@ -13,12 +18,18 @@ object Parser {
     private const val ASSOCIATIONS = "associations"
     private const val STUDENT_ORGANISATIONS = "student_organisations"
     private const val CAFES = "cafes"
+    private const val BARRACKS = "barracks"
+    private const val LIBRARIES = "libraries"
+    private const val SPORT_SECTIONS = "sport_sections"
 
     private val links = mapOf(
             GROUPS to "http://mai.ru/education/schedule/?department=",
             ASSOCIATIONS to "http://www.mai.ru/life/associations/",
             STUDENT_ORGANISATIONS to "http://www.mai.ru/life/join/index.php",
-            CAFES to "http://mai.ru/common/campus/cafeteria/"
+            CAFES to "http://mai.ru/common/campus/cafeteria/",
+            BARRACKS to "http://mai.ru/common/campus/dormitory.php",
+            LIBRARIES to "http://mai.ru/common/campus/library/",
+            SPORT_SECTIONS to "http://www.mai.ru/life/sport/sections.php"
     )
 
     suspend fun parseGroups(facultyCode: String, currentCourse: String): List<String> {
@@ -98,5 +109,118 @@ object Parser {
             return list
         }
         return list
+    }
+
+    fun parseBarracks(): List<ExpandableItemHeader> {
+        val collection = mutableListOf<ExpandableItemHeader>()
+        try {
+            val doc = Jsoup.connect(links[BARRACKS]).get()
+            val table = doc?.select("table[class=data-table]")?.first()
+            val stupidHeader = doc?.select("h2")?.first()
+            val rows = table?.select("tr")
+            val header = table?.select("th")?.first()
+            if (table == null) return collection
+            collection.add(ExpandableItemHeader(stupidHeader!!.text(), mutableListOf()))
+            collection.add(ExpandableItemHeader(header!!.text()!!, mutableListOf()))
+            var j = 0
+            for (i in rows!!.indices) {
+                val el = rows[i].select("td")
+                if (!el.isEmpty()) {
+                    val body = ExpandableItemBody(el[0].select("b").text(),
+                            el[0].ownText(),
+                            el[1].text())
+                    collection[j].bodies.add(body)
+                } else {
+                    j++
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (n: NullPointerException) {
+            return collection
+        }
+        return collection
+    }
+
+    fun parseLibraries(): List<ExpandableItemHeader> {
+        val collection = mutableListOf<ExpandableItemHeader>()
+        try {
+            val doc = Jsoup.connect(links[LIBRARIES]).get()
+            val table = doc?.select("table[class = table table-bordered table-hover]")?.first()
+            val rows = doc?.select("tr")
+            if (table == null) return collection
+            for (i in rows!!.indices) {
+                if (rows[i].select("th").size == 1) {
+                    collection.add(ExpandableItemHeader(rows[i].text(), mutableListOf()))
+                }
+            }
+            var j = 0
+            for (i in 2 until rows.size) {
+                val el = rows[i].select("td")
+                if (!el.isEmpty()) {
+                    val body = ExpandableItemBody(
+                            el[0].text(),
+                            el[1].html(),
+                            null)
+                    collection[j].bodies.add(body)
+                } else if (rows[i].select("th").size == 1) {
+                    j++
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (n: NullPointerException) {
+            return collection
+        }
+        return collection
+    }
+
+    fun parseSportSections(): List<ExpandableItemHeader> {
+        val collection = mutableListOf<ExpandableItemHeader>()
+        try {
+            val doc = Jsoup.connect(links[SPORT_SECTIONS]).get()
+            val table = doc?.select("table[class=data-table]")?.first()
+            val rows = table?.select("tr")
+            val headers = table?.select("th")
+            if (table == null) return collection
+            for (i in headers!!.indices) {
+                collection.add(ExpandableItemHeader(headers[i].text(), mutableListOf()))
+            }
+            var j = 0
+            for (i in 1 until rows!!.size) {
+                val element = rows[i].select("td")
+                if (!element.isEmpty()) {
+                    if (element.size > 2) {
+                        val body = ExpandableItemBody(element[0].text(), element[1].text(), getExtractedText(element[2]))
+                        collection[j].bodies.add(body)
+                    } else {
+                        val body = ExpandableItemBody(element[0].text(), "", element[1].html())
+                        collection[j].bodies.add(body)
+                    }
+                } else {
+                    j++
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (n: NullPointerException) {
+            return collection
+        }
+        return collection
+    }
+
+    private fun getExtractedText(element: Element): String {
+        val nodes = element.childNodes()
+        val stringBuilder = StringBuilder()
+        val iterator: Iterator<Node> = nodes.iterator()
+        while (iterator.hasNext()) {
+            val n = iterator.next()
+            if (n is TextNode) {
+                stringBuilder.append(n.text())
+            } else if (n is Element) {
+                stringBuilder.append(n.attr("href"))
+            }
+        }
+        return stringBuilder.toString()
     }
 }
