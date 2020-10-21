@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.ActivityChooseSingleItem
 import com.mai.nix.maiapp.MainActivity
 import com.mai.nix.maiapp.R
+import com.mai.nix.maiapp.MVIEntity
 import com.mai.nix.maiapp.helpers.UserSettings
 import kotlinx.android.synthetic.main.activity_new_choose_group.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,7 +24,8 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 class NewChooseGroupActivity : AppCompatActivity(),
         GroupsAdapter.GroupChosenListener,
-        View.OnClickListener {
+        View.OnClickListener,
+        MVIEntity {
 
     companion object {
         const val FACULTIES_RESULT_CODE = 23
@@ -116,11 +118,11 @@ class NewChooseGroupActivity : AppCompatActivity(),
         setResult(RESULT_OK, data)
     }
 
-    private fun setupViewModel() {
+    override fun setupViewModel() {
         groupsViewModel = ViewModelProviders.of(this, GroupsViewModelFactory()).get(GroupsViewModel::class.java)
     }
 
-    private fun observeViewModel() {
+    override fun observeViewModel() {
         lifecycleScope.launch {
             groupsViewModel.state.collect {
                 chooseFacultyButton.text = if (it.faculty.isNotEmpty()) it.faculty else getString(R.string.choose_faculty_space)
