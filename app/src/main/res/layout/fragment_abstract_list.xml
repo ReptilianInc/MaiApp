@@ -5,12 +5,12 @@
     android:background="@color/backgroundSplash">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/expandableListSwipeRefreshLayout"
+        android:id="@+id/abstractListSwipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/expandableRecyclerView"
+            android:id="@+id/abstractListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

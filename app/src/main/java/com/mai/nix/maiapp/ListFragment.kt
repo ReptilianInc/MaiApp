@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_simple_list.*
+import kotlinx.android.synthetic.main.fragment_abstract_list.*
 
 abstract class ListFragment: Fragment(), MVIEntity {
 
@@ -19,7 +19,7 @@ abstract class ListFragment: Fragment(), MVIEntity {
     abstract fun refresh()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_simple_list, container, false)
+        return inflater.inflate(R.layout.fragment_abstract_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,7 +28,7 @@ abstract class ListFragment: Fragment(), MVIEntity {
         prepareRecyclerView()
         observeViewModel()
         setupViewModel()
-        simpleListSwipeRefreshLayout.setOnRefreshListener {
+        abstractListSwipeRefreshLayout.setOnRefreshListener {
             refresh()
         }
         refresh()
@@ -37,9 +37,9 @@ abstract class ListFragment: Fragment(), MVIEntity {
     private fun prepareRecyclerView() {
         val linearLayoutManager = LinearLayoutManager(requireContext())
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        simpleListView.layoutManager = LinearLayoutManager(requireContext())
-        simpleListView.adapter = adapter
+        abstractListView.layoutManager = LinearLayoutManager(requireContext())
+        abstractListView.adapter = adapter
         val dividerItemDecoration = DividerItemDecoration(requireContext(), linearLayoutManager.orientation)
-        simpleListView.addItemDecoration(dividerItemDecoration)
+        abstractListView.addItemDecoration(dividerItemDecoration)
     }
 }

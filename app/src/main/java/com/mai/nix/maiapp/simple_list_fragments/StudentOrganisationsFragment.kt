@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mai.nix.maiapp.R
 import com.mai.nix.maiapp.navigation_fragments.life.LifeAbstractFragment
 import com.mai.nix.maiapp.navigation_fragments.life.StudentOrganisationsIntent
-import kotlinx.android.synthetic.main.fragment_simple_list.*
+import kotlinx.android.synthetic.main.fragment_abstract_list.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -30,7 +30,7 @@ class StudentOrganisationsFragment : LifeAbstractFragment() {
     override fun setupViewModel() {
         lifecycleScope.launch {
             lifeViewModel.studentOrganisationsState.collect {
-                simpleListSwipeRefreshLayout.isRefreshing = it.loading
+                abstractListSwipeRefreshLayout.isRefreshing = it.loading
                 (adapter as SimpleListAdapter).simpleListModels.addAll(it.items)
                 adapter.notifyDataSetChanged()
                 if (!it.error.isNullOrEmpty()) {

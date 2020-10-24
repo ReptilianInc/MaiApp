@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mai.nix.maiapp.R
 import com.mai.nix.maiapp.navigation_fragments.campus.CampusAbstractFragment
 import com.mai.nix.maiapp.navigation_fragments.campus.BarracksIntent
-import kotlinx.android.synthetic.main.fragment_simple_list.*
+import kotlinx.android.synthetic.main.fragment_abstract_list.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -30,7 +30,7 @@ class BarracksFragment : CampusAbstractFragment() {
     override fun setupViewModel() {
         lifecycleScope.launch {
             campusViewModel.barracksState.collect {
-                simpleListSwipeRefreshLayout.isRefreshing = it.loading
+                abstractListSwipeRefreshLayout.isRefreshing = it.loading
                 (adapter as ExpandableListAdapter).models.addAll(it.items)
                 adapter.notifyDataSetChanged()
                 if (!it.error.isNullOrEmpty()) {
