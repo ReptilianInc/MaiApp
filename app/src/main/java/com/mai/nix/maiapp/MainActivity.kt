@@ -20,6 +20,8 @@ class MainActivity : AppCompatActivity() {
 
     //@JvmField
     //var examsNeedToUpdate = false
+    private var retainFragment: Fragment? = null
+
     private var selectedItemId = -999
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,21 +45,26 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        if (savedInstanceState != null) {
-            selectedItemId = savedInstanceState.getInt(SELECTED_ITEM_ID)
-            chooseFragmentById()
-        } else {
-            supportActionBar?.setTitle(R.string.menu_schedule)
+        retainFragment = supportFragmentManager.findFragmentByTag(CURRENT_FRAGMENT_TAG)
+        if (retainFragment == null) {
+            retainFragment = ScheduleFragment()
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.mainFragmentHost, ScheduleFragment())
+                    .add(R.id.mainFragmentHost, retainFragment!!, CURRENT_FRAGMENT_TAG)
                     .commit()
         }
+
     }
 
     private fun setFragment(title: String, fragment: Fragment) {
         supportActionBar?.title = title
+
         supportFragmentManager.beginTransaction()
-                .replace(R.id.mainFragmentHost, fragment)
+                .remove(retainFragment!!)
+                .commit()
+
+        retainFragment = fragment
+        supportFragmentManager.beginTransaction()
+                .add(R.id.mainFragmentHost, retainFragment!!, CURRENT_FRAGMENT_TAG)
                 .commit()
     }
 
@@ -90,5 +97,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val UPDATE_SCHEDULE = 69
         private const val SELECTED_ITEM_ID = "selected_item_id"
+        private const val CURRENT_FRAGMENT_TAG = "current_fragment_tag"
     }
 }
