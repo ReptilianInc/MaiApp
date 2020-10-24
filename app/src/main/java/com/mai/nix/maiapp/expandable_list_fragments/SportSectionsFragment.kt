@@ -1,34 +1,42 @@
 package com.mai.nix.maiapp.expandable_list_fragments
 
-import android.os.AsyncTask
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.mai.nix.maiapp.R
-import com.mai.nix.maiapp.helpers.Parser
-import com.mai.nix.maiapp.model.ExpandableItemHeader
-import kotlinx.android.synthetic.main.fragment_expandable_list.*
+import com.mai.nix.maiapp.navigation_fragments.life.LifeAbstractFragment
+import com.mai.nix.maiapp.navigation_fragments.life.SportSectionsIntent
+import kotlinx.android.synthetic.main.fragment_simple_list.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /**
  * Created by Nix on 11.08.2017.
  */
-class SportSectionsFragment : ExpandableListFragment() {
-    override fun releaseThread() {
-        MyThread().execute()
+
+@ExperimentalCoroutinesApi
+class SportSectionsFragment : LifeAbstractFragment() {
+
+    override fun initAdapter(): RecyclerView.Adapter<*> {
+        return ExpandableListAdapter()
     }
 
-    private inner class MyThread : AsyncTask<Int?, Void?, List<ExpandableItemHeader>>() {
-
-        override fun doInBackground(vararg p0: Int?): List<ExpandableItemHeader> {
-            return emptyList()
+    override fun refresh() {
+        lifecycleScope.launch {
+            lifeViewModel.sportSectionsIntent.send(SportSectionsIntent.LoadSportSections)
         }
+    }
 
-        override fun onPostExecute(list: List<ExpandableItemHeader>) {
-            expandableListSwipeRefreshLayout.isRefreshing = false
-            if (list.isEmpty()) {
-                if (context != null) Toast.makeText(context, R.string.error,
-                        Toast.LENGTH_LONG).show()
-            } else {
-                adapter.models.addAll(list)
+    override fun setupViewModel() {
+        lifecycleScope.launch {
+            lifeViewModel.sportSectionsState.collect {
+                simpleListSwipeRefreshLayout.isRefreshing = it.loading
+                (adapter as ExpandableListAdapter).models.addAll(it.items)
                 adapter.notifyDataSetChanged()
+                if (!it.error.isNullOrEmpty()) {
+                    Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

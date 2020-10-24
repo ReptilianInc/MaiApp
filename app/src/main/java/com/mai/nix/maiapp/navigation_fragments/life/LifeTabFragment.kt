@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp.navigation_fragments
+package com.mai.nix.maiapp.navigation_fragments.life
 
 import androidx.viewpager2.widget.ViewPager2
 import com.mai.nix.maiapp.TabsFragment
@@ -11,7 +11,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 /**
  * Created by Nix on 01.08.2017.
  */
-class LifeFragment : TabsFragment() {
+
+class LifeTabFragment : TabsFragment() {
     @ExperimentalCoroutinesApi
     override fun setupViewPager(viewPager: ViewPager2) {
         setHasOptionsMenu(false)

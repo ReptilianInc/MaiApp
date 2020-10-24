@@ -25,7 +25,6 @@ abstract class ListFragment: Fragment(), MVIEntity {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = initAdapter()
-        simpleListSwipeRefreshLayout.isRefreshing = true
         prepareRecyclerView()
         observeViewModel()
         setupViewModel()
