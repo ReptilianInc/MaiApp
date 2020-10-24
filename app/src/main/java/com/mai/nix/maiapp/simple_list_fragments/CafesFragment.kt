@@ -1,34 +1,43 @@
 package com.mai.nix.maiapp.simple_list_fragments
 
-import android.os.AsyncTask
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.mai.nix.maiapp.R
-import com.mai.nix.maiapp.helpers.Parser
-import com.mai.nix.maiapp.model.SimpleListModel
+import com.mai.nix.maiapp.navigation_fragments.campus.CafesIntent
+import com.mai.nix.maiapp.navigation_fragments.campus.CampusAbstractFragment
 import kotlinx.android.synthetic.main.fragment_simple_list.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+
 /**
  * Created by Nix on 14.08.2017.
  */
-class CafesFragment : SimpleListFragment() {
-    override fun releaseThread() {
-        MyThread().execute()
+
+@ExperimentalCoroutinesApi
+class CafesFragment : CampusAbstractFragment() {
+
+    override fun initAdapter(): RecyclerView.Adapter<*> {
+        return SimpleListAdapter()
     }
 
-    private inner class MyThread : AsyncTask<List<SimpleListModel>, Void?, List<SimpleListModel>>() {
-
-        override fun onPostExecute(list: List<SimpleListModel>) {
-            simpleListSwipeRefreshLayout.isRefreshing = false
-            if (list.isEmpty()) {
-                if (context != null) Toast.makeText(context, R.string.error,
-                        Toast.LENGTH_LONG).show()
-            } else {
-                adapter.simpleListModels.addAll(list)
-                adapter.notifyDataSetChanged()
-            }
+    override fun refresh() {
+        lifecycleScope.launch {
+            campusViewModel.cafesIntent.send(CafesIntent.CafesLoad)
         }
+    }
 
-        override fun doInBackground(vararg p0: List<SimpleListModel>): List<SimpleListModel> {
-            return Parser.parseCafes()
+    override fun setupViewModel() {
+        lifecycleScope.launch {
+            campusViewModel.cafesState.collect {
+                simpleListSwipeRefreshLayout.isRefreshing = it.loading
+                (adapter as SimpleListAdapter).simpleListModels.addAll(it.items)
+                adapter.notifyDataSetChanged()
+                if (!it.error.isNullOrEmpty()) {
+                    Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }

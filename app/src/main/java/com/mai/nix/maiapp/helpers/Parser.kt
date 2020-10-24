@@ -46,165 +46,143 @@ object Parser {
         return groups
     }
 
-    fun parseAssociations(): List<SimpleListModel> {
+    suspend fun parseAssociations(): List<SimpleListModel> {
         val list = mutableListOf<SimpleListModel>()
-        try {
-            val doc = Jsoup.connect(links[ASSOCIATIONS]).get()
-            val table = doc?.select("table[class=data-table]")?.first()
-            val rows = table?.select("th")
-            val cols = table?.select("td")
-            if (rows == null || cols == null) return list
-            var i = 0
-            var j = 0
-            while (j < cols.size) {
-                list.add(SimpleListModel(rows[i].text(), cols[j].text(), cols[j + 1].text(),
-                        cols[j + 2].text()))
-                i++
-                j += 3
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return list
+        val doc = withContext(Dispatchers.IO) {
+            Jsoup.connect(links[ASSOCIATIONS]).get()
+        }
+        val table = doc?.select("table[class=data-table]")?.first()
+        val rows = table?.select("th")
+        val cols = table?.select("td")
+        if (rows == null || cols == null) return list
+        var i = 0
+        var j = 0
+        while (j < cols.size) {
+            list.add(SimpleListModel(rows[i].text(), cols[j].text(), cols[j + 1].text(),
+                    cols[j + 2].text()))
+            i++
+            j += 3
         }
         return list
     }
 
-    fun parseStudentOrganisations(): List<SimpleListModel> {
+    suspend fun parseStudentOrganisations(): List<SimpleListModel> {
         val list = mutableListOf<SimpleListModel>()
-        try {
-            val doc = Jsoup.connect(links[STUDENT_ORGANISATIONS]).get()
-            val table = doc?.select("table[class=data-table]")?.first()
-            val rows = table?.select("th")
-            val cols = table?.select("td")
-            if (rows == null || cols == null) return list
-            var i = 0
-            var j = 0
-            while (j < cols.size) {
-                list.add(SimpleListModel(rows[i].text(), cols[j].text(), cols[j + 1].text(),
-                        cols[j + 2].text()))
-                i++
-                j += 3
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return list
+        val doc = withContext(Dispatchers.IO) {
+            Jsoup.connect(links[STUDENT_ORGANISATIONS]).get()
+        }
+        val table = doc?.select("table[class=data-table]")?.first()
+        val rows = table?.select("th")
+        val cols = table?.select("td")
+        if (rows == null || cols == null) return list
+        var i = 0
+        var j = 0
+        while (j < cols.size) {
+            list.add(SimpleListModel(rows[i].text(), cols[j].text(), cols[j + 1].text(),
+                    cols[j + 2].text()))
+            i++
+            j += 3
+        }
+
+        return list
+    }
+
+    suspend fun parseCafes(): List<SimpleListModel> {
+        val list = mutableListOf<SimpleListModel>()
+        val doc = withContext(Dispatchers.IO) {
+            Jsoup.connect(links[CAFES]).get()
+        }
+        val table = doc?.select("table[class = table table-bordered]")?.first()
+        val rows = table?.select("tr") ?: return list
+        for (i in 1 until rows.size) {
+            val element = rows[i].select("td")
+            list.add(SimpleListModel(element[1].text(), element[2].text(), null, element[3].text()))
         }
         return list
     }
 
-    fun parseCafes(): List<SimpleListModel> {
-        val list = mutableListOf<SimpleListModel>()
-        try {
-            val doc = Jsoup.connect(links[CAFES]).get()
-            val table = doc?.select("table[class = table table-bordered]")?.first()
-            val rows = table?.select("tr") ?: return list
-            for (i in 1 until rows.size) {
-                val element = rows[i].select("td")
-                list.add(SimpleListModel(element[1].text(), element[2].text(), null, element[3].text()))
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return list
-        } catch (n: NullPointerException) {
-            return list
-        }
-        return list
-    }
-
-    fun parseBarracks(): List<ExpandableItemHeader> {
+    suspend fun parseBarracks(): List<ExpandableItemHeader> {
         val collection = mutableListOf<ExpandableItemHeader>()
-        try {
-            val doc = Jsoup.connect(links[BARRACKS]).get()
-            val table = doc?.select("table[class=data-table]")?.first()
-            val stupidHeader = doc?.select("h2")?.first()
-            val rows = table?.select("tr")
-            val header = table?.select("th")?.first()
-            if (table == null) return collection
-            collection.add(ExpandableItemHeader(stupidHeader!!.text(), mutableListOf()))
-            collection.add(ExpandableItemHeader(header!!.text()!!, mutableListOf()))
-            var j = 0
-            for (i in rows!!.indices) {
-                val el = rows[i].select("td")
-                if (!el.isEmpty()) {
-                    val body = ExpandableItemBody(el[0].select("b").text(),
-                            el[0].ownText(),
-                            el[1].text())
-                    collection[j].bodies.add(body)
-                } else {
-                    j++
-                }
+        val doc = withContext(Dispatchers.IO) {
+            Jsoup.connect(links[BARRACKS]).get()
+        }
+        val table = doc?.select("table[class=data-table]")?.first()
+        val stupidHeader = doc?.select("h2")?.first()
+        val rows = table?.select("tr")
+        val header = table?.select("th")?.first()
+        if (table == null) return collection
+        collection.add(ExpandableItemHeader(stupidHeader!!.text(), mutableListOf()))
+        collection.add(ExpandableItemHeader(header!!.text()!!, mutableListOf()))
+        var j = 0
+        for (i in rows!!.indices) {
+            val el = rows[i].select("td")
+            if (!el.isEmpty()) {
+                val body = ExpandableItemBody(el[0].select("b").text(),
+                        el[0].ownText(),
+                        el[1].text())
+                collection[j].bodies.add(body)
+            } else {
+                j++
             }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } catch (n: NullPointerException) {
-            return collection
         }
         return collection
     }
 
-    fun parseLibraries(): List<ExpandableItemHeader> {
+    suspend fun parseLibraries(): List<ExpandableItemHeader> {
         val collection = mutableListOf<ExpandableItemHeader>()
-        try {
-            val doc = Jsoup.connect(links[LIBRARIES]).get()
-            val table = doc?.select("table[class = table table-bordered table-hover]")?.first()
-            val rows = doc?.select("tr")
-            if (table == null) return collection
-            for (i in rows!!.indices) {
-                if (rows[i].select("th").size == 1) {
-                    collection.add(ExpandableItemHeader(rows[i].text(), mutableListOf()))
-                }
+        val doc = withContext(Dispatchers.IO) {
+            Jsoup.connect(links[LIBRARIES]).get()
+        }
+        val table = doc?.select("table[class = table table-bordered table-hover]")?.first()
+        val rows = doc?.select("tr")
+        if (table == null) return collection
+        for (i in rows!!.indices) {
+            if (rows[i].select("th").size == 1) {
+                collection.add(ExpandableItemHeader(rows[i].text(), mutableListOf()))
             }
-            var j = 0
-            for (i in 2 until rows.size) {
-                val el = rows[i].select("td")
-                if (!el.isEmpty()) {
-                    val body = ExpandableItemBody(
-                            el[0].text(),
-                            el[1].html(),
-                            null)
-                    collection[j].bodies.add(body)
-                } else if (rows[i].select("th").size == 1) {
-                    j++
-                }
+        }
+        var j = 0
+        for (i in 2 until rows.size) {
+            val el = rows[i].select("td")
+            if (!el.isEmpty()) {
+                val body = ExpandableItemBody(
+                        el[0].text(),
+                        el[1].html(),
+                        null)
+                collection[j].bodies.add(body)
+            } else if (rows[i].select("th").size == 1) {
+                j++
             }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } catch (n: NullPointerException) {
-            return collection
         }
         return collection
     }
 
-    fun parseSportSections(): List<ExpandableItemHeader> {
+    suspend fun parseSportSections(): List<ExpandableItemHeader> {
         val collection = mutableListOf<ExpandableItemHeader>()
-        try {
-            val doc = Jsoup.connect(links[SPORT_SECTIONS]).get()
-            val table = doc?.select("table[class=data-table]")?.first()
-            val rows = table?.select("tr")
-            val headers = table?.select("th")
-            if (table == null) return collection
-            for (i in headers!!.indices) {
-                collection.add(ExpandableItemHeader(headers[i].text(), mutableListOf()))
-            }
-            var j = 0
-            for (i in 1 until rows!!.size) {
-                val element = rows[i].select("td")
-                if (!element.isEmpty()) {
-                    if (element.size > 2) {
-                        val body = ExpandableItemBody(element[0].text(), element[1].text(), getExtractedText(element[2]))
-                        collection[j].bodies.add(body)
-                    } else {
-                        val body = ExpandableItemBody(element[0].text(), "", element[1].html())
-                        collection[j].bodies.add(body)
-                    }
+        val doc = withContext(Dispatchers.IO) {
+            Jsoup.connect(links[SPORT_SECTIONS]).get()
+        }
+        val table = doc?.select("table[class=data-table]")?.first()
+        val rows = table?.select("tr")
+        val headers = table?.select("th")
+        if (table == null) return collection
+        for (i in headers!!.indices) {
+            collection.add(ExpandableItemHeader(headers[i].text(), mutableListOf()))
+        }
+        var j = 0
+        for (i in 1 until rows!!.size) {
+            val element = rows[i].select("td")
+            if (!element.isEmpty()) {
+                if (element.size > 2) {
+                    val body = ExpandableItemBody(element[0].text(), element[1].text(), getExtractedText(element[2]))
+                    collection[j].bodies.add(body)
                 } else {
-                    j++
+                    val body = ExpandableItemBody(element[0].text(), "", element[1].html())
+                    collection[j].bodies.add(body)
                 }
+            } else {
+                j++
             }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } catch (n: NullPointerException) {
-            return collection
         }
         return collection
     }

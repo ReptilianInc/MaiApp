@@ -1,34 +1,43 @@
 package com.mai.nix.maiapp.expandable_list_fragments
 
-import android.os.AsyncTask
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.mai.nix.maiapp.R
-import com.mai.nix.maiapp.helpers.Parser
-import com.mai.nix.maiapp.model.ExpandableItemHeader
-import kotlinx.android.synthetic.main.fragment_expandable_list.*
+import com.mai.nix.maiapp.navigation_fragments.campus.CampusAbstractFragment
+import com.mai.nix.maiapp.navigation_fragments.campus.LibrariesIntent
+import kotlinx.android.synthetic.main.fragment_simple_list.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /**
  * Created by Nix on 13.08.2017.
  */
-class LibrariesFragment : ExpandableListFragment() {
-    override fun releaseThread() {
-        MyThread().execute()
+
+@ExperimentalCoroutinesApi
+class LibrariesFragment : CampusAbstractFragment() {
+
+    override fun initAdapter(): RecyclerView.Adapter<*> {
+        return ExpandableListAdapter()
     }
 
-    private inner class MyThread : AsyncTask<Int?, Void?, List<ExpandableItemHeader>>() {
-        override fun onPostExecute(list: List<ExpandableItemHeader>) {
-            expandableListSwipeRefreshLayout.isRefreshing = false
-            if (list.isEmpty()) {
-                if (context != null) Toast.makeText(context, R.string.error,
-                        Toast.LENGTH_LONG).show()
-            } else {
-                adapter.models.addAll(list)
-                adapter.notifyDataSetChanged()
-            }
+    override fun refresh() {
+        lifecycleScope.launch {
+            campusViewModel.librariesIntent.send(LibrariesIntent.LibrariesLoad)
         }
+    }
 
-        override fun doInBackground(vararg p0: Int?): List<ExpandableItemHeader> {
-            return Parser.parseLibraries()
+    override fun setupViewModel() {
+        lifecycleScope.launch {
+            campusViewModel.librariesState.collect {
+                simpleListSwipeRefreshLayout.isRefreshing = it.loading
+                (adapter as ExpandableListAdapter).models.addAll(it.items)
+                adapter.notifyDataSetChanged()
+                if (!it.error.isNullOrEmpty()) {
+                    Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }

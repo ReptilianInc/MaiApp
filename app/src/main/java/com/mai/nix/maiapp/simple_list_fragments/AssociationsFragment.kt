@@ -29,7 +29,7 @@ class AssociationsFragment : SimpleListFragment() {
         }
 
         override fun doInBackground(vararg p0: List<SimpleListModel>): List<SimpleListModel> {
-            return Parser.parseAssociations()
+            return emptyList()
         }
     }
 }

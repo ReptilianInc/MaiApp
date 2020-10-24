@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp.navigation_fragments
+package com.mai.nix.maiapp.navigation_fragments.campus
 
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,11 +9,13 @@ import com.mai.nix.maiapp.ViewPagerAdapter
 import com.mai.nix.maiapp.expandable_list_fragments.BarracksFragment
 import com.mai.nix.maiapp.expandable_list_fragments.LibrariesFragment
 import com.mai.nix.maiapp.simple_list_fragments.CafesFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * Created by Nix on 13.05.2017.
  */
-class CampusFragment : TabsFragment() {
+class CampusTabsFragment : TabsFragment() {
+    @ExperimentalCoroutinesApi
     override fun setupViewPager(viewPager: ViewPager?) {
         setHasOptionsMenu(false)
         val adapter = ViewPagerAdapter(childFragmentManager)

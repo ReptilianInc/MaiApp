@@ -18,7 +18,7 @@ class SportSectionsFragment : ExpandableListFragment() {
     private inner class MyThread : AsyncTask<Int?, Void?, List<ExpandableItemHeader>>() {
 
         override fun doInBackground(vararg p0: Int?): List<ExpandableItemHeader> {
-            return Parser.parseSportSections()
+            return emptyList()
         }
 
         override fun onPostExecute(list: List<ExpandableItemHeader>) {

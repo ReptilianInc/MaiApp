@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import com.mai.nix.maiapp.navigation_fragments.*
+import com.mai.nix.maiapp.navigation_fragments.campus.CampusTabsFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -39,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 when (mSelectedItemId) {
                     R.id.menu_sch -> setFragment("Расписание пар", ScheduleFragment())
                     R.id.menu_sch_ex -> setFragment("Расписание сессии", ExamScheduleFragment())
-                    R.id.menu_campus -> setFragment("Кампус", CampusFragment())
+                    R.id.menu_campus -> setFragment("Кампус", CampusTabsFragment())
                     R.id.life -> setFragment("Жизнь", LifeFragment())
                     R.id.menu_settings -> {
                         val intent = Intent(this@MainActivity, SettingsActivity::class.java)

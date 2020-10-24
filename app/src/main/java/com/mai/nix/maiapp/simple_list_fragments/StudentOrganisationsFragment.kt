@@ -29,7 +29,7 @@ class StudentOrganisationsFragment : SimpleListFragment() {
         }
 
         override fun doInBackground(vararg p0: List<SimpleListModel>): List<SimpleListModel> {
-            return Parser.parseStudentOrganisations()
+            return emptyList()
         }
     }
 }
