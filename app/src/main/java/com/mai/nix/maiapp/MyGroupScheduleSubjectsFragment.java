@@ -76,7 +76,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (!((MainActivity) getActivity()).subjectsNeedToUpdate) {
+                /*if (!((MainActivity) getActivity()).subjectsNeedToUpdate) {
                     if (i != 0) {
                         mWeek = Integer.toString(i);
                         mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
@@ -108,7 +108,7 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
                         }
                         mAdapter.notifyDataSetChanged();
                     }
-                }
+                }*/
             }
 
             @Override
@@ -230,12 +230,12 @@ public class MyGroupScheduleSubjectsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (((MainActivity) getActivity()).subjectsNeedToUpdate) {
+        /*if (((MainActivity) getActivity()).subjectsNeedToUpdate) {
             mCurrentGroup = UserSettings.getGroup(getContext());
             mCurrentLink = mLink.concat(mCurrentGroup);
             new MyThread(mCurrentLink, true).execute();
             ((MainActivity) getActivity()).subjectsNeedToUpdate = false;
-        }
+        }*/
     }
 
     @Override

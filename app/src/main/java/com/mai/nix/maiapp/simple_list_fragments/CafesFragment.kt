@@ -32,7 +32,7 @@ class CafesFragment : CampusAbstractFragment() {
         lifecycleScope.launch {
             campusViewModel.cafesState.collect {
                 abstractListSwipeRefreshLayout.isRefreshing = it.loading
-                (adapter as SimpleListAdapter).simpleListModels.addAll(it.items)
+                (adapter as SimpleListAdapter).updateItems(it.items)
                 adapter.notifyDataSetChanged()
                 if (!it.error.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()

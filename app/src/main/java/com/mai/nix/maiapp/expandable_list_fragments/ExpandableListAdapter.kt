@@ -13,7 +13,12 @@ import kotlinx.android.synthetic.main.view_expandable_list_item.view.*
 
 class ExpandableListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val models = mutableListOf<ExpandableItemHeader>()
+    private val models = mutableListOf<ExpandableItemHeader>()
+
+    fun updateItems(items: List<ExpandableItemHeader>) {
+        models.clear()
+        models.addAll(items)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.view_expandable_list_item, parent, false)

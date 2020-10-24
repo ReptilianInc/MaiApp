@@ -10,7 +10,12 @@ import kotlinx.android.synthetic.main.view_simple_list_item.view.*
 
 class SimpleListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val simpleListModels = mutableListOf<SimpleListModel>()
+    private val simpleListModels = mutableListOf<SimpleListModel>()
+
+    fun updateItems(items: List<SimpleListModel>) {
+        simpleListModels.clear()
+        simpleListModels.addAll(items)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.view_simple_list_item, parent, false)

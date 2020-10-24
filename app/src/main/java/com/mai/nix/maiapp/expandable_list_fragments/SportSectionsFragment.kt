@@ -32,7 +32,7 @@ class SportSectionsFragment : LifeAbstractFragment() {
         lifecycleScope.launch {
             lifeViewModel.sportSectionsState.collect {
                 abstractListSwipeRefreshLayout.isRefreshing = it.loading
-                (adapter as ExpandableListAdapter).models.addAll(it.items)
+                (adapter as ExpandableListAdapter).updateItems(it.items)
                 adapter.notifyDataSetChanged()
                 if (!it.error.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()

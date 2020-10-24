@@ -65,7 +65,7 @@ public class ExamItemFragment extends Fragment {
         mExamModels = new ArrayList<>();
         mListView = (ListView) v.findViewById(R.id.stud_org_listview);
         mAdapter = new ExamAdapter(getContext(), mExamModels);
-        if (!((MainActivity) getActivity()).examsNeedToUpdate) {
+        /*if (!((MainActivity) getActivity()).examsNeedToUpdate) {
             if (mDataLab.isExamsTableEmpty()) {
                 new MyThread(true).execute();
             } else if (UserSettings.getExamsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
@@ -80,7 +80,7 @@ public class ExamItemFragment extends Fragment {
                 mAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
-        }
+        }*/
         mListView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -163,11 +163,11 @@ public class ExamItemFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (((MainActivity) getActivity()).examsNeedToUpdate) {
+        /*if (((MainActivity) getActivity()).examsNeedToUpdate) {
             mCurrentGroup = UserSettings.getGroup(getContext());
             new MyThread(true).execute();
             ((MainActivity) getActivity()).examsNeedToUpdate = false;
-        }
+        }*/
     }
 
     @Override
