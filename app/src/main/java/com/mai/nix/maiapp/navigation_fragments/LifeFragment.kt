@@ -1,6 +1,6 @@
 package com.mai.nix.maiapp.navigation_fragments
 
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.mai.nix.maiapp.TabsFragment
 import com.mai.nix.maiapp.ViewPagerAdapter
 import com.mai.nix.maiapp.expandable_list_fragments.SportSectionsFragment
@@ -13,12 +13,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
  */
 class LifeFragment : TabsFragment() {
     @ExperimentalCoroutinesApi
-    override fun setupViewPager(viewPager: ViewPager?) {
+    override fun setupViewPager(viewPager: ViewPager2) {
         setHasOptionsMenu(false)
-        val adapter = ViewPagerAdapter(childFragmentManager)
+        val adapter = ViewPagerAdapter(requireActivity())
         adapter.addFragment(StudentOrganisationsFragment(), "Студенческие объединения")
         adapter.addFragment(SportSectionsFragment(), "Спортивные секции")
         adapter.addFragment(AssociationsFragment(), "Объединения сотрудников и выпускников")
-        viewPager?.adapter = adapter
+        viewPager.adapter = adapter
     }
 }

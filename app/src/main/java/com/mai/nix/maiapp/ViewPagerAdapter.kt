@@ -1,22 +1,24 @@
 package com.mai.nix.maiapp
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import java.util.*
 
 /**
  * Created by Nix on 01.08.2017.
  */
-class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+
+class ViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
     private val fragmentList: MutableList<Fragment> = ArrayList()
     private val fragmentTitleList: MutableList<String> = ArrayList()
-    override fun getItem(position: Int): Fragment {
-        return fragmentList[position]
+
+    override fun getItemCount(): Int {
+        return fragmentList.size
     }
 
-    override fun getCount(): Int {
-        return fragmentList.size
+    override fun createFragment(position: Int): Fragment {
+        return fragmentList[position]
     }
 
     fun addFragment(fragment: Fragment, title: String) {
@@ -24,7 +26,7 @@ class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager,
         fragmentTitleList.add(title)
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
+    fun getPageTitle(position: Int): String {
         return fragmentTitleList[position]
     }
 }
