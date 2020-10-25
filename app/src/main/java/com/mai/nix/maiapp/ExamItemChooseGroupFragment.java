@@ -53,7 +53,7 @@ public class ExamItemChooseGroupFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.shedule_exams_layout, container, false);
+        View v = inflater.inflate(R.layout.fragment_exams_layout, container, false);
         View header = inflater.inflate(R.layout.choose_group_ex_header, null);
         mButton = header.findViewById(R.id.choose_view);
         mSwipeRefreshLayout = v.findViewById(R.id.swiperefresh);
@@ -66,10 +66,10 @@ public class ExamItemChooseGroupFragment extends Fragment {
             }
         });
         mExamModels = new ArrayList<>();
-        mListView = (ListView) v.findViewById(R.id.stud_org_listview);
-        mAdapter = new ExamAdapter(getContext(), mExamModels);
-        mListView.addHeaderView(header);
-        mListView.setAdapter(mAdapter);
+        //mListView = (ListView) v.findViewById(R.id.examsRecyclerView);
+        //mAdapter = new ExamAdapter(getContext(), mExamModels);
+        //mListView.addHeaderView(header);
+        //mListView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

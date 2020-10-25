@@ -40,14 +40,14 @@ public class ExamAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.exam_card, viewGroup, false);
+            view = inflater.inflate(R.layout.view_exam_list_item, viewGroup, false);
         }
-        TextView textView1 = (TextView)view.findViewById(R.id.exam_date);
-        TextView textView2 = (TextView)view.findViewById(R.id.exam_day);
-        TextView textView3 = (TextView)view.findViewById(R.id.exam_time);
-        TextView textView4 = (TextView)view.findViewById(R.id.exam_title);
-        TextView textView5 = (TextView)view.findViewById(R.id.exam_teacher);
-        TextView textView6 = (TextView)view.findViewById(R.id.exam_room);
+        TextView textView1 = (TextView)view.findViewById(R.id.examDate);
+        TextView textView2 = (TextView)view.findViewById(R.id.examDay);
+        TextView textView3 = (TextView)view.findViewById(R.id.examTime);
+        TextView textView4 = (TextView)view.findViewById(R.id.examTitle);
+        TextView textView5 = (TextView)view.findViewById(R.id.examTeacher);
+        TextView textView6 = (TextView)view.findViewById(R.id.examRoom);
 
         textView1.setText(mModels.get(i).getDate());
         textView2.setText(mModels.get(i).getDay());

@@ -1,6 +1,7 @@
 package com.mai.nix.maiapp.helpers
 
 import android.util.Log
+import com.mai.nix.maiapp.model.ExamModel
 import com.mai.nix.maiapp.model.ExpandableItemBody
 import com.mai.nix.maiapp.model.ExpandableItemHeader
 import com.mai.nix.maiapp.model.SimpleListModel
@@ -10,7 +11,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
 import org.jsoup.nodes.TextNode
-import java.io.IOException
+import org.jsoup.select.Elements
 
 object Parser {
 
@@ -21,6 +22,7 @@ object Parser {
     private const val BARRACKS = "barracks"
     private const val LIBRARIES = "libraries"
     private const val SPORT_SECTIONS = "sport_sections"
+    private const val EXAMS = "exams"
 
     private val links = mapOf(
             GROUPS to "http://mai.ru/education/schedule/?department=",
@@ -29,7 +31,8 @@ object Parser {
             CAFES to "http://mai.ru/common/campus/cafeteria/",
             BARRACKS to "http://mai.ru/common/campus/dormitory.php",
             LIBRARIES to "http://mai.ru/common/campus/library/",
-            SPORT_SECTIONS to "http://www.mai.ru/life/sport/sections.php"
+            SPORT_SECTIONS to "http://www.mai.ru/life/sport/sections.php",
+            EXAMS to "http://mai.ru/education/schedule/session.php?group="
     )
 
     suspend fun parseGroups(facultyCode: String, currentCourse: String): List<String> {
@@ -200,5 +203,28 @@ object Parser {
             }
         }
         return stringBuilder.toString()
+    }
+
+    suspend fun parseExams(group: String): List<ExamModel> {
+        val exams = mutableListOf<ExamModel>()
+        val doc = withContext(Dispatchers.IO) {
+            Jsoup.connect(links[EXAMS] + group).get()
+        }
+        val date = doc.select("div[class=sc-table-col sc-day-header sc-gray]")
+        val day = doc.select("span[class=sc-day]")
+        val container = doc.select("div[class=sc-table-col sc-table-detail-container]")
+        if (day.isEmpty()) return exams
+        for (i in day.indices) {
+            val time: Elements = container[i].select("div[class=sc-table-col sc-item-time]")
+            val title: Elements = container[i].select("span[class=sc-title]")
+            val teacher: Elements = container[i].select("div[class=sc-table-col sc-item-title]")
+            val room: Elements = container[i].select("div[class=sc-table-col sc-item-location]")
+            for (k in time.indices) {
+                val model = ExamModel(date[i].text(), day[i].text(), time[k].text(), title[k].text(),
+                        teacher[k].select("span[class=sc-lecturer]").text(), room[k].text())
+                exams.add(model)
+            }
+        }
+        return exams
     }
 }

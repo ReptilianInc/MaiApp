@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import com.mai.nix.maiapp.navigation_fragments.*
 import com.mai.nix.maiapp.navigation_fragments.campus.CampusTabsFragment
+import com.mai.nix.maiapp.navigation_fragments.exams.ExamScheduleFragment
 import com.mai.nix.maiapp.navigation_fragments.life.LifeTabFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
