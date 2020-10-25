@@ -8,12 +8,15 @@ import android.view.*
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
 import kotlinx.android.synthetic.main.fragment_subjects_layout.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * Created by Nix on 01.08.2017.
  */
 
+@ExperimentalCoroutinesApi
 class SubjectsChooseGroupFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +30,13 @@ class SubjectsChooseGroupFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        chooseGroupButton.visibility = View.VISIBLE
+        chooseGroupButton.setOnClickListener {
+            requireActivity().startActivityForResult(NewChooseGroupActivity.newIntent(requireContext(), false), REQUEST_CODE_GROUP)
+        }
+        chooseWeekButton.setOnClickListener {
+            //ActivityChooseSingleItem.startActivity(this, courses, NewChooseGroupActivity.COURSES_RESULT_CODE)
+        }
         subjectsSwipeRefreshLayout.setOnRefreshListener {
 
         }

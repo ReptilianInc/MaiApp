@@ -84,6 +84,9 @@ class SubjectsFragment : Fragment(), MVIEntity {
         prepareRecyclerView()
         setupViewModel()
         observeViewModel()
+        chooseWeekButton.setOnClickListener {
+            //ActivityChooseSingleItem.startActivity(this, courses, NewChooseGroupActivity.COURSES_RESULT_CODE)
+        }
         subjectsSwipeRefreshLayout.setOnRefreshListener {
             /*if (mSpinner.getSelectedItemPosition() != 0) {
                 mWeek = Integer.toString(mSpinner.getSelectedItemPosition())
