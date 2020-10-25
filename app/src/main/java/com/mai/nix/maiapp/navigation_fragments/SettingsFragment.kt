@@ -10,9 +10,9 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.mai.nix.maiapp.ChooseGroupActivity
 import com.mai.nix.maiapp.DataLab
 import com.mai.nix.maiapp.R
+import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
 import com.mai.nix.maiapp.helpers.UserSettings
 import com.mai.nix.maiapp.helpers.UserSettings.getExamsUpdateFrequency
 import com.mai.nix.maiapp.helpers.UserSettings.getGroup
@@ -20,6 +20,7 @@ import com.mai.nix.maiapp.helpers.UserSettings.getSubjectsUpdateFrequency
 import com.mai.nix.maiapp.helpers.UserSettings.setExamsUpdateFrequency
 import com.mai.nix.maiapp.helpers.UserSettings.setGroup
 import com.mai.nix.maiapp.helpers.UserSettings.setSubjectsUpdateFrequency
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * Created by Nix on 03.08.2017.
@@ -65,12 +66,13 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         return i.toInt()
     }
 
+    @ExperimentalCoroutinesApi
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode != Activity.RESULT_OK) {
             return
         }
         if (requestCode == REQUEST_CODE_GROUP && data != null) {
-            chosenGroup = data.getStringExtra(ChooseGroupActivity.EXTRA_GROUP)
+            chosenGroup = data.getStringExtra(NewChooseGroupActivity.EXTRA_GROUP)
                     ?: throw Exception("No group found")
             setGroup(requireContext(), chosenGroup)
             groupPreference.summary = chosenGroup
@@ -78,10 +80,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         }
     }
 
+    @ExperimentalCoroutinesApi
     override fun onPreferenceClick(preference: Preference): Boolean {
         when (preference.key) {
             "pref_group" -> {
-                val i = ChooseGroupActivity.newIntent(activity, false)
+                val i = NewChooseGroupActivity.newIntent(requireContext(), false)
                 startActivityForResult(i, REQUEST_CODE_GROUP)
             }
             "clear_cache_subj" -> {

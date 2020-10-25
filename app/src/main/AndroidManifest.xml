@@ -27,11 +27,6 @@
             android:label="@string/title_activity_settings"
             android:theme="@style/AppThemeSecondary" />
         <activity
-            android:name=".ChooseGroupActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/choose_group_activity_title"
-            android:theme="@style/AppThemeSecondary" />
-        <activity
             android:name=".NewSplashActivity"
             android:noHistory="true"
             android:theme="@style/Splash"
