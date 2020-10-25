@@ -1,8 +1,8 @@
 package com.mai.nix.maiapp.navigation_fragments
 
 import androidx.viewpager2.widget.ViewPager2
-import com.mai.nix.maiapp.ChooseGroupScheduleFragment
-import com.mai.nix.maiapp.MyGroupScheduleSubjectsFragment
+import com.mai.nix.maiapp.SubjectsChooseGroupFragment
+import com.mai.nix.maiapp.SubjectsFragment
 import com.mai.nix.maiapp.TabsFragment
 import com.mai.nix.maiapp.ViewPagerAdapter
 
@@ -12,8 +12,8 @@ import com.mai.nix.maiapp.ViewPagerAdapter
 class ScheduleFragment : TabsFragment() {
     override fun setupViewPager(viewPager: ViewPager2) {
         val adapter = ViewPagerAdapter(requireActivity())
-        adapter.addFragment(MyGroupScheduleSubjectsFragment(), "Моё расписание")
-        adapter.addFragment(ChooseGroupScheduleFragment(), "Выбрать группу")
+        adapter.addFragment(SubjectsFragment(), "Моё расписание")
+        adapter.addFragment(SubjectsChooseGroupFragment(), "Выбрать группу")
         viewPager.adapter = adapter
     }
 }

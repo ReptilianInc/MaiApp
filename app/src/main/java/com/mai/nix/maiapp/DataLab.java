@@ -19,6 +19,7 @@ import static com.mai.nix.maiapp.database.SubjectsDbSchema.*;
  * Created by Nix on 28.08.2017.
  */
 
+@Deprecated
 public class DataLab {
     private static DataLab sDataLab;
     private Context mContext;
@@ -109,12 +110,12 @@ public class DataLab {
         try{
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                if(cursor.getBody().getUuid().equals(id)){
+                /*if(cursor.getBody().getUuid().equals(id)){
                     models.add(cursor.getBody());
                     cursor.moveToNext();
                 }else{
                     cursor.moveToNext();
-                }
+                }*/
             }
         }finally {
             //cursor.close();
@@ -133,14 +134,14 @@ public class DataLab {
     }
     private static ContentValues getHeadersContentValues(SubjectHeader header){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(HeadersTable.Cols.UUID, header.getUuid().toString());
+        //contentValues.put(HeadersTable.Cols.UUID, header.getUuid().toString());
         contentValues.put(HeadersTable.Cols.DATE, header.getDate());
         contentValues.put(HeadersTable.Cols.DAY, header.getDay());
         return contentValues;
     }
    private static ContentValues getBodiesContentValues(SubjectBody body){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(BodiesTable.Cols.HEADER_UUID, body.getUuid().toString());
+        //contentValues.put(BodiesTable.Cols.HEADER_UUID, body.getUuid().toString());
         contentValues.put(BodiesTable.Cols.TIME, body.getTime());
         contentValues.put(BodiesTable.Cols.TYPE, body.getType());
         contentValues.put(BodiesTable.Cols.TITLE, body.getTitle());

@@ -62,6 +62,7 @@
     <string name="cache_cath">Кэш</string>
     <string name="about_cath">О программе</string>
 
+    <string name="choose_week_space">Текущая неделя (кэш)</string>
     <string-array name="spinner_items">
         <item>Текущая неделя (кэш)</item>
         <item>1 неделя</item>

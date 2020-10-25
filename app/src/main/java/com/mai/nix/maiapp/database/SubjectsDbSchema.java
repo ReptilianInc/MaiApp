@@ -4,6 +4,7 @@ package com.mai.nix.maiapp.database;
  * Created by Nix on 30.08.2017.
  */
 
+@Deprecated
 public class SubjectsDbSchema {
     public static final class HeadersTable{
 

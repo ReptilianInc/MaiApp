@@ -93,6 +93,7 @@ class ExamsFragment : Fragment(), MVIEntity {
             examsViewModel.state.collect {
                 examsSwipeRefreshLayout.isRefreshing = it.loading
                 examAdapter.updateItems(it.exams)
+                examAdapter.notifyDataSetChanged()
                 if (!it.error.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
                 }

@@ -11,6 +11,7 @@ import com.mai.nix.maiapp.database.SubjectsDbSchema.HeadersTable;
  * Created by Nix on 28.08.2017.
  */
 
+@Deprecated
 public class CacheBaseHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;
     private static final String DATABASE_NAME = "cacheBase.db";

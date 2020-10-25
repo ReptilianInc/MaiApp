@@ -33,6 +33,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
+@Deprecated
 public class ChooseGroupActivity extends AppCompatActivity {
     private ListView mListView;
     private ArrayAdapter<String> mAdapter;

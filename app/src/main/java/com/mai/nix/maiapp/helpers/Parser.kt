@@ -1,10 +1,7 @@
 package com.mai.nix.maiapp.helpers
 
 import android.util.Log
-import com.mai.nix.maiapp.model.ExamModel
-import com.mai.nix.maiapp.model.ExpandableItemBody
-import com.mai.nix.maiapp.model.ExpandableItemHeader
-import com.mai.nix.maiapp.model.SimpleListModel
+import com.mai.nix.maiapp.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
@@ -12,6 +9,7 @@ import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
 import org.jsoup.nodes.TextNode
 import org.jsoup.select.Elements
+import java.util.ArrayList
 
 object Parser {
 
@@ -23,16 +21,18 @@ object Parser {
     private const val LIBRARIES = "libraries"
     private const val SPORT_SECTIONS = "sport_sections"
     private const val EXAMS = "exams"
+    private const val SUBJECTS = "subjects"
 
     private val links = mapOf(
-            GROUPS to "http://mai.ru/education/schedule/?department=",
-            ASSOCIATIONS to "http://www.mai.ru/life/associations/",
-            STUDENT_ORGANISATIONS to "http://www.mai.ru/life/join/index.php",
-            CAFES to "http://mai.ru/common/campus/cafeteria/",
-            BARRACKS to "http://mai.ru/common/campus/dormitory.php",
-            LIBRARIES to "http://mai.ru/common/campus/library/",
+            GROUPS to "https://mai.ru/education/schedule/?department=",
+            ASSOCIATIONS to "https://www.mai.ru/life/associations/",
+            STUDENT_ORGANISATIONS to "https://www.mai.ru/life/join/index.php",
+            CAFES to "https://mai.ru/common/campus/cafeteria/",
+            BARRACKS to "https://mai.ru/common/campus/dormitory.php",
+            LIBRARIES to "https://mai.ru/common/campus/library/",
             SPORT_SECTIONS to "http://www.mai.ru/life/sport/sections.php",
-            EXAMS to "http://mai.ru/education/schedule/session.php?group="
+            EXAMS to "https://mai.ru/education/schedule/session.php?group=",
+            SUBJECTS to "https://mai.ru/education/schedule/detail.php?group="
     )
 
     suspend fun parseGroups(facultyCode: String, currentCourse: String): List<String> {
@@ -226,5 +226,41 @@ object Parser {
             }
         }
         return exams
+    }
+
+    suspend fun parseSubjects(group: String, week: String = ""): List<SubjectHeader> {
+        val finalLink = links[SUBJECTS] + group + "&week=" + week
+        val subjects = mutableListOf<SubjectHeader>()
+        val doc = withContext(Dispatchers.IO) {
+            Jsoup.connect(finalLink).get()
+        }
+        val primaries = doc.select("div[class=sc-table sc-table-day]")
+        Log.d("parseSubjects() link = ", finalLink)
+        if (primaries.isNullOrEmpty()) {
+            return subjects
+        }
+        primaries.forEach {
+            var date = it.select("div[class=sc-table-col sc-day-header sc-gray]").text()
+            if (date.isEmpty()) {
+                date = it.select("div[class=sc-table-col sc-day-header sc-blue]").text()
+            }
+            val day = it.select("span[class=sc-day]").text()
+            val header = SubjectHeader(date, day)
+            val bodies = ArrayList<SubjectBody>()
+            val times = it.select("div[class=sc-table-col sc-item-time]")
+            val types = it.select("div[class=sc-table-col sc-item-type]")
+            val titles = it.select("span[class=sc-title]")
+            val teachers = it.select("div[class=sc-table-col sc-item-title]")
+            val rooms = it.select("div[class=sc-table-col sc-item-location]")
+            for (i in times.indices) {
+                val body = SubjectBody(titles[i].text(),
+                        teachers[i].select("span[class=sc-lecturer]").text(),
+                        types[i].text(), times[i].text(), rooms[i].text())
+                bodies.add(body)
+            }
+            header.children = bodies
+            subjects.add(header)
+        }
+        return subjects
     }
 }
