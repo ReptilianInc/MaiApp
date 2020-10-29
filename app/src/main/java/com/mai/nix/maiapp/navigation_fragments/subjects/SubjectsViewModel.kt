@@ -12,10 +12,10 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 @ExperimentalCoroutinesApi
-class SubjectsViewModel(private val subjectsRepository: SubjectsRepository): ViewModel() {
+class SubjectsViewModel(private val subjectsRepository: SubjectsRepository) : ViewModel() {
     val subjectsIntent = Channel<SubjectsIntent>(Channel.UNLIMITED)
 
-    private val _state = MutableStateFlow(SubjectsState(false, "", "", emptyList(), null))
+    private val _state = MutableStateFlow(SubjectsState(false, "", 0, emptyList(), null))
     val state: StateFlow<SubjectsState> get() = _state
 
     init {
@@ -25,20 +25,51 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository): Vie
     private fun handleIntent() {
         viewModelScope.launch {
             subjectsIntent.consumeAsFlow().collect {
-                when(it) {
-                    is SubjectsIntent.LoadSubjects  -> fetchSubjects(it.group, it.week)
+                when (it) {
+                    is SubjectsIntent.SetWeek -> setWeek(it.week)
+                    is SubjectsIntent.LoadSubjects -> fetchSubjects(it.group)
                 }
             }
         }
     }
 
-    private fun fetchSubjects(group: String, week: String) {
+    private fun setWeek(week: Int) {
         viewModelScope.launch {
-            _state.value = SubjectsState(true, group, week, emptyList(), null)
+            _state.value = SubjectsState(
+                    _state.value.loading,
+                    _state.value.group,
+                    week,
+                    _state.value.subjects,
+                    _state.value.error
+            )
+            if (_state.value.group.isNotEmpty()) fetchSubjects(_state.value.group)
+        }
+    }
+
+    private fun fetchSubjects(group: String) {
+        viewModelScope.launch {
+            _state.value = SubjectsState(
+                    true,
+                    group,
+                    _state.value.week,
+                    emptyList(),
+                    null
+            )
             _state.value = try {
-                SubjectsState(false, group, week, subjectsRepository.getSubjects(group, week), null)
+                SubjectsState(
+                        false,
+                        group,
+                        _state.value.week,
+                        subjectsRepository.getSubjects(group, if (_state.value.week != 0) _state.value.week.toString() else ""),
+                        null
+                )
             } catch (e: Exception) {
-                SubjectsState(false, group, week, emptyList(), e.localizedMessage)
+                SubjectsState(false,
+                        group,
+                        _state.value.week,
+                        emptyList(),
+                        e.localizedMessage
+                )
             }
         }
     }

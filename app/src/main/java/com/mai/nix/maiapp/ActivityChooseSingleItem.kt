@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.choose_groups.ItemsAdapter
@@ -19,6 +20,12 @@ class ActivityChooseSingleItem: AppCompatActivity(), ItemsAdapter.OnItemClickLis
             val intent = Intent(context, ActivityChooseSingleItem::class.java)
             intent.putExtra(ITEMS, items)
             context.startActivityForResult(intent, requestCode)
+        }
+
+        fun startActivity(context: AppCompatActivity, fragment: Fragment, items: Array<String>, requestCode: Int) {
+            val intent = Intent(context, ActivityChooseSingleItem::class.java)
+            intent.putExtra(ITEMS, items)
+            fragment.startActivityForResult(intent, requestCode)
         }
     }
 
@@ -36,11 +43,11 @@ class ActivityChooseSingleItem: AppCompatActivity(), ItemsAdapter.OnItemClickLis
     }
 
     private fun prepareRecyclerView(items: Array<String>) {
-        val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
-        linearLayoutManager.orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
+        val linearLayoutManager = LinearLayoutManager(this)
+        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         itemsList.layoutManager = linearLayoutManager
         itemsList.adapter = itemsAdapter
-        val dividerItemDecoration = androidx.recyclerview.widget.DividerItemDecoration(this, linearLayoutManager.orientation)
+        val dividerItemDecoration = DividerItemDecoration(this, linearLayoutManager.orientation)
         itemsList.addItemDecoration(dividerItemDecoration)
         itemsAdapter.items.addAll(items)
     }

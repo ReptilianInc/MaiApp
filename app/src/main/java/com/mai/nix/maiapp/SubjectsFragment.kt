@@ -1,10 +1,12 @@
 package com.mai.nix.maiapp
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -30,6 +32,10 @@ import java.util.*
 @ExperimentalCoroutinesApi
 class SubjectsFragment : Fragment(), MVIEntity {
 
+    companion object {
+        const val CHOOSE_WEEK_RESULT_CODE = 567
+    }
+
     private lateinit var subjectsViewModel: SubjectsViewModel
 
     private val adapter = SubjectsAdapter()
@@ -38,6 +44,26 @@ class SubjectsFragment : Fragment(), MVIEntity {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
+
+    private val weeks = arrayOf(
+            "Текущая неделя (кеш)",
+            "1 неделя",
+            "2 неделя",
+            "3 неделя",
+            "4 неделя",
+            "5 неделя",
+            "6 неделя",
+            "7 неделя",
+            "8 неделя",
+            "9 неделя",
+            "10 неделя",
+            "11 неделя",
+            "12 неделя",
+            "13 неделя",
+            "14 неделя",
+            "15 неделя",
+            "16 неделя"
+    )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_subjects_layout, container, false)
@@ -85,7 +111,7 @@ class SubjectsFragment : Fragment(), MVIEntity {
         setupViewModel()
         observeViewModel()
         chooseWeekButton.setOnClickListener {
-            //ActivityChooseSingleItem.startActivity(this, courses, NewChooseGroupActivity.COURSES_RESULT_CODE)
+            ActivityChooseSingleItem.startActivity(requireActivity() as AppCompatActivity, this, weeks, CHOOSE_WEEK_RESULT_CODE)
         }
         subjectsSwipeRefreshLayout.setOnRefreshListener {
             /*if (mSpinner.getSelectedItemPosition() != 0) {
@@ -108,7 +134,7 @@ class SubjectsFragment : Fragment(), MVIEntity {
                 subjectsSwipeRefreshLayout.isRefreshing = it.loading
                 adapter.updateItems(it.subjects)
                 adapter.notifyDataSetChanged()
-                chooseWeekButton.text = if (it.week.isEmpty()) requireActivity().getString(R.string.choose_week_space) else it.week
+                chooseWeekButton.text = weeks[it.week]
                 if (!it.error.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
                 }
@@ -122,7 +148,7 @@ class SubjectsFragment : Fragment(), MVIEntity {
 
     private fun load() {
         lifecycleScope.launch {
-            subjectsViewModel.subjectsIntent.send(SubjectsIntent.LoadSubjects(UserSettings.getGroup(requireContext())!!, ""))
+            subjectsViewModel.subjectsIntent.send(SubjectsIntent.LoadSubjects(UserSettings.getGroup(requireContext())!!))
         }
     }
 
@@ -148,6 +174,16 @@ class SubjectsFragment : Fragment(), MVIEntity {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.action_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == CHOOSE_WEEK_RESULT_CODE) {
+            val chosenIndex = data?.getIntExtra(ActivityChooseSingleItem.ITEMS_RESULT, 0) ?: 0
+            lifecycleScope.launch {
+                subjectsViewModel.subjectsIntent.send(SubjectsIntent.SetWeek(chosenIndex))
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

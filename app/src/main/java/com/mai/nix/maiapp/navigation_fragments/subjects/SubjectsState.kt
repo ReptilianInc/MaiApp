@@ -4,6 +4,6 @@ import com.mai.nix.maiapp.model.SubjectHeader
 
 data class SubjectsState(val loading: Boolean,
                          val group: String,
-                         val week: String,
+                         val week: Int,
                          val subjects: List<SubjectHeader>,
                          val error: String?)
