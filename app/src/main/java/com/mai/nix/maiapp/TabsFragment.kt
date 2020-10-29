@@ -18,7 +18,6 @@ abstract class TabsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         retainInstance = true
     }
 

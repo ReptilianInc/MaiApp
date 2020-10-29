@@ -139,6 +139,7 @@ class SubjectsChooseGroupFragment : Fragment(), MVIEntity {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
         inflater.inflate(R.menu.action_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }

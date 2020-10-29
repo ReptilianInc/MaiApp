@@ -1,5 +1,6 @@
 package com.mai.nix.maiapp.navigation_fragments.campus
 
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import androidx.viewpager2.widget.ViewPager2
@@ -17,7 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class CampusTabsFragment : TabsFragment() {
     @ExperimentalCoroutinesApi
     override fun setupViewPager(viewPager: ViewPager2) {
-        setHasOptionsMenu(false)
         val adapter = ViewPagerAdapter(requireActivity())
         adapter.addFragment(BarracksFragment(), "Общежития")
         adapter.addFragment(LibrariesFragment(), "Библиотека")
@@ -26,8 +26,12 @@ class CampusTabsFragment : TabsFragment() {
         viewPager.adapter = adapter
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
         menu.clear()
     }
 }
