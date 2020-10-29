@@ -28,6 +28,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository) : Vi
                 when (it) {
                     is SubjectsIntent.SetWeek -> setWeek(it.week)
                     is SubjectsIntent.LoadSubjects -> fetchSubjects(it.group)
+                    is SubjectsIntent.SetGroup -> setGroup(it.group)
                 }
             }
         }
@@ -43,6 +44,19 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository) : Vi
                     _state.value.error
             )
             if (_state.value.group.isNotEmpty()) fetchSubjects(_state.value.group)
+        }
+    }
+
+    private fun setGroup(group: String) {
+        viewModelScope.launch {
+            _state.value = SubjectsState(
+                    _state.value.loading,
+                    group,
+                    state.value.week,
+                    _state.value.subjects,
+                    _state.value.error
+            )
+            fetchSubjects(_state.value.group)
         }
     }
 

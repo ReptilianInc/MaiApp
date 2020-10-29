@@ -5,19 +5,60 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
+import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsAdapter
+import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsIntent
+import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsViewModel
+import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsViewModelFactory
 import kotlinx.android.synthetic.main.fragment_subjects_layout.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /**
  * Created by Nix on 01.08.2017.
  */
 
 @ExperimentalCoroutinesApi
-class SubjectsChooseGroupFragment : Fragment() {
+class SubjectsChooseGroupFragment : Fragment(), MVIEntity {
+
+    companion object {
+        const val CHOOSE_WEEK_RESULT_CODE = 567
+        const val CHOOSE_GROUP_RESULT_CODE = 568
+    }
+
+    private lateinit var subjectsViewModel: SubjectsViewModel
+
+    private val adapter = SubjectsAdapter()
+
+    private val weeks = arrayOf(
+            "Текущая неделя",
+            "1 неделя",
+            "2 неделя",
+            "3 неделя",
+            "4 неделя",
+            "5 неделя",
+            "6 неделя",
+            "7 неделя",
+            "8 неделя",
+            "9 неделя",
+            "10 неделя",
+            "11 неделя",
+            "12 неделя",
+            "13 неделя",
+            "14 неделя",
+            "15 неделя",
+            "16 неделя"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,27 +71,64 @@ class SubjectsChooseGroupFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        prepareRecyclerView()
+        setupViewModel()
+        observeViewModel()
         chooseGroupButton.visibility = View.VISIBLE
         chooseGroupButton.setOnClickListener {
-            requireActivity().startActivityForResult(NewChooseGroupActivity.newIntent(requireContext(), false), REQUEST_CODE_GROUP)
+            startActivityForResult(NewChooseGroupActivity.newIntent(requireContext(), true), CHOOSE_GROUP_RESULT_CODE)
         }
         chooseWeekButton.setOnClickListener {
-            //ActivityChooseSingleItem.startActivity(this, courses, NewChooseGroupActivity.COURSES_RESULT_CODE)
+            ActivityChooseSingleItem.startActivity(requireActivity() as AppCompatActivity, this, weeks, CHOOSE_WEEK_RESULT_CODE)
         }
         subjectsSwipeRefreshLayout.setOnRefreshListener {
 
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode != Activity.RESULT_OK) {
-            return
-        }
-        if (requestCode == REQUEST_CODE_GROUP) {
-            if (data == null) {
-                return
-            }
+    private fun prepareRecyclerView() {
+        val linearLayoutManager = LinearLayoutManager(requireContext())
+        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        subjectsRecyclerView.layoutManager = linearLayoutManager
+        subjectsRecyclerView.adapter = adapter
+        val dividerItemDecoration = DividerItemDecoration(requireContext(), linearLayoutManager.orientation)
+        subjectsRecyclerView.addItemDecoration(dividerItemDecoration)
+    }
 
+    override fun observeViewModel() {
+        lifecycleScope.launch {
+            subjectsViewModel.state.collect {
+                subjectsViewModel.state.collect {
+                    subjectsSwipeRefreshLayout.isRefreshing = it.loading
+                    adapter.updateItems(it.subjects)
+                    adapter.notifyDataSetChanged()
+                    chooseWeekButton.text = weeks[it.week]
+                    if (!it.error.isNullOrEmpty()) {
+                        Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun setupViewModel() {
+        subjectsViewModel = ViewModelProviders.of(this, SubjectsViewModelFactory()).get(SubjectsViewModel::class.java)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == CHOOSE_WEEK_RESULT_CODE) {
+                val chosenIndex = data?.getIntExtra(ActivityChooseSingleItem.ITEMS_RESULT, 0) ?: 0
+                lifecycleScope.launch {
+                    subjectsViewModel.subjectsIntent.send(SubjectsIntent.SetWeek(chosenIndex))
+                }
+            } else if (requestCode == CHOOSE_GROUP_RESULT_CODE) {
+                val chosenGroup = data?.getStringExtra(NewChooseGroupActivity.EXTRA_GROUP)?: ""
+                lifecycleScope.launch {
+                    subjectsViewModel.subjectsIntent.send(SubjectsIntent.SetGroup(chosenGroup))
+                }
+            }
         }
     }
 
@@ -78,9 +156,5 @@ class SubjectsChooseGroupFragment : Fragment() {
             //customTabsIntent.launchUrl(requireContext(), Uri.parse(mLinkMain + mSelectedGroup + PLUS_WEEK + ChosenWeek))
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-        private const val REQUEST_CODE_GROUP = 0
     }
 }
