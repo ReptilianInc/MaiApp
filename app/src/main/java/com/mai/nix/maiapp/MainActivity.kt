@@ -17,10 +17,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     private var retainFragment: Fragment? = null
+    private var currentTitle = "Расписание пар"
 
     private var selectedItemId = -999
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (savedInstanceState != null) currentTitle = savedInstanceState.getString(CURRENT_TOOLBAR_TITLE)?: ""
         setContentView(R.layout.activity_main)
         setSupportActionBar(mainToolbar)
 
@@ -48,11 +50,12 @@ class MainActivity : AppCompatActivity() {
                     .add(R.id.mainFragmentHost, retainFragment!!, CURRENT_FRAGMENT_TAG)
                     .commit()
         }
-
+        supportActionBar?.title = currentTitle
     }
 
     private fun setFragment(title: String, fragment: Fragment) {
-        supportActionBar?.title = title
+        currentTitle = title
+        supportActionBar?.title = currentTitle
 
         supportFragmentManager.beginTransaction()
                 .remove(retainFragment!!)
@@ -74,13 +77,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
         outState.putInt(SELECTED_ITEM_ID, selectedItemId)
+        outState.putString(CURRENT_TOOLBAR_TITLE, currentTitle)
     }
 
     companion object {
         private const val SELECTED_ITEM_ID = "selected_item_id"
+        private const val CURRENT_TOOLBAR_TITLE = "current_toolbar_title"
         private const val CURRENT_FRAGMENT_TAG = "current_fragment_tag"
     }
 }
