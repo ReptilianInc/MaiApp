@@ -2,6 +2,7 @@ package com.mai.nix.maiapp
 
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
@@ -30,7 +31,7 @@ import java.util.*
  */
 
 @ExperimentalCoroutinesApi
-class SubjectsFragment : Fragment(), MVIEntity {
+class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenceChangeListener {
 
     companion object {
         const val CHOOSE_WEEK_RESULT_CODE = 567
@@ -62,7 +63,13 @@ class SubjectsFragment : Fragment(), MVIEntity {
             "13 неделя",
             "14 неделя",
             "15 неделя",
-            "16 неделя"
+            "16 неделя",
+            "17 неделя",
+            "18 неделя",
+            "19 неделя",
+            "20 неделя",
+            "21 неделя",
+            "22 неделя"
     )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -104,6 +111,7 @@ class SubjectsFragment : Fragment(), MVIEntity {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UserSettings.registerListener(this)
         val mCalendar = GregorianCalendar()
         val mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH)
         val mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH)
@@ -127,6 +135,14 @@ class SubjectsFragment : Fragment(), MVIEntity {
         load()
     }
 
+    override fun onSharedPreferenceChanged(p0: SharedPreferences?, p1: String?) {
+        load()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        UserSettings.unregisterListener(this)
+    }
 
     override fun observeViewModel() {
         lifecycleScope.launch {

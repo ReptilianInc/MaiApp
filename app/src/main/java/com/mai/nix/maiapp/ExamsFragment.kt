@@ -1,6 +1,7 @@
 package com.mai.nix.maiapp
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
@@ -28,7 +29,7 @@ import java.util.*
  */
 
 @ExperimentalCoroutinesApi
-class ExamsFragment : Fragment(), MVIEntity {
+class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var examsViewModel: ExamsViewModel
 
@@ -64,6 +65,7 @@ class ExamsFragment : Fragment(), MVIEntity {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UserSettings.registerListener(this)
         val mCalendar = GregorianCalendar()
         val mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH)
         val mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH)
@@ -80,6 +82,15 @@ class ExamsFragment : Fragment(), MVIEntity {
         examsSwipeRefreshLayout.setOnRefreshListener {
             examsSwipeRefreshLayout.isRefreshing = true
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        UserSettings.unregisterListener(this)
+    }
+
+    override fun onSharedPreferenceChanged(p0: SharedPreferences?, p1: String?) {
+        load()
     }
 
     private fun load() {

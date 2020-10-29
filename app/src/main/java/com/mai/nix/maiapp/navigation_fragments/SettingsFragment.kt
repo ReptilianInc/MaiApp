@@ -37,7 +37,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.app_prefs, rootKey)
-        dataLab = DataLab.get(activity)
         groupPreference = findPreference("pref_group")!!
         val clearSubjectsCache = findPreference<Preference>("clear_cache_subj")
         val clearExamsCache = findPreference<Preference>("clear_cache_ex")
@@ -68,11 +67,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
     @ExperimentalCoroutinesApi
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode != Activity.RESULT_OK) {
-            return
-        }
-        if (requestCode == REQUEST_CODE_GROUP && data != null) {
-            chosenGroup = data.getStringExtra(NewChooseGroupActivity.EXTRA_GROUP)
+        if (requestCode == REQUEST_CODE_GROUP && resultCode == Activity.RESULT_OK) {
+            chosenGroup = data?.getStringExtra(NewChooseGroupActivity.EXTRA_GROUP)
                     ?: throw Exception("No group found")
             setGroup(requireContext(), chosenGroup)
             groupPreference.summary = chosenGroup
@@ -84,7 +80,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     override fun onPreferenceClick(preference: Preference): Boolean {
         when (preference.key) {
             "pref_group" -> {
-                val i = NewChooseGroupActivity.newIntent(requireContext(), false)
+                val i = NewChooseGroupActivity.newIntent(requireContext(), true)
                 startActivityForResult(i, REQUEST_CODE_GROUP)
             }
             "clear_cache_subj" -> {

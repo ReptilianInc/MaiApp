@@ -41,7 +41,7 @@ class SubjectsChooseGroupFragment : Fragment(), MVIEntity {
     private val adapter = SubjectsAdapter()
 
     private val weeks = arrayOf(
-            "Текущая неделя",
+            "Текущая неделя (кеш)",
             "1 неделя",
             "2 неделя",
             "3 неделя",
@@ -57,7 +57,13 @@ class SubjectsChooseGroupFragment : Fragment(), MVIEntity {
             "13 неделя",
             "14 неделя",
             "15 неделя",
-            "16 неделя"
+            "16 неделя",
+            "17 неделя",
+            "18 неделя",
+            "19 неделя",
+            "20 неделя",
+            "21 неделя",
+            "22 неделя"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

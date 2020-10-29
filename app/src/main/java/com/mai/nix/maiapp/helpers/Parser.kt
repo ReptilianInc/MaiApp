@@ -206,10 +206,12 @@ object Parser {
     }
 
     suspend fun parseExams(group: String): List<ExamModel> {
+        val finalLink = links[EXAMS] + group
         val exams = mutableListOf<ExamModel>()
         val doc = withContext(Dispatchers.IO) {
-            Jsoup.connect(links[EXAMS] + group).get()
+            Jsoup.connect(finalLink).get()
         }
+        Log.d("parseExams() link = ", finalLink)
         val date = doc.select("div[class=sc-table-col sc-day-header sc-gray]")
         val day = doc.select("span[class=sc-day]")
         val container = doc.select("div[class=sc-table-col sc-table-detail-container]")
@@ -234,8 +236,8 @@ object Parser {
         val doc = withContext(Dispatchers.IO) {
             Jsoup.connect(finalLink).get()
         }
-        val primaries = doc.select("div[class=sc-table sc-table-day]")
         Log.d("parseSubjects() link = ", finalLink)
+        val primaries = doc.select("div[class=sc-table sc-table-day]")
         if (primaries.isNullOrEmpty()) {
             return subjects
         }

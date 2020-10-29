@@ -27,6 +27,16 @@ object UserSettings {
     }
 
     @JvmStatic
+    fun registerListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        sSharedPreferences?.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    @JvmStatic
+    fun unregisterListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        sSharedPreferences?.unregisterOnSharedPreferenceChangeListener(listener)
+    }
+
+    @JvmStatic
     fun getGroup(context: Context): String? {
         return sSharedPreferences?.getString(context.getString(R.string.pref_group), null)
     }

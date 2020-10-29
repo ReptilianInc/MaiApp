@@ -16,11 +16,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    //@JvmField
-    //var subjectsNeedToUpdate = false
-
-    //@JvmField
-    //var examsNeedToUpdate = false
     private var retainFragment: Fragment? = null
 
     private var selectedItemId = -999
@@ -75,18 +70,7 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_sch_ex -> setFragment("Расписание сессии", ExamScheduleFragment())
             R.id.menu_campus -> setFragment("Кампус", CampusTabsFragment())
             R.id.life -> setFragment("Жизнь", LifeTabFragment())
-            R.id.menu_settings -> {
-                val intent = Intent(this@MainActivity, SettingsActivity::class.java)
-                startActivityForResult(intent, UPDATE_SCHEDULE)
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == UPDATE_SCHEDULE) {
-            //subjectsNeedToUpdate = true
-            //examsNeedToUpdate = true
+            R.id.menu_settings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
         }
     }
 
@@ -96,7 +80,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val UPDATE_SCHEDULE = 69
         private const val SELECTED_ITEM_ID = "selected_item_id"
         private const val CURRENT_FRAGMENT_TAG = "current_fragment_tag"
     }
