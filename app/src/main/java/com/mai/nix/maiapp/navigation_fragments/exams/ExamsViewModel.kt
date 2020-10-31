@@ -1,7 +1,10 @@
 package com.mai.nix.maiapp.navigation_fragments.exams
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.mai.nix.maiapp.MaiApp
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +15,7 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 @ExperimentalCoroutinesApi
-class ExamsViewModel(private val examsRepository: ExamsRepository) : ViewModel() {
+class ExamsViewModel(private val examsRepository: ExamsRepository, application: Application) : AndroidViewModel(application) {
     val examsIntent = Channel<ExamsIntent>(Channel.UNLIMITED)
 
     private val _state = MutableStateFlow(ExamsState(false, emptyList(), null))
@@ -25,7 +28,7 @@ class ExamsViewModel(private val examsRepository: ExamsRepository) : ViewModel()
     private fun handleIntent() {
         viewModelScope.launch {
             examsIntent.consumeAsFlow().collect {
-                when(it) {
+                when (it) {
                     is ExamsIntent.LoadExams -> fetchExams(it.group)
                 }
             }
@@ -34,11 +37,20 @@ class ExamsViewModel(private val examsRepository: ExamsRepository) : ViewModel()
 
     private fun fetchExams(group: String) {
         viewModelScope.launch {
-            _state.value = ExamsState(true, emptyList(), null)
-            _state.value = try {
-                ExamsState(false, examsRepository.getExams(group), null)
-            } catch (e: Exception) {
-                ExamsState(false, emptyList(), e.localizedMessage)
+            val exams = examsRepository.getExamsDb(getApplication())
+            if (exams.isNotEmpty()) {
+                Log.d("Exams", "db is not empty")
+                _state.value = ExamsState(false, exams, null)
+            } else {
+                Log.d("Exams", "db is empty")
+                _state.value = ExamsState(true, emptyList(), null)
+                try {
+                    val exams1 = examsRepository.getExamsWeb(group)
+                    _state.value = ExamsState(false, exams1, null)
+                    getApplication<MaiApp>().getDatabase().examDao.insertExams(exams1)
+                } catch (e: Exception) {
+                    _state.value = ExamsState(false, emptyList(), e.localizedMessage)
+                }
             }
         }
     }

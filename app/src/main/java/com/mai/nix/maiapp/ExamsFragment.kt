@@ -1,5 +1,6 @@
 package com.mai.nix.maiapp
 
+import android.app.Application
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
@@ -113,7 +114,7 @@ class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenc
     }
 
     override fun setupViewModel() {
-        examsViewModel = ViewModelProviders.of(this, ExamsViewModelFactory()).get(ExamsViewModel::class.java)
+        examsViewModel = ViewModelProviders.of(this, ExamsViewModelFactory(requireContext().applicationContext as Application)).get(ExamsViewModel::class.java)
     }
 
     override fun onResume() {

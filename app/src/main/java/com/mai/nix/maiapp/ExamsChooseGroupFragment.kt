@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.content.Intent
 import android.widget.Toast
 import android.app.Activity
+import android.app.Application
 import android.net.Uri
 import android.view.*
 import androidx.browser.customtabs.CustomTabsIntent
@@ -89,7 +90,7 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
     }
 
     override fun setupViewModel() {
-        examsViewModel = ViewModelProviders.of(this, ExamsViewModelFactory()).get(ExamsViewModel::class.java)
+        examsViewModel = ViewModelProviders.of(this, ExamsViewModelFactory(requireContext().applicationContext as Application)).get(ExamsViewModel::class.java)
     }
 
     private fun prepareRecyclerView() {

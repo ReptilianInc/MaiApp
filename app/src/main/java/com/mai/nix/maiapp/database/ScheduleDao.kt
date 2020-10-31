@@ -19,7 +19,7 @@ interface ScheduleDao {
 
     suspend fun addAll(schedules: List<Schedule>) {
         schedules.forEach { schedule ->
-            val id = insertDay(schedule.day!!)
+            val id = insertDay(schedule.day?: throw Exception("Schedule day is NULL"))
             schedule.subjects?.forEach {
                 it.dayId = id
                 insertSubject(it)

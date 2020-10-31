@@ -18,12 +18,12 @@ public class DatabaseCursorWrapper extends CursorWrapper {
     }
     public ExamModel getExam(){
         ExamModel examModel = new ExamModel();
-        examModel.setDate(getString(getColumnIndex(ExamTable.Cols.DATE)));
-        examModel.setDay(getString(getColumnIndex(ExamTable.Cols.DAY)));
-        examModel.setTime(getString(getColumnIndex(ExamTable.Cols.TIME)));
-        examModel.setTitle(getString(getColumnIndex(ExamTable.Cols.TITLE)));
-        examModel.setTeacher(getString(getColumnIndex(ExamTable.Cols.TEACHER)));
-        examModel.setRoom(getString(getColumnIndex(ExamTable.Cols.ROOM)));
+        //examModel.setDate(getString(getColumnIndex(ExamTable.Cols.DATE)));
+        //examModel.setDay(getString(getColumnIndex(ExamTable.Cols.DAY)));
+        //examModel.setTime(getString(getColumnIndex(ExamTable.Cols.TIME)));
+        //examModel.setTitle(getString(getColumnIndex(ExamTable.Cols.TITLE)));
+        //examModel.setTeacher(getString(getColumnIndex(ExamTable.Cols.TEACHER)));
+        //examModel.setRoom(getString(getColumnIndex(ExamTable.Cols.ROOM)));
         return examModel;
     }
     public Day getHeader(){

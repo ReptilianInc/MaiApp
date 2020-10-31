@@ -14,11 +14,11 @@ class ExamsAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     fun updateItems(items: List<ExamModel>) {
         exams.clear()
-        exams.addAll(exams)
+        exams.addAll(items)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.view_group_choose_preference_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.view_exam_list_item, parent, false)
         return ExamsViewHolder(view)
     }
 
