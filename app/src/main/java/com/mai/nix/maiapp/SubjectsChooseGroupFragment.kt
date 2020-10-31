@@ -1,8 +1,8 @@
 package com.mai.nix.maiapp
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -106,7 +106,7 @@ class SubjectsChooseGroupFragment : Fragment(), MVIEntity {
             subjectsViewModel.state.collect {
                 subjectsViewModel.state.collect {
                     subjectsSwipeRefreshLayout.isRefreshing = it.loading
-                    adapter.updateItems(it.subjects)
+                    adapter.updateItems(it.schedules)
                     adapter.notifyDataSetChanged()
                     chooseWeekButton.text = weeks[it.week]
                     if (!it.error.isNullOrEmpty()) {
@@ -118,7 +118,7 @@ class SubjectsChooseGroupFragment : Fragment(), MVIEntity {
     }
 
     override fun setupViewModel() {
-        subjectsViewModel = ViewModelProviders.of(this, SubjectsViewModelFactory()).get(SubjectsViewModel::class.java)
+        subjectsViewModel = ViewModelProviders.of(this, SubjectsViewModelFactory(requireContext().applicationContext as Application)).get(SubjectsViewModel::class.java)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

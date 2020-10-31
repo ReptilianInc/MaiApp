@@ -1,19 +1,21 @@
 package com.mai.nix.maiapp.navigation_fragments.subjects
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mai.nix.maiapp.R
-import com.mai.nix.maiapp.model.SubjectHeader
+import com.mai.nix.maiapp.model.Day
+import com.mai.nix.maiapp.model.Schedule
 import kotlinx.android.synthetic.main.view_subjects_list_item.view.*
 
 class SubjectsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val subjects = mutableListOf<SubjectHeader>()
+    private val subjects = mutableListOf<Schedule>()
 
-    fun updateItems(items: List<SubjectHeader>) {
+    fun updateItems(items: List<Schedule>) {
         subjects.clear()
         subjects.addAll(items)
     }
@@ -32,10 +34,11 @@ class SubjectsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     inner class SubjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindItem(subjectHeader: SubjectHeader) {
-            itemView.subjectDate.text = subjectHeader.date
-            itemView.subjectDay.text = subjectHeader.day
-            subjectHeader.children.forEach {
+        @SuppressLint("InflateParams")
+        fun bindItem(schedule: Schedule) {
+            itemView.subjectDate.text = schedule.day?.date
+            itemView.subjectDay.text = schedule.day?.day
+            schedule.subjects?.forEach {
                 val childView = LayoutInflater.from(itemView.context).inflate(R.layout.view_subjects_list_child_item, null)
                 childView.findViewById<TextView>(R.id.subjectTime).text = it.time
                 childView.findViewById<TextView>(R.id.subjectRoom).text = it.room

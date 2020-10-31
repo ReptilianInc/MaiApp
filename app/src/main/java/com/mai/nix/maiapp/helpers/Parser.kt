@@ -230,16 +230,16 @@ object Parser {
         return exams
     }
 
-    suspend fun parseSubjects(group: String, week: String = ""): List<SubjectHeader> {
+    suspend fun parseSubjects(group: String, week: String = ""): List<Schedule> {
         val finalLink = links[SUBJECTS] + group + "&week=" + week
-        val subjects = mutableListOf<SubjectHeader>()
+        val schedules = mutableListOf<Schedule>()
         val doc = withContext(Dispatchers.IO) {
             Jsoup.connect(finalLink).get()
         }
         Log.d("parseSubjects() link = ", finalLink)
         val primaries = doc.select("div[class=sc-table sc-table-day]")
         if (primaries.isNullOrEmpty()) {
-            return subjects
+            return schedules
         }
         primaries.forEach {
             var date = it.select("div[class=sc-table-col sc-day-header sc-gray]").text()
@@ -247,22 +247,23 @@ object Parser {
                 date = it.select("div[class=sc-table-col sc-day-header sc-blue]").text()
             }
             val day = it.select("span[class=sc-day]").text()
-            val header = SubjectHeader(date, day)
-            val bodies = ArrayList<SubjectBody>()
+            val schedule = Schedule()
+            schedule.day = Day(date, day)
+            val subjects = ArrayList<Subject>()
             val times = it.select("div[class=sc-table-col sc-item-time]")
             val types = it.select("div[class=sc-table-col sc-item-type]")
             val titles = it.select("span[class=sc-title]")
             val teachers = it.select("div[class=sc-table-col sc-item-title]")
             val rooms = it.select("div[class=sc-table-col sc-item-location]")
             for (i in times.indices) {
-                val body = SubjectBody(titles[i].text(),
+                val body = Subject(titles[i].text(),
                         teachers[i].select("span[class=sc-lecturer]").text(),
                         types[i].text(), times[i].text(), rooms[i].text())
-                bodies.add(body)
+                subjects.add(body)
             }
-            header.children = bodies
-            subjects.add(header)
+            schedule.subjects = subjects
+            schedules.add(schedule)
         }
-        return subjects
+        return schedules
     }
 }

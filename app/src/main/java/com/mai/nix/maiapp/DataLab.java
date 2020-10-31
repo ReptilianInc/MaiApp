@@ -8,8 +8,8 @@ import com.mai.nix.maiapp.database.CacheBaseHelper;
 import com.mai.nix.maiapp.database.DatabaseCursorWrapper;
 import com.mai.nix.maiapp.database.ExamDbSchema.ExamTable;
 import com.mai.nix.maiapp.model.ExamModel;
-import com.mai.nix.maiapp.model.SubjectBody;
-import com.mai.nix.maiapp.model.SubjectHeader;
+import com.mai.nix.maiapp.model.Subject;
+import com.mai.nix.maiapp.model.Day;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -39,12 +39,12 @@ public class DataLab {
         ContentValues contentValues = getExamContentValues(model);
         mDatabase.insert(ExamTable.NAME, null, contentValues);
     }
-    public void addHeader(SubjectHeader model){
+    public void addHeader(Day model){
         ContentValues contentValues = getHeadersContentValues(model);
         mDatabase.insert(HeadersTable.NAME, null, contentValues);
     }
-    public void addBodies(List<SubjectBody> models){
-        for(SubjectBody body : models){
+    public void addBodies(List<Subject> models){
+        for(Subject body : models){
             ContentValues c = getBodiesContentValues(body);
             mDatabase.insert(BodiesTable.NAME, null, c);
         }
@@ -91,8 +91,8 @@ public class DataLab {
             return true;
         }
     }
-    public ArrayList<SubjectHeader> getHeaders(){
-        ArrayList<SubjectHeader> models = new ArrayList<>();
+    public ArrayList<Day> getHeaders(){
+        ArrayList<Day> models = new ArrayList<>();
         DatabaseCursorWrapper cursor = queryHeaders(null, null);
         try{
             cursor.moveToFirst();
@@ -104,8 +104,8 @@ public class DataLab {
         }
         return models;
     }
-    public ArrayList<SubjectBody> getBodies(UUID id){
-        ArrayList<SubjectBody> models = new ArrayList<>();
+    public ArrayList<Subject> getBodies(UUID id){
+        ArrayList<Subject> models = new ArrayList<>();
         DatabaseCursorWrapper cursor = queryBodies(null, null);
         try{
             cursor.moveToFirst();
@@ -132,14 +132,14 @@ public class DataLab {
         contentValues.put(ExamTable.Cols.ROOM, model.getRoom());
         return contentValues;
     }
-    private static ContentValues getHeadersContentValues(SubjectHeader header){
+    private static ContentValues getHeadersContentValues(Day header){
         ContentValues contentValues = new ContentValues();
         //contentValues.put(HeadersTable.Cols.UUID, header.getUuid().toString());
         contentValues.put(HeadersTable.Cols.DATE, header.getDate());
         contentValues.put(HeadersTable.Cols.DAY, header.getDay());
         return contentValues;
     }
-   private static ContentValues getBodiesContentValues(SubjectBody body){
+   private static ContentValues getBodiesContentValues(Subject body){
         ContentValues contentValues = new ContentValues();
         //contentValues.put(BodiesTable.Cols.HEADER_UUID, body.getUuid().toString());
         contentValues.put(BodiesTable.Cols.TIME, body.getTime());

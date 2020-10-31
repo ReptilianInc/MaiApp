@@ -1,9 +1,9 @@
 package com.mai.nix.maiapp
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -148,7 +148,7 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
         lifecycleScope.launch {
             subjectsViewModel.state.collect {
                 subjectsSwipeRefreshLayout.isRefreshing = it.loading
-                adapter.updateItems(it.subjects)
+                adapter.updateItems(it.schedules)
                 adapter.notifyDataSetChanged()
                 chooseWeekButton.text = weeks[it.week]
                 if (!it.error.isNullOrEmpty()) {
@@ -159,7 +159,7 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
     }
 
     override fun setupViewModel() {
-        subjectsViewModel = ViewModelProviders.of(this, SubjectsViewModelFactory()).get(SubjectsViewModel::class.java)
+        subjectsViewModel = ViewModelProviders.of(this, SubjectsViewModelFactory(requireContext().applicationContext as Application)).get(SubjectsViewModel::class.java)
     }
 
     private fun load() {

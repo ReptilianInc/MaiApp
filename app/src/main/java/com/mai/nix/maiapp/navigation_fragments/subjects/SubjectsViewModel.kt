@@ -1,6 +1,7 @@
 package com.mai.nix.maiapp.navigation_fragments.subjects
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 @ExperimentalCoroutinesApi
-class SubjectsViewModel(private val subjectsRepository: SubjectsRepository) : ViewModel() {
+class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app: Application) : AndroidViewModel(app) {
     val subjectsIntent = Channel<SubjectsIntent>(Channel.UNLIMITED)
 
     private val _state = MutableStateFlow(SubjectsState(false, "", 0, emptyList(), null))
@@ -40,7 +41,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository) : Vi
                     _state.value.loading,
                     _state.value.group,
                     week,
-                    _state.value.subjects,
+                    _state.value.schedules,
                     _state.value.error
             )
             if (_state.value.group.isNotEmpty()) fetchSubjects(_state.value.group)
@@ -53,7 +54,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository) : Vi
                     _state.value.loading,
                     group,
                     state.value.week,
-                    _state.value.subjects,
+                    _state.value.schedules,
                     _state.value.error
             )
             fetchSubjects(_state.value.group)
