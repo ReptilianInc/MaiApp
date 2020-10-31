@@ -152,7 +152,7 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
                 adapter.notifyDataSetChanged()
                 chooseWeekButton.text = weeks[it.week]
                 if (!it.error.isNullOrEmpty()) {
-                    Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), it.error, Toast.LENGTH_SHORT).show()
                 }
             }
         }

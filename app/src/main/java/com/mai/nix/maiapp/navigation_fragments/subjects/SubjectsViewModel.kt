@@ -1,8 +1,10 @@
 package com.mai.nix.maiapp.navigation_fragments.subjects
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.mai.nix.maiapp.MaiApp
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,29 +64,40 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
     }
 
     private fun fetchSubjects(group: String) {
-        viewModelScope.launch {
-            _state.value = SubjectsState(
-                    true,
-                    group,
-                    _state.value.week,
-                    emptyList(),
-                    null
-            )
-            _state.value = try {
-                SubjectsState(
-                        false,
-                        group,
-                        _state.value.week,
-                        subjectsRepository.getSubjects(group, if (_state.value.week != 0) _state.value.week.toString() else ""),
-                        null
-                )
-            } catch (e: Exception) {
-                SubjectsState(false,
-                        group,
-                        _state.value.week,
-                        emptyList(),
-                        e.localizedMessage
-                )
+        if (_state.value.week == 0) {
+            viewModelScope.launch {
+                val data = subjectsRepository.getSubjectsDb(getApplication())
+                if (data.isNotEmpty()) {
+                    Log.d("subjects", "db is not empty")
+                    _state.value = SubjectsState(false, group, _state.value.week, data, null)
+                } else {
+                    Log.d("subjects", "db is empty")
+                    _state.value = SubjectsState(
+                            true,
+                            group,
+                            _state.value.week,
+                            emptyList(),
+                            null
+                    )
+                    try {
+                        val dataWeb = subjectsRepository.getSubjectsWeb(group, if (_state.value.week != 0) _state.value.week.toString() else "")
+                        _state.value = SubjectsState(
+                                false,
+                                group,
+                                _state.value.week,
+                                dataWeb,
+                                null
+                        )
+                        getApplication<MaiApp>().getDatabase().scheduleDao.addAll(dataWeb)
+                    } catch (e: Exception) {
+                        _state.value = SubjectsState(false,
+                                group,
+                                _state.value.week,
+                                emptyList(),
+                                e.localizedMessage
+                        )
+                    }
+                }
             }
         }
     }

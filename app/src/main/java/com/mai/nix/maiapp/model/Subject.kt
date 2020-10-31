@@ -16,7 +16,7 @@ data class Subject(
         val room: String,
         @PrimaryKey(autoGenerate = true)
         val id: Long = 0,
-        val dayId: Long = 0) {
+        var dayId: Long = 0) {
 
     constructor() : this("", "", "", "", "")
 }
