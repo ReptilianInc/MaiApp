@@ -1,8 +1,10 @@
 package com.mai.nix.maiapp.simple_list_fragments
 
+import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mai.nix.maiapp.R
 import com.mai.nix.maiapp.model.SimpleListModel
@@ -32,7 +34,13 @@ class SimpleListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun bindItem(simpleListModel: SimpleListModel) {
             itemView.title.text = simpleListModel.title
             itemView.leader.text = simpleListModel.leader
-            itemView.address.text = simpleListModel.address
+            if (simpleListModel.address.isNullOrEmpty()) {
+                itemView.address.visibility = View.GONE
+            } else {
+                val html = HtmlCompat.fromHtml(simpleListModel.address, HtmlCompat.FROM_HTML_MODE_LEGACY).trim()
+                if (html.length > 1) itemView.address.text = html else itemView.address.visibility = View.GONE
+                if (html.contains("https")) Linkify.addLinks(itemView.address, Linkify.ALL)
+            }
             if (simpleListModel.phone.isNullOrEmpty()) {
                 itemView.phone.visibility = View.GONE
             } else {

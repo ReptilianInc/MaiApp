@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_abstract_list.*
@@ -39,7 +38,5 @@ abstract class ListFragment: Fragment(), MVIEntity {
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         abstractListView.layoutManager = LinearLayoutManager(requireContext())
         abstractListView.adapter = adapter
-        val dividerItemDecoration = DividerItemDecoration(requireContext(), linearLayoutManager.orientation)
-        abstractListView.addItemDecoration(dividerItemDecoration)
     }
 }

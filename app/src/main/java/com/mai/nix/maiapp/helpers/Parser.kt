@@ -9,7 +9,7 @@ import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
 import org.jsoup.nodes.TextNode
 import org.jsoup.select.Elements
-import java.util.ArrayList
+import java.util.*
 
 object Parser {
 
@@ -84,8 +84,9 @@ object Parser {
         var i = 0
         var j = 0
         while (j < cols.size) {
+            val link = cols[j + 2].select("a").attr("href")
             list.add(SimpleListModel(rows[i].text(), cols[j].text(), cols[j + 1].text(),
-                    cols[j + 2].text()))
+                    if (!link.isNullOrEmpty()) link else cols[j + 2].html()))
             i++
             j += 3
         }
