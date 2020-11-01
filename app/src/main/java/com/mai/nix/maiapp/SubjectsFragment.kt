@@ -164,18 +164,8 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
 
     private fun load() {
         lifecycleScope.launch {
-            subjectsViewModel.subjectsIntent.send(SubjectsIntent.LoadSubjects(UserSettings.getGroup(requireContext())!!))
+            subjectsViewModel.subjectsIntent.send(SubjectsIntent.LoadSubjects(UserSettings.getGroup(requireContext())!!, useDb = true))
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        /*if (((MainActivity) getActivity()).subjectsNeedToUpdate) {
-            mCurrentGroup = UserSettings.getGroup(getContext());
-            mCurrentLink = mLink.concat(mCurrentGroup);
-            new MyThread(mCurrentLink, true).execute();
-            ((MainActivity) getActivity()).subjectsNeedToUpdate = false;
-        }*/
     }
 
     private fun prepareRecyclerView() {

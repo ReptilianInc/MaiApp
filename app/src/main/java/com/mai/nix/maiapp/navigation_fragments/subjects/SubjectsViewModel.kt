@@ -30,7 +30,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
             subjectsIntent.consumeAsFlow().collect {
                 when (it) {
                     is SubjectsIntent.SetWeek -> setWeek(it.week)
-                    is SubjectsIntent.LoadSubjects -> fetchSubjects(it.group)
+                    is SubjectsIntent.LoadSubjects -> fetchSubjects(it.group, it.useDb)
                     is SubjectsIntent.SetGroup -> setGroup(it.group)
                 }
             }
@@ -46,7 +46,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                     _state.value.schedules,
                     _state.value.error
             )
-            if (_state.value.group.isNotEmpty()) fetchSubjects(_state.value.group)
+            if (_state.value.group.isNotEmpty()) fetchSubjects(_state.value.group, week == 0)
         }
     }
 
@@ -59,19 +59,19 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                     _state.value.schedules,
                     _state.value.error
             )
-            fetchSubjects(_state.value.group)
+            fetchSubjects(_state.value.group, false)
         }
     }
 
-    private fun fetchSubjects(group: String) {
-        if (_state.value.week == 0) {
+    private fun fetchSubjects(group: String, useDb: Boolean) {
+        if (_state.value.week == 0 && useDb) {
             viewModelScope.launch {
                 val data = subjectsRepository.getSubjectsDb(getApplication())
                 if (data.isNotEmpty()) {
-                    Log.d("subjects", "db is not empty")
+                    Log.d("fetchSubjects($group)", "db is not empty")
                     _state.value = SubjectsState(false, group, _state.value.week, data, null)
                 } else {
-                    Log.d("subjects", "db is empty")
+                    Log.d("fetchSubjects($group)", "db is empty")
                     _state.value = SubjectsState(
                             true,
                             group,
@@ -80,7 +80,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                             null
                     )
                     try {
-                        val dataWeb = subjectsRepository.getSubjectsWeb(group, if (_state.value.week != 0) _state.value.week.toString() else "")
+                        val dataWeb = subjectsRepository.getSubjectsWeb(group, "")
                         _state.value = SubjectsState(
                                 false,
                                 group,
@@ -97,6 +97,32 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                                 e.localizedMessage
                         )
                     }
+                }
+            }
+        } else {
+            viewModelScope.launch {
+                _state.value = SubjectsState(
+                        true,
+                        group,
+                        _state.value.week,
+                        emptyList(),
+                        null
+                )
+                _state.value = try {
+                    SubjectsState(
+                            false,
+                            group,
+                            _state.value.week,
+                            subjectsRepository.getSubjectsWeb(group, if (_state.value.week != 0) _state.value.week.toString() else ""),
+                            null
+                    )
+                } catch (e: Exception) {
+                    SubjectsState(false,
+                            group,
+                            _state.value.week,
+                            emptyList(),
+                            e.localizedMessage
+                    )
                 }
             }
         }

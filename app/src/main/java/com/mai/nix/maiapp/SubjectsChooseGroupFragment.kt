@@ -41,7 +41,7 @@ class SubjectsChooseGroupFragment : Fragment(), MVIEntity {
     private val adapter = SubjectsAdapter()
 
     private val weeks = arrayOf(
-            "Текущая неделя (кеш)",
+            "Текущая неделя",
             "1 неделя",
             "2 неделя",
             "3 неделя",
@@ -106,6 +106,7 @@ class SubjectsChooseGroupFragment : Fragment(), MVIEntity {
             subjectsViewModel.state.collect {
                 subjectsViewModel.state.collect {
                     subjectsSwipeRefreshLayout.isRefreshing = it.loading
+                    chooseGroupButton.text = if (it.group.isEmpty()) requireContext().getString(R.string.choose_group_space) else it.group
                     adapter.updateItems(it.schedules)
                     adapter.notifyDataSetChanged()
                     chooseWeekButton.text = weeks[it.week]
