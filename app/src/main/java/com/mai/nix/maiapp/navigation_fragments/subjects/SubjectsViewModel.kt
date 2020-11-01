@@ -29,15 +29,15 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
         viewModelScope.launch {
             subjectsIntent.consumeAsFlow().collect {
                 when (it) {
-                    is SubjectsIntent.SetWeek -> setWeek(it.week)
+                    is SubjectsIntent.SetWeek -> setWeek(it.week, it.useDb)
                     is SubjectsIntent.LoadSubjects -> fetchSubjects(it.group, it.useDb)
-                    is SubjectsIntent.SetGroup -> setGroup(it.group)
+                    is SubjectsIntent.SetGroup -> setGroup(it.group, it.useDb)
                 }
             }
         }
     }
 
-    private fun setWeek(week: Int) {
+    private fun setWeek(week: Int, useDb: Boolean) {
         viewModelScope.launch {
             _state.value = SubjectsState(
                     _state.value.loading,
@@ -46,11 +46,11 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                     _state.value.schedules,
                     _state.value.error
             )
-            if (_state.value.group.isNotEmpty()) fetchSubjects(_state.value.group, week == 0)
+            if (_state.value.group.isNotEmpty()) fetchSubjects(_state.value.group, useDb)
         }
     }
 
-    private fun setGroup(group: String) {
+    private fun setGroup(group: String, useDb: Boolean) {
         viewModelScope.launch {
             _state.value = SubjectsState(
                     _state.value.loading,
@@ -59,7 +59,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                     _state.value.schedules,
                     _state.value.error
             )
-            fetchSubjects(_state.value.group, false)
+            fetchSubjects(_state.value.group, useDb)
         }
     }
 

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -15,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mai.nix.maiapp.helpers.Parser
 import com.mai.nix.maiapp.helpers.UserSettings
 import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsAdapter
 import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsIntent
@@ -40,6 +42,8 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
     private lateinit var subjectsViewModel: SubjectsViewModel
 
     private val adapter = SubjectsAdapter()
+
+    private var selectedWeek = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -151,6 +155,7 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
                 adapter.updateItems(it.schedules)
                 adapter.notifyDataSetChanged()
                 chooseWeekButton.text = weeks[it.week]
+                selectedWeek = if (it.week > 0) it.week.toString() else ""
                 if (!it.error.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
                 }
@@ -188,7 +193,7 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
         if (resultCode == Activity.RESULT_OK && requestCode == CHOOSE_WEEK_RESULT_CODE) {
             val chosenIndex = data?.getIntExtra(ActivityChooseSingleItem.ITEMS_RESULT, 0) ?: 0
             lifecycleScope.launch {
-                subjectsViewModel.subjectsIntent.send(SubjectsIntent.SetWeek(chosenIndex))
+                subjectsViewModel.subjectsIntent.send(SubjectsIntent.SetWeek(chosenIndex, chosenIndex == 0))
             }
         }
     }
@@ -197,15 +202,15 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
         if (item.itemId == R.id.share_button) {
             val i = Intent(Intent.ACTION_SEND)
             i.type = "text/plain"
-            //i.putExtra(Intent.EXTRA_TEXT, mCurrentLink)
-            //i.putExtra(Intent.EXTRA_SUBJECT, mCurrentGroup)
-            //startActivity(Intent.createChooser(i, getString(R.string.share_subjects_link)))
+            i.putExtra(Intent.EXTRA_TEXT, Parser.generateSubjectsLink(UserSettings.getGroup(requireContext())!!, selectedWeek))
+            i.putExtra(Intent.EXTRA_SUBJECT, UserSettings.getGroup(requireContext()))
+            startActivity(Intent.createChooser(i, getString(R.string.share_subjects_link)))
         } else if (item.itemId == R.id.browser_button) {
             val builder = CustomTabsIntent.Builder()
             builder.setShowTitle(true)
             builder.setToolbarColor(ContextCompat.getColor(requireContext(), R.color.colorText))
             val customTabsIntent = builder.build()
-            //customTabsIntent.launchUrl(requireContext(), Uri.parse(mCurrentLink))
+            customTabsIntent.launchUrl(requireContext(), Uri.parse(Parser.generateSubjectsLink(UserSettings.getGroup(requireContext())!!, selectedWeek)))
         }
         return super.onOptionsItemSelected(item)
     }
