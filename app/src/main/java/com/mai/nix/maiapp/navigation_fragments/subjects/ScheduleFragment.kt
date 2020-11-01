@@ -1,8 +1,6 @@
 package com.mai.nix.maiapp.navigation_fragments.subjects
 
 import androidx.viewpager2.widget.ViewPager2
-import com.mai.nix.maiapp.SubjectsChooseGroupFragment
-import com.mai.nix.maiapp.SubjectsFragment
 import com.mai.nix.maiapp.TabsFragment
 import com.mai.nix.maiapp.ViewPagerAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi

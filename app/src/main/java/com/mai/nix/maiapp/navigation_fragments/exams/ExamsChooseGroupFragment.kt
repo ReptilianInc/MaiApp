@@ -1,12 +1,12 @@
-package com.mai.nix.maiapp
+package com.mai.nix.maiapp.navigation_fragments.exams
 
-import android.app.Application
-import android.content.Intent
-import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.content.Intent
 import android.widget.Toast
+import android.app.Activity
+import android.app.Application
+import android.net.Uri
+import android.view.*
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -14,30 +14,31 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mai.nix.maiapp.MVIEntity
+import com.mai.nix.maiapp.R
+import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
 import com.mai.nix.maiapp.helpers.Parser
-import com.mai.nix.maiapp.helpers.UserSettings
-import com.mai.nix.maiapp.navigation_fragments.exams.ExamsAdapter
-import com.mai.nix.maiapp.navigation_fragments.exams.ExamsIntent
-import com.mai.nix.maiapp.navigation_fragments.exams.ExamsViewModel
-import com.mai.nix.maiapp.navigation_fragments.exams.ExamsViewModelFactory
 import kotlinx.android.synthetic.main.fragment_exams_layout.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.util.*
 
 /**
- * Created by Nix on 01.08.2017.
+ * Created by Nix on 17.08.2017.
  */
 
 @ExperimentalCoroutinesApi
-class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenceChangeListener {
+class ExamsChooseGroupFragment : Fragment(), MVIEntity {
+
+    companion object {
+        private const val REQUEST_CODE_GROUP = 569
+    }
 
     private lateinit var examsViewModel: ExamsViewModel
 
     private val examAdapter = ExamsAdapter()
 
-    private var selectedGroup = ""
+    private var selectedGroup: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,68 +47,41 @@ class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenc
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_exams_layout, container, false)
-
-        //val mAdapter = ExamAdapter(context, mExamModels)
-        /*if (!((MainActivity) getActivity()).examsNeedToUpdate) {
-            if (mDataLab.isExamsTableEmpty()) {
-                new MyThread(true).execute();
-            } else if (UserSettings.getExamsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
-                    UserSettings.getDay(getContext()) != mCurrentDay) {
-                new MyThread(true).execute();
-            }
-            if (UserSettings.getExamsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
-                    UserSettings.getWeek(getContext()) != mCurrentWeek) {
-                new MyThread(true).execute();
-            } else {
-                mExamModels.addAll(mDataLab.getExams());
-                mAdapter.notifyDataSetChanged();
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        }*/
-        //examsListView.adapter = mAdapter
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UserSettings.registerListener(this)
-        val mCalendar = GregorianCalendar()
-        val mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-        val mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH)
-        selectedGroup = UserSettings.getGroup(requireContext())?: ""
-        //val mCurrentLink = mLink + mCurrentGroup
+        bottomDataCard.visibility = View.VISIBLE
         prepareRecyclerView()
-        examsSwipeRefreshLayout.setOnRefreshListener {
-            update()
-        }
         setupViewModel()
         observeViewModel()
-        load()
-    }
 
-    override fun onDetach() {
-        super.onDetach()
-        UserSettings.unregisterListener(this)
-    }
+        chooseGroupButton.setOnClickListener {
+            startActivityForResult(NewChooseGroupActivity.newIntent(requireContext(), true), REQUEST_CODE_GROUP)
+        }
 
-    override fun onSharedPreferenceChanged(p0: SharedPreferences?, p1: String?) {
-        load()
-    }
-
-    private fun load() {
-        lifecycleScope.launch {
-            examsViewModel.examsIntent.send(ExamsIntent.LoadExams(selectedGroup, useDb = true))
+        examsSwipeRefreshLayout.setOnRefreshListener {
+            if (selectedGroup.isNotEmpty()) update(selectedGroup) else examsSwipeRefreshLayout.isRefreshing = false
         }
     }
 
-    private fun update() {
+    private fun load(group: String) {
         lifecycleScope.launch {
-            examsViewModel.examsIntent.send(ExamsIntent.UpdateExams(selectedGroup, updateDb = true))
+            examsViewModel.examsIntent.send(ExamsIntent.LoadExams(group, useDb = false))
+        }
+    }
+
+    private fun update(group: String) {
+        lifecycleScope.launch {
+            examsViewModel.examsIntent.send(ExamsIntent.UpdateExams(group, updateDb = false))
         }
     }
 
     override fun observeViewModel() {
         lifecycleScope.launch {
             examsViewModel.state.collect {
+                selectedGroup = it.group
+                chooseGroupButton.text = if (selectedGroup.isEmpty()) requireContext().getString(R.string.choose_group_space) else selectedGroup
                 examsSwipeRefreshLayout.isRefreshing = it.loading
                 examAdapter.updateItems(it.exams)
                 examAdapter.notifyDataSetChanged()
@@ -131,6 +105,14 @@ class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenc
         examsRecyclerView.addItemDecoration(dividerItemDecoration)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_GROUP) {
+            val group = data?.getStringExtra(NewChooseGroupActivity.EXTRA_GROUP)?: ""
+            load(group)
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.action_menu, menu)
@@ -138,6 +120,10 @@ class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenc
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (selectedGroup.isEmpty()) {
+            Toast.makeText(context, R.string.exception_group_null, Toast.LENGTH_SHORT).show()
+            return super.onOptionsItemSelected(item)
+        }
         if (item.itemId == R.id.share_button) {
             val i = Intent(Intent.ACTION_SEND)
             i.type = "text/plain"

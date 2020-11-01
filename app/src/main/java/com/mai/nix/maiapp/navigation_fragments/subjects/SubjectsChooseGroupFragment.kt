@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp
+package com.mai.nix.maiapp.navigation_fragments.subjects
 
 import android.app.Activity
 import android.app.Application
@@ -15,13 +15,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mai.nix.maiapp.ActivityChooseSingleItem
+import com.mai.nix.maiapp.MVIEntity
+import com.mai.nix.maiapp.R
 import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
 import com.mai.nix.maiapp.helpers.Parser
-import com.mai.nix.maiapp.helpers.UserSettings
-import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsAdapter
-import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsIntent
-import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsViewModel
-import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsViewModelFactory
 import kotlinx.android.synthetic.main.fragment_subjects_layout.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect

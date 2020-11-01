@@ -1,8 +1,6 @@
 package com.mai.nix.maiapp.navigation_fragments.exams
 
 import androidx.viewpager2.widget.ViewPager2
-import com.mai.nix.maiapp.ExamsChooseGroupFragment
-import com.mai.nix.maiapp.ExamsFragment
 import com.mai.nix.maiapp.TabsFragment
 import com.mai.nix.maiapp.ViewPagerAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi

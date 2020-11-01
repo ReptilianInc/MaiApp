@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import androidx.viewpager2.widget.ViewPager2
-import com.mai.nix.maiapp.MapFragment
 import com.mai.nix.maiapp.TabsFragment
 import com.mai.nix.maiapp.ViewPagerAdapter
 import com.mai.nix.maiapp.expandable_list_fragments.BarracksFragment

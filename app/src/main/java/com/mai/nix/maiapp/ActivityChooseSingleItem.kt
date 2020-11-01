@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.choose_groups.ItemsAdapter
-import kotlinx.android.synthetic.main.activity_choose_group_preference.*
+import kotlinx.android.synthetic.main.activity_choose_single_item.*
 
 class ActivityChooseSingleItem: AppCompatActivity(), ItemsAdapter.OnItemClickListener {
 
@@ -33,7 +33,7 @@ class ActivityChooseSingleItem: AppCompatActivity(), ItemsAdapter.OnItemClickLis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_choose_group_preference)
+        setContentView(R.layout.activity_choose_single_item)
         itemsAdapter.callback = this
         val items = intent.getStringArrayExtra(ITEMS)
         prepareRecyclerView(items)

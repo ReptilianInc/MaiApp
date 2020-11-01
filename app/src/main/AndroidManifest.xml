@@ -24,7 +24,7 @@
             android:label="@string/app_name"
             android:theme="@style/AppThemeTest" />
         <activity
-            android:name=".NewSplashActivity"
+            android:name=".SplashActivity"
             android:noHistory="true"
             android:theme="@style/Splash"
             android:screenOrientation="portrait">
