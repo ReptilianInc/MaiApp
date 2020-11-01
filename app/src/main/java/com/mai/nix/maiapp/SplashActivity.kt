@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.ViewTreeObserver
-import androidx.appcompat.app.AppCompatDelegate
 import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
 import com.mai.nix.maiapp.helpers.UserSettings
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -16,8 +15,6 @@ class SplashActivity : AppCompatActivity() {
     @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        UserSettings.initialize(this)
-        AppCompatDelegate.setDefaultNightMode(UserSettings.getTheme(this))
         setContentView(R.layout.activity_splash)
         startAnimation()
     }
