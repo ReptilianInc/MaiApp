@@ -26,7 +26,8 @@ class SubjectsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as SubjectViewHolder).bindItem(subjects[position])
+        (holder as SubjectViewHolder).clearView()
+        holder.bindItem(subjects[position])
     }
 
     override fun getItemCount(): Int {
@@ -34,6 +35,11 @@ class SubjectsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     inner class SubjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        fun clearView() {
+            itemView.childItemsLayout.removeAllViews()
+        }
+
         @SuppressLint("InflateParams")
         fun bindItem(schedule: Schedule) {
             itemView.subjectDate.text = schedule.day?.date

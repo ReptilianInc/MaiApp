@@ -32,6 +32,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                     is SubjectsIntent.SetWeek -> setWeek(it.week, it.useDb)
                     is SubjectsIntent.LoadSubjects -> fetchSubjects(it.group, it.useDb)
                     is SubjectsIntent.SetGroup -> setGroup(it.group, it.useDb)
+                    is SubjectsIntent.UpdateSubjects -> fetchSubjects(it.group, it.updateDb)
                 }
             }
         }
@@ -88,7 +89,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                                 dataWeb,
                                 null
                         )
-                        getApplication<MaiApp>().getDatabase().scheduleDao.addAll(dataWeb)
+                        getApplication<MaiApp>().getDatabase().scheduleDao.updateAll(dataWeb)
                     } catch (e: Exception) {
                         _state.value = SubjectsState(false,
                                 group,

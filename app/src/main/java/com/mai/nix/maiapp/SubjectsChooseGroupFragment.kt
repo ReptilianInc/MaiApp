@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
 import com.mai.nix.maiapp.helpers.Parser
+import com.mai.nix.maiapp.helpers.UserSettings
 import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsAdapter
 import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsIntent
 import com.mai.nix.maiapp.navigation_fragments.subjects.SubjectsViewModel
@@ -93,7 +94,13 @@ class SubjectsChooseGroupFragment : Fragment(), MVIEntity {
             ActivityChooseSingleItem.startActivity(requireActivity() as AppCompatActivity, this, weeks, CHOOSE_WEEK_RESULT_CODE)
         }
         subjectsSwipeRefreshLayout.setOnRefreshListener {
+            update()
+        }
+    }
 
+    private fun update() {
+        lifecycleScope.launch {
+            subjectsViewModel.subjectsIntent.send(SubjectsIntent.UpdateSubjects(selectedGroup, updateDb = false))
         }
     }
 

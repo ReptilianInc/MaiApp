@@ -126,21 +126,13 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
             ActivityChooseSingleItem.startActivity(requireActivity() as AppCompatActivity, this, weeks, CHOOSE_WEEK_RESULT_CODE)
         }
         subjectsSwipeRefreshLayout.setOnRefreshListener {
-            /*if (mSpinner.getSelectedItemPosition() != 0) {
-                mWeek = Integer.toString(mSpinner.getSelectedItemPosition())
-                mCurrentLink = mLink + mCurrentGroup + PLUS_WEEK + mWeek
-                MyThread(mCurrentLink, false).execute()
-            } else {
-                mCurrentLink = mLink + mCurrentGroup
-                MyThread(mCurrentLink, true).execute()
-            }*/
-            load()
+            update()
         }
         load()
     }
 
     override fun onSharedPreferenceChanged(p0: SharedPreferences?, p1: String?) {
-        load()
+        update()
     }
 
     override fun onDetach() {
@@ -170,6 +162,12 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
     private fun load() {
         lifecycleScope.launch {
             subjectsViewModel.subjectsIntent.send(SubjectsIntent.LoadSubjects(UserSettings.getGroup(requireContext())!!, useDb = true))
+        }
+    }
+
+    private fun update() {
+        lifecycleScope.launch {
+            subjectsViewModel.subjectsIntent.send(SubjectsIntent.UpdateSubjects(UserSettings.getGroup(requireContext())!!, selectedWeek.isEmpty()))
         }
     }
 
