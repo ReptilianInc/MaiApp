@@ -32,7 +32,7 @@ import java.util.*
  */
 
 @ExperimentalCoroutinesApi
-class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenceChangeListener {
+class SubjectsFragment : Fragment(), MVIEntity {
 
     companion object {
         const val CHOOSE_WEEK_RESULT_CODE = 567
@@ -114,7 +114,6 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UserSettings.registerListener(this)
         val mCalendar = GregorianCalendar()
         val mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH)
         val mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH)
@@ -128,15 +127,6 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
             update()
         }
         load()
-    }
-
-    override fun onSharedPreferenceChanged(p0: SharedPreferences?, p1: String?) {
-        update()
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        UserSettings.unregisterListener(this)
     }
 
     override fun observeViewModel() {

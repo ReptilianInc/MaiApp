@@ -29,7 +29,7 @@ import java.util.*
  */
 
 @ExperimentalCoroutinesApi
-class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenceChangeListener {
+class ExamsFragment : Fragment(), MVIEntity {
 
     private lateinit var examsViewModel: ExamsViewModel
 
@@ -67,7 +67,6 @@ class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenc
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UserSettings.registerListener(this)
         val mCalendar = GregorianCalendar()
         val mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH)
         val mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH)
@@ -79,15 +78,6 @@ class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenc
         }
         setupViewModel()
         observeViewModel()
-        load()
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        UserSettings.unregisterListener(this)
-    }
-
-    override fun onSharedPreferenceChanged(p0: SharedPreferences?, p1: String?) {
         load()
     }
 

@@ -84,6 +84,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             chosenGroup = data?.getStringExtra(NewChooseGroupActivity.EXTRA_GROUP)
                     ?: throw Exception("No group found")
             setGroup(requireContext(), chosenGroup)
+            clearSubjectsCache(showMessage = false)
+            clearExamsCache(showMessage = false)
             groupPreference.summary = chosenGroup
             requireActivity().setResult(Activity.RESULT_OK)
         }
@@ -96,24 +98,10 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                 startActivityForResult(i, REQUEST_CODE_GROUP)
             }
             "clear_cache_subj" -> {
-                lifecycleScope.launch {
-                    try {
-                        (requireContext().applicationContext as MaiApp).getDatabase().scheduleDao.deleteAll()
-                        Toast.makeText(activity, R.string.clear_cache_subj_toast, Toast.LENGTH_SHORT).show()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
+                clearSubjectsCache(showMessage = true)
             }
             "clear_cache_ex" -> {
-                lifecycleScope.launch {
-                    try {
-                        (requireContext().applicationContext as MaiApp).getDatabase().examDao.clearAll()
-                        Toast.makeText(activity, R.string.clear_cache_exams_toast, Toast.LENGTH_SHORT).show()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
+                clearExamsCache(showMessage = true)
             }
             "about" -> Toast.makeText(activity, R.string.author, Toast.LENGTH_SHORT).show()
             "go_mai" -> {
@@ -125,6 +113,28 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             }
         }
         return true
+    }
+
+    private fun clearExamsCache(showMessage: Boolean) {
+        lifecycleScope.launch {
+            try {
+                (requireContext().applicationContext as MaiApp).getDatabase().examDao.clearAll()
+                if (showMessage) Toast.makeText(activity, R.string.clear_cache_exams_toast, Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun clearSubjectsCache(showMessage: Boolean) {
+        lifecycleScope.launch {
+            try {
+                (requireContext().applicationContext as MaiApp).getDatabase().scheduleDao.deleteAll()
+                if (showMessage) Toast.makeText(activity, R.string.clear_cache_subj_toast, Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
