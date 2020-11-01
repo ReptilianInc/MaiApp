@@ -1,16 +1,18 @@
-package com.mai.nix.maiapp.navigation_fragments
+package com.mai.nix.maiapp.navigation_fragments.settings
 
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.mai.nix.maiapp.DataLab
+import com.mai.nix.maiapp.MaiApp
 import com.mai.nix.maiapp.R
 import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
 import com.mai.nix.maiapp.helpers.UserSettings
@@ -21,18 +23,30 @@ import com.mai.nix.maiapp.helpers.UserSettings.setExamsUpdateFrequency
 import com.mai.nix.maiapp.helpers.UserSettings.setGroup
 import com.mai.nix.maiapp.helpers.UserSettings.setSubjectsUpdateFrequency
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 /**
  * Created by Nix on 03.08.2017.
  */
 
+@ExperimentalCoroutinesApi
 class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     private lateinit var groupPreference: Preference
     private lateinit var chosenGroup: String
-    private lateinit var dataLab: DataLab
 
     companion object {
         private const val REQUEST_CODE_GROUP = 0
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+        view?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundSplash))
+        return view
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -65,7 +79,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         return i.toInt()
     }
 
-    @ExperimentalCoroutinesApi
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_GROUP && resultCode == Activity.RESULT_OK) {
             chosenGroup = data?.getStringExtra(NewChooseGroupActivity.EXTRA_GROUP)
@@ -76,7 +89,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         }
     }
 
-    @ExperimentalCoroutinesApi
     override fun onPreferenceClick(preference: Preference): Boolean {
         when (preference.key) {
             "pref_group" -> {
@@ -84,12 +96,24 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                 startActivityForResult(i, REQUEST_CODE_GROUP)
             }
             "clear_cache_subj" -> {
-                dataLab.clearSubjectsCache()
-                Toast.makeText(activity, R.string.clear_cache_subj_toast, Toast.LENGTH_SHORT).show()
+                lifecycleScope.launch {
+                    try {
+                        (requireContext().applicationContext as MaiApp).getDatabase().scheduleDao.deleteAll()
+                        Toast.makeText(activity, R.string.clear_cache_subj_toast, Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             }
             "clear_cache_ex" -> {
-                dataLab.clearExamsCache()
-                Toast.makeText(activity, R.string.clear_cache_exams_toast, Toast.LENGTH_SHORT).show()
+                lifecycleScope.launch {
+                    try {
+                        (requireContext().applicationContext as MaiApp).getDatabase().examDao.clearAll()
+                        Toast.makeText(activity, R.string.clear_cache_exams_toast, Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             }
             "about" -> Toast.makeText(activity, R.string.author, Toast.LENGTH_SHORT).show()
             "go_mai" -> {
@@ -114,5 +138,10 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             }
         }
         return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        super.onCreateOptionsMenu(menu, inflater)
     }
 }

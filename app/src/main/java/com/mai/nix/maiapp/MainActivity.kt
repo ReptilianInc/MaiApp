@@ -1,6 +1,5 @@
 package com.mai.nix.maiapp
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -10,9 +9,12 @@ import com.google.android.material.navigation.NavigationView
 import com.mai.nix.maiapp.navigation_fragments.campus.CampusTabsFragment
 import com.mai.nix.maiapp.navigation_fragments.exams.ExamScheduleFragment
 import com.mai.nix.maiapp.navigation_fragments.life.LifeTabFragment
+import com.mai.nix.maiapp.navigation_fragments.settings.SettingsFragment
 import com.mai.nix.maiapp.navigation_fragments.subjects.ScheduleFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 class MainActivity : AppCompatActivity() {
 
     private var retainFragment: Fragment? = null
@@ -72,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_sch_ex -> setFragment("Расписание сессии", ExamScheduleFragment())
             R.id.menu_campus -> setFragment("Кампус", CampusTabsFragment())
             R.id.life -> setFragment("Жизнь", LifeTabFragment())
-            R.id.menu_settings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+            R.id.menu_settings -> setFragment("Настройки", SettingsFragment())
         }
     }
 

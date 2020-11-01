@@ -16,4 +16,7 @@ interface ExamsDao {
 
     @Update
     suspend fun updateExams(exams: List<ExamModel>)
+
+    @Query("DELETE FROM ExamModel")
+    suspend fun clearAll()
 }

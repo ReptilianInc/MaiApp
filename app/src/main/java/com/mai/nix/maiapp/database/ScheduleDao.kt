@@ -23,9 +23,13 @@ interface ScheduleDao {
     @Query("DELETE FROM subject")
     suspend fun deleteAllSubjects()
 
-    suspend fun updateAll(schedules: List<Schedule>) {
+    suspend fun deleteAll() {
         deleteAllDays()
         deleteAllSubjects()
+    }
+
+    suspend fun updateAll(schedules: List<Schedule>) {
+        deleteAll()
         schedules.forEach { schedule ->
             val id = insertDay(schedule.day?: throw Exception("Schedule day is NULL"))
             schedule.subjects?.forEach {
