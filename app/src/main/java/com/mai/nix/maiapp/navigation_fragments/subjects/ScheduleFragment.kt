@@ -1,4 +1,4 @@
-package com.mai.nix.maiapp.navigation_fragments
+package com.mai.nix.maiapp.navigation_fragments.subjects
 
 import androidx.viewpager2.widget.ViewPager2
 import com.mai.nix.maiapp.SubjectsChooseGroupFragment

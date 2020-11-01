@@ -209,7 +209,7 @@ class SubjectsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPrefer
             i.type = "text/plain"
             //i.putExtra(Intent.EXTRA_TEXT, mCurrentLink)
             //i.putExtra(Intent.EXTRA_SUBJECT, mCurrentGroup)
-            startActivity(Intent.createChooser(i, getString(R.string.share_subjects_link)))
+            //startActivity(Intent.createChooser(i, getString(R.string.share_subjects_link)))
         } else if (item.itemId == R.id.browser_button) {
             val builder = CustomTabsIntent.Builder()
             builder.setShowTitle(true)

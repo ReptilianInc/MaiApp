@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mai.nix.maiapp.helpers.Parser
 import com.mai.nix.maiapp.helpers.UserSettings
 import com.mai.nix.maiapp.navigation_fragments.exams.ExamsAdapter
 import com.mai.nix.maiapp.navigation_fragments.exams.ExamsIntent
@@ -35,6 +36,8 @@ class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenc
     private lateinit var examsViewModel: ExamsViewModel
 
     private val examAdapter = ExamsAdapter()
+
+    private var selectedGroup = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,19 +73,15 @@ class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenc
         val mCalendar = GregorianCalendar()
         val mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH)
         val mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH)
-        val mCurrentGroup = UserSettings.getGroup(requireContext())
+        selectedGroup = UserSettings.getGroup(requireContext())?: ""
         //val mCurrentLink = mLink + mCurrentGroup
         prepareRecyclerView()
         examsSwipeRefreshLayout.setOnRefreshListener {
-            load()
+            update()
         }
         setupViewModel()
         observeViewModel()
         load()
-
-        examsSwipeRefreshLayout.setOnRefreshListener {
-            examsSwipeRefreshLayout.isRefreshing = true
-        }
     }
 
     override fun onDetach() {
@@ -96,7 +95,13 @@ class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenc
 
     private fun load() {
         lifecycleScope.launch {
-            examsViewModel.examsIntent.send(ExamsIntent.LoadExams(UserSettings.getGroup(requireContext())?: "", useDb = true))
+            examsViewModel.examsIntent.send(ExamsIntent.LoadExams(selectedGroup, useDb = true))
+        }
+    }
+
+    private fun update() {
+        lifecycleScope.launch {
+            examsViewModel.examsIntent.send(ExamsIntent.UpdateExams(selectedGroup, updateDb = true))
         }
     }
 
@@ -115,15 +120,6 @@ class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenc
 
     override fun setupViewModel() {
         examsViewModel = ViewModelProviders.of(this, ExamsViewModelFactory(requireContext().applicationContext as Application)).get(ExamsViewModel::class.java)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        /*if (((MainActivity) getActivity()).examsNeedToUpdate) {
-            mCurrentGroup = UserSettings.getGroup(getContext());
-            new MyThread(true).execute();
-            ((MainActivity) getActivity()).examsNeedToUpdate = false;
-        }*/
     }
 
     private fun prepareRecyclerView() {
@@ -145,15 +141,15 @@ class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenc
         if (item.itemId == R.id.share_button) {
             val i = Intent(Intent.ACTION_SEND)
             i.type = "text/plain"
-            //i.putExtra(Intent.EXTRA_TEXT, mCurrentLink)
-            //i.putExtra(Intent.EXTRA_SUBJECT, mCurrentGroup)
+            i.putExtra(Intent.EXTRA_TEXT, Parser.generateExamsLink(selectedGroup))
+            i.putExtra(Intent.EXTRA_SUBJECT, selectedGroup)
             startActivity(Intent.createChooser(i, getString(R.string.share_exam_link)))
         } else if (item.itemId == R.id.browser_button) {
             val builder = CustomTabsIntent.Builder()
             builder.setShowTitle(true)
             builder.setToolbarColor(ContextCompat.getColor(requireContext(), R.color.colorText))
             val customTabsIntent = builder.build()
-            //customTabsIntent.launchUrl(requireContext(), Uri.parse(mCurrentLink))
+            customTabsIntent.launchUrl(requireContext(), Uri.parse(Parser.generateExamsLink(selectedGroup)))
         }
         return super.onOptionsItemSelected(item)
     }

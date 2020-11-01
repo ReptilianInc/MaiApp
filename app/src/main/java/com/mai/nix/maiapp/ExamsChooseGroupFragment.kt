@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
+import com.mai.nix.maiapp.helpers.Parser
 import com.mai.nix.maiapp.navigation_fragments.exams.ExamsAdapter
 import com.mai.nix.maiapp.navigation_fragments.exams.ExamsIntent
 import com.mai.nix.maiapp.navigation_fragments.exams.ExamsViewModel
@@ -39,7 +40,7 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
 
     private val examAdapter = ExamsAdapter()
 
-    private var mSelectedGroup: String? = null
+    private var selectedGroup: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,9 +55,6 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
         super.onViewCreated(view, savedInstanceState)
         bottomDataCard.visibility = View.VISIBLE
         prepareRecyclerView()
-        examsSwipeRefreshLayout.setOnRefreshListener {
-            load(mSelectedGroup?: "")
-        }
         setupViewModel()
         observeViewModel()
 
@@ -65,7 +63,7 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
         }
 
         examsSwipeRefreshLayout.setOnRefreshListener {
-            examsSwipeRefreshLayout.isRefreshing = true
+            if (selectedGroup.isNotEmpty()) update(selectedGroup) else examsSwipeRefreshLayout.isRefreshing = false
         }
     }
 
@@ -75,9 +73,17 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
         }
     }
 
+    private fun update(group: String) {
+        lifecycleScope.launch {
+            examsViewModel.examsIntent.send(ExamsIntent.UpdateExams(group, updateDb = false))
+        }
+    }
+
     override fun observeViewModel() {
         lifecycleScope.launch {
             examsViewModel.state.collect {
+                selectedGroup = it.group
+                chooseGroupButton.text = if (selectedGroup.isEmpty()) requireContext().getString(R.string.choose_group_space) else selectedGroup
                 examsSwipeRefreshLayout.isRefreshing = it.loading
                 examAdapter.updateItems(it.exams)
                 examAdapter.notifyDataSetChanged()
@@ -104,8 +110,8 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_GROUP) {
-            mSelectedGroup = data?.getStringExtra(NewChooseGroupActivity.EXTRA_GROUP)
-            load(mSelectedGroup?: "")
+            val group = data?.getStringExtra(NewChooseGroupActivity.EXTRA_GROUP)?: ""
+            load(group)
         }
     }
 
@@ -116,22 +122,22 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (mSelectedGroup == null) {
+        if (selectedGroup.isEmpty()) {
             Toast.makeText(context, R.string.exception_group_null, Toast.LENGTH_SHORT).show()
             return super.onOptionsItemSelected(item)
         }
         if (item.itemId == R.id.share_button) {
             val i = Intent(Intent.ACTION_SEND)
             i.type = "text/plain"
-            //i.putExtra(Intent.EXTRA_TEXT, mLink + mSelectedGroup)
-            i.putExtra(Intent.EXTRA_SUBJECT, mSelectedGroup)
+            i.putExtra(Intent.EXTRA_TEXT, Parser.generateExamsLink(selectedGroup))
+            i.putExtra(Intent.EXTRA_SUBJECT, selectedGroup)
             startActivity(Intent.createChooser(i, getString(R.string.share_exam_link)))
         } else if (item.itemId == R.id.browser_button) {
             val builder = CustomTabsIntent.Builder()
             builder.setShowTitle(true)
             builder.setToolbarColor(ContextCompat.getColor(requireContext(), R.color.colorText))
             val customTabsIntent = builder.build()
-            //customTabsIntent.launchUrl(requireContext(), Uri.parse(mLink + mSelectedGroup))
+            customTabsIntent.launchUrl(requireContext(), Uri.parse(Parser.generateExamsLink(selectedGroup)))
         }
         return super.onOptionsItemSelected(item)
     }

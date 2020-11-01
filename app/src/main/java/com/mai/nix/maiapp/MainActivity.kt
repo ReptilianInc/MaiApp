@@ -2,16 +2,15 @@ package com.mai.nix.maiapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
-import com.mai.nix.maiapp.navigation_fragments.*
 import com.mai.nix.maiapp.navigation_fragments.campus.CampusTabsFragment
 import com.mai.nix.maiapp.navigation_fragments.exams.ExamScheduleFragment
 import com.mai.nix.maiapp.navigation_fragments.life.LifeTabFragment
+import com.mai.nix.maiapp.navigation_fragments.subjects.ScheduleFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

@@ -154,7 +154,7 @@ class SubjectsChooseGroupFragment : Fragment(), MVIEntity {
             i.type = "text/plain"
             //i.putExtra(Intent.EXTRA_TEXT, mLinkMain + mSelectedGroup + PLUS_WEEK + ChosenWeek)
             //i.putExtra(Intent.EXTRA_SUBJECT, mSelectedGroup)
-            startActivity(Intent.createChooser(i, getString(R.string.share_subjects_link)))
+            //startActivity(Intent.createChooser(i, getString(R.string.share_subjects_link)))
         } else if (item.itemId == R.id.browser_button) {
             val builder = CustomTabsIntent.Builder()
             builder.setShowTitle(true)

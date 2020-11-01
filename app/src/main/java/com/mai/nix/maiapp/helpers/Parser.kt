@@ -35,6 +35,8 @@ object Parser {
             SUBJECTS to "https://mai.ru/education/schedule/detail.php?group="
     )
 
+    fun generateExamsLink(group: String) = links[EXAMS] + group
+
     suspend fun parseGroups(facultyCode: String, currentCourse: String): List<String> {
         val connectLink = links[GROUPS] + facultyCode + "&course=" + currentCourse
         val groups = mutableListOf<String>()
@@ -206,7 +208,7 @@ object Parser {
     }
 
     suspend fun parseExams(group: String): List<ExamModel> {
-        val finalLink = links[EXAMS] + group
+        val finalLink = generateExamsLink(group)
         val exams = mutableListOf<ExamModel>()
         val doc = withContext(Dispatchers.IO) {
             Jsoup.connect(finalLink).get()
