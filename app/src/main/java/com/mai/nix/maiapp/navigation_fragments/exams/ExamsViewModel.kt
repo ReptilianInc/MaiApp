@@ -29,13 +29,17 @@ class ExamsViewModel(private val examsRepository: ExamsRepository, application: 
         viewModelScope.launch {
             examsIntent.consumeAsFlow().collect {
                 when (it) {
-                    is ExamsIntent.LoadExams -> fetchExams(it.group)
+                    is ExamsIntent.LoadExams -> fetchExams(it.group, it.useDb)
                 }
             }
         }
     }
 
-    private fun fetchExams(group: String) {
+    private fun fetchExams(group: String, useDb: Boolean) {
+        if (useDb) fetchExamsWithDb(group) else fetchExamsOnlyWeb(group)
+    }
+
+    private fun fetchExamsWithDb(group: String) {
         viewModelScope.launch {
             val exams = examsRepository.getExamsDb(getApplication())
             if (exams.isNotEmpty()) {
@@ -51,6 +55,17 @@ class ExamsViewModel(private val examsRepository: ExamsRepository, application: 
                 } catch (e: Exception) {
                     _state.value = ExamsState(false, emptyList(), e.localizedMessage)
                 }
+            }
+        }
+    }
+
+    private fun fetchExamsOnlyWeb(group: String) {
+        viewModelScope.launch {
+            _state.value = ExamsState(true, emptyList(), null)
+            _state.value = try {
+                ExamsState(false, examsRepository.getExamsWeb(group), null)
+            } catch (e: Exception) {
+                ExamsState(false, emptyList(), e.localizedMessage)
             }
         }
     }

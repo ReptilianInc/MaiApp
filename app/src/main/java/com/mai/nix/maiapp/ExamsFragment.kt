@@ -96,7 +96,7 @@ class ExamsFragment : Fragment(), MVIEntity, SharedPreferences.OnSharedPreferenc
 
     private fun load() {
         lifecycleScope.launch {
-            examsViewModel.examsIntent.send(ExamsIntent.LoadExams(UserSettings.getGroup(requireContext())?: ""))
+            examsViewModel.examsIntent.send(ExamsIntent.LoadExams(UserSettings.getGroup(requireContext())?: "", useDb = true))
         }
     }
 

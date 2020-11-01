@@ -15,7 +15,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
-import com.mai.nix.maiapp.helpers.UserSettings
 import com.mai.nix.maiapp.navigation_fragments.exams.ExamsAdapter
 import com.mai.nix.maiapp.navigation_fragments.exams.ExamsIntent
 import com.mai.nix.maiapp.navigation_fragments.exams.ExamsViewModel
@@ -31,6 +30,10 @@ import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class ExamsChooseGroupFragment : Fragment(), MVIEntity {
+
+    companion object {
+        private const val REQUEST_CODE_GROUP = 569
+    }
 
     private lateinit var examsViewModel: ExamsViewModel
 
@@ -52,7 +55,7 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
         bottomDataCard.visibility = View.VISIBLE
         prepareRecyclerView()
         examsSwipeRefreshLayout.setOnRefreshListener {
-            load()
+            load(mSelectedGroup?: "")
         }
         setupViewModel()
         observeViewModel()
@@ -62,18 +65,13 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
         }
 
         examsSwipeRefreshLayout.setOnRefreshListener {
-            load()
-        }
-
-        examsSwipeRefreshLayout.setOnRefreshListener {
             examsSwipeRefreshLayout.isRefreshing = true
         }
     }
 
-    private fun load() {
+    private fun load(group: String) {
         lifecycleScope.launch {
-            examsViewModel.examsIntent.send(ExamsIntent.LoadExams(UserSettings.getGroup(requireContext())
-                    ?: ""))
+            examsViewModel.examsIntent.send(ExamsIntent.LoadExams(group, useDb = false))
         }
     }
 
@@ -82,6 +80,7 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
             examsViewModel.state.collect {
                 examsSwipeRefreshLayout.isRefreshing = it.loading
                 examAdapter.updateItems(it.exams)
+                examAdapter.notifyDataSetChanged()
                 if (!it.error.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
                 }
@@ -104,15 +103,9 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_OK) {
-            return
-        }
-        if (requestCode == REQUEST_CODE_GROUP) {
-            if (data == null) {
-                return
-            }
-            mSelectedGroup = data.getStringExtra(NewChooseGroupActivity.EXTRA_GROUP)
-            chooseGroupButton.text = mSelectedGroup
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_GROUP) {
+            mSelectedGroup = data?.getStringExtra(NewChooseGroupActivity.EXTRA_GROUP)
+            load(mSelectedGroup?: "")
         }
     }
 
@@ -141,9 +134,5 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
             //customTabsIntent.launchUrl(requireContext(), Uri.parse(mLink + mSelectedGroup))
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-        private const val REQUEST_CODE_GROUP = 0
     }
 }
