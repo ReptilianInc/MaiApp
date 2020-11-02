@@ -26,18 +26,24 @@ class ExpandableListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ExpandableListViewHolder).bindItem(models[position])
+        (holder as ExpandableListViewHolder).clearView()
+        holder.bindItem(models[position])
     }
 
     override fun getItemCount() = models.size
 
     inner class ExpandableListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        fun clearView() {
+            itemView.childItemsLayout.removeAllViews()
+        }
+
         fun bindItem(item: ExpandableItemHeader) {
             itemView.title.text = item.title
             item.bodies.forEachIndexed { index, expandableItemBody ->
                 val childView = LayoutInflater.from(itemView.context).inflate(R.layout.view_expandable_list_item_child, null)
-                childView.findViewById<TextView>(R.id.title).text = expandableItemBody.title
-                childView.findViewById<TextView>(R.id.owner).text = expandableItemBody.owner
+                childView.findViewById<TextView>(R.id.title).text = HtmlCompat.fromHtml(expandableItemBody.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                childView.findViewById<TextView>(R.id.owner).text = HtmlCompat.fromHtml(expandableItemBody.owner, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 val phoneView = childView.findViewById<TextView>(R.id.phone)
                 if (!expandableItemBody.phoneEtc.isNullOrEmpty()) {
                     phoneView.text = HtmlCompat.fromHtml(expandableItemBody.phoneEtc, HtmlCompat.FROM_HTML_MODE_LEGACY)

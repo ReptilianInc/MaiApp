@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFragment(title: String, fragment: Fragment) {
+        if (retainFragment!!::class == fragment::class) return
         currentTitle = title
         supportActionBar?.title = currentTitle
 

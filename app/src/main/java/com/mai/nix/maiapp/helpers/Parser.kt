@@ -153,7 +153,7 @@ object Parser {
             val el = rows[i].select("td")
             if (!el.isEmpty()) {
                 val body = ExpandableItemBody(
-                        el[0].text(),
+                        el[0].html(),
                         el[1].html(),
                         null)
                 collection[j].bodies.add(body)
