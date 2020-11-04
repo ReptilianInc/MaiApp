@@ -5,7 +5,7 @@
     <style name="AppTheme.NavigationView" parent="Theme.AppCompat.DayNight" />
 
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkSec</item>
+        <item name="colorPrimaryDark">@color/colorPrimarySec</item>
         <item name="colorPrimary">@color/colorPrimarySec</item>
         <item name="colorAccent">@color/colorAccentSec</item>
         <item name="windowActionBar">false</item>

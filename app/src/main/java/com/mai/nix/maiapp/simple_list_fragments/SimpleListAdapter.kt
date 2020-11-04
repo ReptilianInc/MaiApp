@@ -10,7 +10,7 @@ import com.mai.nix.maiapp.R
 import com.mai.nix.maiapp.model.SimpleListModel
 import kotlinx.android.synthetic.main.view_simple_list_item.view.*
 
-class SimpleListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SimpleListAdapter(private val iconsPack: Array<Int>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val simpleListModels = mutableListOf<SimpleListModel>()
 
@@ -32,6 +32,7 @@ class SimpleListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class SimpleListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bindItem(simpleListModel: SimpleListModel) {
+            setIcons()
             itemView.title.text = simpleListModel.title
             itemView.leader.text = simpleListModel.leader
             if (simpleListModel.address.isNullOrEmpty()) {
@@ -46,6 +47,13 @@ class SimpleListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             } else {
                 itemView.phone.text = simpleListModel.phone
             }
+        }
+
+        private fun setIcons() {
+            if (iconsPack.size < 3) throw Exception("Icons Pack length must = 3")
+            itemView.leader.setCompoundDrawablesRelativeWithIntrinsicBounds(iconsPack[0],0,0,0)
+            itemView.address.setCompoundDrawablesRelativeWithIntrinsicBounds(iconsPack[1],0,0,0)
+            itemView.phone.setCompoundDrawablesRelativeWithIntrinsicBounds(iconsPack[2],0,0,0)
         }
     }
 }

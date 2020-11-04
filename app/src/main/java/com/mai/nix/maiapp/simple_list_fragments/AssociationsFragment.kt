@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class AssociationsFragment : LifeAbstractFragment() {
 
     override fun initAdapter(): RecyclerView.Adapter<*> {
-        return SimpleListAdapter()
+        return SimpleListAdapter(arrayOf(R.drawable.ic_round_author_24, R.drawable.ic_round_place_24, R.drawable.ic_round_contact_support_24))
     }
 
     override fun refresh() {

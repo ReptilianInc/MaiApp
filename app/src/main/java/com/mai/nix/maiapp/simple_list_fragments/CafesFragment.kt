@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class CafesFragment : CampusAbstractFragment() {
 
     override fun initAdapter(): RecyclerView.Adapter<*> {
-        return SimpleListAdapter()
+        return SimpleListAdapter(arrayOf(R.drawable.ic_round_place_24, R.drawable.ic_round_schedule_24, 0))
     }
 
     override fun refresh() {

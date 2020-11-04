@@ -11,7 +11,7 @@ import com.mai.nix.maiapp.R
 import com.mai.nix.maiapp.model.ExpandableItemHeader
 import kotlinx.android.synthetic.main.view_expandable_list_item.view.*
 
-class ExpandableListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ExpandableListAdapter(private val iconsPack: Array<Int>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val models = mutableListOf<ExpandableItemHeader>()
 
@@ -42,8 +42,14 @@ class ExpandableListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             itemView.title.text = item.title
             item.bodies.forEachIndexed { index, expandableItemBody ->
                 val childView = LayoutInflater.from(itemView.context).inflate(R.layout.view_expandable_list_item_child, null)
+                setIcons(childView)
                 childView.findViewById<TextView>(R.id.title).text = HtmlCompat.fromHtml(expandableItemBody.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
-                childView.findViewById<TextView>(R.id.owner).text = HtmlCompat.fromHtml(expandableItemBody.owner, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                val owner = HtmlCompat.fromHtml(expandableItemBody.owner, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                if (owner.isNotEmpty()) {
+                    childView.findViewById<TextView>(R.id.owner).text = owner
+                } else {
+                    childView.findViewById<TextView>(R.id.owner).visibility = View.GONE
+                }
                 val phoneView = childView.findViewById<TextView>(R.id.phone)
                 if (!expandableItemBody.phoneEtc.isNullOrEmpty()) {
                     phoneView.text = HtmlCompat.fromHtml(expandableItemBody.phoneEtc, HtmlCompat.FROM_HTML_MODE_LEGACY)
@@ -56,6 +62,12 @@ class ExpandableListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 }
                 itemView.childItemsLayout.addView(childView)
             }
+        }
+
+        private fun setIcons(view: View) {
+            if (iconsPack.size < 2) throw Exception("Icons Pack length must = 2")
+            view.findViewById<TextView>(R.id.owner).setCompoundDrawablesRelativeWithIntrinsicBounds(iconsPack[0],0,0,0)
+            view.findViewById<TextView>(R.id.phone).setCompoundDrawablesRelativeWithIntrinsicBounds(iconsPack[1],0,0,0)
         }
     }
 

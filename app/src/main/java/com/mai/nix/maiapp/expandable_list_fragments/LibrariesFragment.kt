@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class LibrariesFragment : CampusAbstractFragment() {
 
     override fun initAdapter(): RecyclerView.Adapter<*> {
-        return ExpandableListAdapter()
+        return ExpandableListAdapter(arrayOf(R.drawable.ic_round_place_24, 0))
     }
 
     override fun refresh() {

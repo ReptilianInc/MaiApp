@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundSplash">
+    android:background="@color/backgroundColorLightBlue">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/abstractListSwipeRefreshLayout"
@@ -12,6 +12,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/abstractListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>

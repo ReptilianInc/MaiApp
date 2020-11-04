@@ -8,5 +8,6 @@
     <color name="colorPrimarySec">#1C1C1C</color>
     <color name="colorPrimaryDarkSec">#000000</color>
     <color name="colorAccentSec">#1E88E5</color>
+    <color name="backgroundColorLightBlue">#2D3032</color>
 
 </resources>
