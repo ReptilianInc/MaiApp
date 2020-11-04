@@ -11,8 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
+        android:drawablePadding="6dp"
+        android:gravity="center_vertical"
         android:textColor="@color/colorText"
         android:textStyle="bold"
+        app:drawableStartCompat="@drawable/ic_round_schedule_24"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="09:00 – 10:30" />
@@ -33,12 +36,12 @@
         android:id="@+id/subjectTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginEnd="12dp"
         app:layout_constraintLeft_toLeftOf="@id/subjectTime"
-        app:layout_constraintTop_toBottomOf="@id/subjectTime"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subjectTime"
         tools:text="Стандартизация и сертификация программных продуктов" />
 
     <TextView
@@ -46,6 +49,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
+        android:drawablePadding="6dp"
+        android:gravity="center_vertical"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        app:drawableStartCompat="@drawable/ic_round_author_24"
         app:layout_constraintLeft_toLeftOf="@id/subjectTitle"
         app:layout_constraintTop_toBottomOf="@id/subjectTitle"
         tools:text="Молчанова Светлана Ивановна" />
@@ -55,9 +63,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:drawablePadding="6dp"
+        android:gravity="center_vertical"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         android:textStyle="bold"
+        app:drawableStartCompat="@drawable/ic_round_place_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/subjectTeacher"
         app:layout_constraintTop_toBottomOf="@id/subjectTeacher"
         tools:text="609 (Орш. А)" />
+
+    <View
+        android:id="@+id/bottomDivider"
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:background="@color/secondaryTextColor"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subjectRoom" />
 </androidx.constraintlayout.widget.ConstraintLayout>

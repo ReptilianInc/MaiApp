@@ -44,13 +44,24 @@ class SubjectsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun bindItem(schedule: Schedule) {
             itemView.subjectDate.text = schedule.day?.date
             itemView.subjectDay.text = schedule.day?.day
-            schedule.subjects?.forEach {
+            schedule.subjects?.forEachIndexed { index, subject ->
                 val childView = LayoutInflater.from(itemView.context).inflate(R.layout.view_subjects_list_child_item, null)
-                childView.findViewById<TextView>(R.id.subjectTime).text = it.time
-                childView.findViewById<TextView>(R.id.subjectRoom).text = it.room
-                childView.findViewById<TextView>(R.id.subjectTeacher).text = it.teacher
-                childView.findViewById<TextView>(R.id.subjectType).text = it.type
-                childView.findViewById<TextView>(R.id.subjectTitle).text = it.title
+                childView.findViewById<TextView>(R.id.subjectTime).text = subject.time
+
+                if (subject.room.isNotEmpty()) {
+                    childView.findViewById<TextView>(R.id.subjectRoom).text = subject.room
+                } else {
+                    childView.findViewById<TextView>(R.id.subjectRoom).visibility = View.GONE
+                }
+
+                childView.findViewById<TextView>(R.id.subjectTeacher).text = subject.teacher
+                childView.findViewById<TextView>(R.id.subjectType).text = subject.type
+                childView.findViewById<TextView>(R.id.subjectTitle).text = subject.title
+
+                if (index != schedule.subjects!!.lastIndex) {
+                    childView.findViewById<View>(R.id.bottomDivider).visibility = View.VISIBLE
+                }
+
                 itemView.childItemsLayout.addView(childView)
             }
         }
