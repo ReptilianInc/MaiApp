@@ -2,7 +2,6 @@ package com.mai.nix.maiapp.navigation_fragments.exams
 
 import android.app.Application
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
@@ -12,7 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.MVIEntity
 import com.mai.nix.maiapp.R
@@ -115,8 +113,6 @@ class ExamsFragment : Fragment(), MVIEntity {
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         examsRecyclerView.layoutManager = linearLayoutManager
         examsRecyclerView.adapter = examAdapter
-        val dividerItemDecoration = DividerItemDecoration(requireContext(), linearLayoutManager.orientation)
-        examsRecyclerView.addItemDecoration(dividerItemDecoration)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

@@ -1,96 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="12dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginBottom="6dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/dateHolder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/schedule_date_background"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/dateHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/secondaryTextColor"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/examDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:maxLength="5"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="01.06" />
+
+            <TextView
+                android:id="@+id/examDay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="4dp"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="@id/examDate"
+                app:layout_constraintLeft_toRightOf="@id/examDate"
+                app:layout_constraintTop_toTopOf="@id/examDate"
+                tools:text="ЧТ" />
+
+            <TextView
+                android:id="@+id/examTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="@id/examDate"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/examDate"
+                tools:text="09:00 – 10:30" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/examDate"
-            android:layout_width="wrap_content"
+            android:id="@+id/examTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
             android:layout_marginBottom="4dp"
-            android:maxLength="5"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="01.06" />
-
-        <TextView
-            android:id="@+id/examDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="4dp"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="@id/examDate"
-            app:layout_constraintLeft_toRightOf="@id/examDate"
-            app:layout_constraintTop_toTopOf="@id/examDate"
-            tools:text="ЧТ" />
-
-        <TextView
-            android:id="@+id/examTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="6dp"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="@id/examDate"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/examDate"
-            tools:text="09:00 – 10:30" />
+            app:layout_constraintTop_toBottomOf="@id/dateHolder"
+            tools:text="Стандартизация и сертификация программных продуктов" />
+
+        <TextView
+            android:id="@+id/examTeacher"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/examTitle"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="8dp"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            app:drawableStartCompat="@drawable/ic_round_author_24"
+            app:layout_constraintLeft_toLeftOf="@id/examTitle"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/examTitle"
+            tools:text="Молчанова Светлана Ивановна" />
+
+        <TextView
+            android:id="@+id/examRoom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_round_place_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/examTeacher"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/examTeacher"
+            tools:text="609 (Орш. А)" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/examTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="4dp"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dateHolder"
-        tools:text="Стандартизация и сертификация программных продуктов" />
-
-    <TextView
-        android:id="@+id/examTeacher"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/examTitle"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintLeft_toLeftOf="@id/examTitle"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/examTitle"
-        tools:text="Молчанова Светлана Ивановна" />
-
-    <TextView
-        android:id="@+id/examRoom"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="8dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/examTeacher"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/examTeacher"
-        tools:text="609 (Орш. А)" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

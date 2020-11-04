@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.MVIEntity
 import com.mai.nix.maiapp.R
@@ -101,8 +100,6 @@ class ExamsChooseGroupFragment : Fragment(), MVIEntity {
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         examsRecyclerView.layoutManager = linearLayoutManager
         examsRecyclerView.adapter = examAdapter
-        val dividerItemDecoration = DividerItemDecoration(requireContext(), linearLayoutManager.orientation)
-        examsRecyclerView.addItemDecoration(dividerItemDecoration)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
