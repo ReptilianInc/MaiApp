@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:padding="12dp"
             android:textColor="@android:color/white"
-            android:background="@color/secondaryTextColor"
+            android:background="@color/headerColor"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"

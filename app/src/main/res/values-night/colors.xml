@@ -3,6 +3,7 @@
     <color name="backgroundSplash">#252525</color>
     <color name="mainTextColor">#FFFFFF</color>
     <color name="secondaryTextColor">#FFFFFF</color>
+    <color name="headerColor">#1C1C1C</color>
 
     ///
     <color name="colorPrimarySec">#1C1C1C</color>
