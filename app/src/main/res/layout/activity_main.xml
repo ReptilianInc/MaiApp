@@ -45,6 +45,8 @@
         android:layout_gravity="start"
         android:theme="@style/AppTheme.NavigationView"
         app:headerLayout="@layout/view_navigation_header"
+        app:itemIconTint="@color/secondaryTextColor"
+        app:itemTextColor="@color/secondaryTextColor"
         app:menu="@menu/nav_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

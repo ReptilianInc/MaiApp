@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mai.nix.maiapp.choose_groups.ItemsAdapter
 import kotlinx.android.synthetic.main.activity_choose_single_item.*
+import java.lang.Exception
 
 class ActivityChooseSingleItem: AppCompatActivity(), ItemsAdapter.OnItemClickListener {
 
@@ -20,12 +21,14 @@ class ActivityChooseSingleItem: AppCompatActivity(), ItemsAdapter.OnItemClickLis
             val intent = Intent(context, ActivityChooseSingleItem::class.java)
             intent.putExtra(ITEMS, items)
             context.startActivityForResult(intent, requestCode)
+            context.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         }
 
         fun startActivity(context: AppCompatActivity, fragment: Fragment, items: Array<String>, requestCode: Int) {
             val intent = Intent(context, ActivityChooseSingleItem::class.java)
             intent.putExtra(ITEMS, items)
             fragment.startActivityForResult(intent, requestCode)
+            context.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         }
     }
 
@@ -36,9 +39,10 @@ class ActivityChooseSingleItem: AppCompatActivity(), ItemsAdapter.OnItemClickLis
         setContentView(R.layout.activity_choose_single_item)
         itemsAdapter.callback = this
         val items = intent.getStringArrayExtra(ITEMS)
-        prepareRecyclerView(items)
+        prepareRecyclerView(items?: throw Exception("Items Array must not be null!"))
         background.setOnClickListener {
             finish()
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         }
     }
 
@@ -57,5 +61,11 @@ class ActivityChooseSingleItem: AppCompatActivity(), ItemsAdapter.OnItemClickLis
         intent.putExtra(ITEMS_RESULT, position)
         setResult(Activity.RESULT_OK, intent)
         finish()
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 }

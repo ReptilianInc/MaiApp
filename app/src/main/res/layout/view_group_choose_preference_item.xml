@@ -6,5 +6,5 @@
     android:background="?attr/selectableItemBackground"
     android:padding="12dp"
     android:gravity="center"
-    android:textColor="@color/colorTextSecondary"
+    android:textColor="@color/mainTextColor"
     tools:text="Институт №1" />
