@@ -42,41 +42,27 @@ class ExamsFragment : Fragment(), MVIEntity {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_exams_layout, container, false)
-
-        //val mAdapter = ExamAdapter(context, mExamModels)
-        /*if (!((MainActivity) getActivity()).examsNeedToUpdate) {
-            if (mDataLab.isExamsTableEmpty()) {
-                new MyThread(true).execute();
-            } else if (UserSettings.getExamsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
-                    UserSettings.getDay(getContext()) != mCurrentDay) {
-                new MyThread(true).execute();
-            }
-            if (UserSettings.getExamsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
-                    UserSettings.getWeek(getContext()) != mCurrentWeek) {
-                new MyThread(true).execute();
-            } else {
-                mExamModels.addAll(mDataLab.getExams());
-                mAdapter.notifyDataSetChanged();
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        }*/
-        //examsListView.adapter = mAdapter
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mCalendar = GregorianCalendar()
-        val mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-        val mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH)
-        selectedGroup = UserSettings.getGroup(requireContext())?: ""
-        //val mCurrentLink = mLink + mCurrentGroup
+        val calendar = GregorianCalendar()
+        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+        val currentWeek = calendar.get(Calendar.WEEK_OF_MONTH)
+        selectedGroup = UserSettings.getGroup(requireContext()) ?: ""
         prepareRecyclerView()
         examsSwipeRefreshLayout.setOnRefreshListener {
             update()
         }
         setupViewModel()
         observeViewModel()
-        load()
+
+        if (UserSettings.getExamsUpdateFrequency(requireContext()) == UserSettings.EVERY_DAY && UserSettings.getDay(requireContext()) != currentDay ||
+                UserSettings.getExamsUpdateFrequency(requireContext()) == UserSettings.EVERY_WEEK && UserSettings.getWeek(requireContext()) != currentWeek) {
+            update()
+        } else {
+            load()
+        }
     }
 
     private fun load() {

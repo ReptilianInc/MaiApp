@@ -3,6 +3,7 @@ package com.mai.nix.maiapp.helpers
 import android.content.Context
 import android.content.SharedPreferences
 import com.mai.nix.maiapp.R
+import java.util.*
 
 /**
  * Created by Nix on 08.09.2017.
@@ -49,6 +50,10 @@ object UserSettings {
         sEditor = sSharedPreferences?.edit()
         sEditor?.putString(context.getString(R.string.freg_cache), value)
         sEditor?.apply()
+        when(value) {
+            EVERY_DAY -> setDay(context)
+            EVERY_WEEK -> setWeek(context)
+        }
     }
 
     @JvmStatic
@@ -62,12 +67,18 @@ object UserSettings {
         sEditor = sSharedPreferences?.edit()
         sEditor?.putString(context.getString(R.string.freg_cache_exams), value)
         sEditor?.apply()
+        when(value) {
+            EVERY_DAY -> setDay(context)
+            EVERY_WEEK -> setWeek(context)
+        }
     }
 
     @JvmStatic
-    fun setDay(context: Context, value: Int) {
+    fun setDay(context: Context) {
+        val calendar = GregorianCalendar()
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
         sEditor = sSharedPreferences?.edit()
-        sEditor?.putInt(context.getString(R.string.day_pref), value)
+        sEditor?.putInt(context.getString(R.string.day_pref), day)
         sEditor?.apply()
     }
 
@@ -77,9 +88,11 @@ object UserSettings {
     }
 
     @JvmStatic
-    fun setWeek(context: Context, value: Int) {
+    fun setWeek(context: Context) {
+        val calendar = GregorianCalendar()
+        val week = calendar.get(Calendar.WEEK_OF_MONTH)
         sEditor = sSharedPreferences?.edit()
-        sEditor?.putInt(context.getString(R.string.week_pref), value)
+        sEditor?.putInt(context.getString(R.string.week_pref), week)
         sEditor?.apply()
     }
 

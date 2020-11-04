@@ -37,7 +37,7 @@
             app:title="@string/clear_cache_ex" />
 
         <ListPreference
-            app:defaultValue="1"
+            app:defaultValue="3"
             app:entries="@array/freg_array"
             app:entryValues="@array/freg_values"
             app:iconSpaceReserved="false"
@@ -46,7 +46,7 @@
             app:title="@string/freg_cache" />
 
         <ListPreference
-            app:defaultValue="1"
+            app:defaultValue="3"
             app:entries="@array/freg_array"
             app:entryValues="@array/freg_values"
             app:iconSpaceReserved="false"

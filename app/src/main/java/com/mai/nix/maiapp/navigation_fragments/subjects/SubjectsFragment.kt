@@ -75,46 +75,13 @@ class SubjectsFragment : Fragment(), MVIEntity {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_subjects_layout, container, false)
-        /*if (!((MainActivity) getActivity()).subjectsNeedToUpdate) {
-            if (i != 0) {
-                mWeek = Integer.toString(i);
-                mCurrentLink = mLink.concat(mCurrentGroup).concat(PLUS_WEEK).concat(mWeek);
-                new MyThread(mCurrentLink, false).execute();
-            } else if (mDataLab.isSubjectsTablesEmpty()) {
-                mCurrentLink = mLink.concat(mCurrentGroup);
-                new MyThread(mCurrentLink, true).execute();
-            } else if (UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_DAY) &&
-                    UserSettings.getDay(getContext()) != mCurrentDay) {
-                UserSettings.setDay(getContext(), mCurrentDay);
-                mCurrentLink = mLink.concat(mCurrentGroup);
-                new MyThread(mCurrentLink, true).execute();
-            } else if (UserSettings.getSubjectsUpdateFrequency(getContext()).equals(UserSettings.EVERY_WEEK) &&
-                    UserSettings.getWeek(getContext()) != mCurrentWeek) {
-                UserSettings.setWeek(getContext(), mCurrentWeek);
-                mCurrentLink = mLink.concat(mCurrentGroup);
-                new MyThread(mCurrentLink, true).execute();
-            } else {
-                mGroups.clear();
-                mCurrentLink = mLink.concat(mCurrentGroup);
-                ArrayList<SubjectHeader> headers = new ArrayList<>();
-                headers.addAll(mDataLab.getHeaders());
-                for (SubjectHeader header : headers) {
-                    header.setChildren(mDataLab.getBodies(header.getUuid()));
-                }
-                mGroups.addAll(headers);
-                for (int j = 0; j < mGroups.size(); j++) {
-                    mListView.expandGroup(j);
-                }
-                mAdapter.notifyDataSetChanged();
-            }
-        }*/
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mCalendar = GregorianCalendar()
-        val mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-        val mCurrentWeek = mCalendar.get(Calendar.WEEK_OF_MONTH)
+        val calendar = GregorianCalendar()
+        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+        val currentWeek = calendar.get(Calendar.WEEK_OF_MONTH)
         prepareRecyclerView()
         setupViewModel()
         observeViewModel()
@@ -124,7 +91,14 @@ class SubjectsFragment : Fragment(), MVIEntity {
         subjectsSwipeRefreshLayout.setOnRefreshListener {
             update()
         }
-        load()
+
+        if (UserSettings.getSubjectsUpdateFrequency(requireContext()) == UserSettings.EVERY_DAY && UserSettings.getDay(requireContext()) != currentDay) {
+            update()
+        } else if (UserSettings.getSubjectsUpdateFrequency(requireContext()) == UserSettings.EVERY_WEEK && UserSettings.getWeek(requireContext()) != currentWeek) {
+            update()
+        } else {
+            load()
+        }
     }
 
     override fun observeViewModel() {

@@ -16,12 +16,7 @@ import com.mai.nix.maiapp.MaiApp
 import com.mai.nix.maiapp.R
 import com.mai.nix.maiapp.choose_groups.NewChooseGroupActivity
 import com.mai.nix.maiapp.helpers.UserSettings
-import com.mai.nix.maiapp.helpers.UserSettings.getExamsUpdateFrequency
-import com.mai.nix.maiapp.helpers.UserSettings.getGroup
-import com.mai.nix.maiapp.helpers.UserSettings.getSubjectsUpdateFrequency
-import com.mai.nix.maiapp.helpers.UserSettings.setExamsUpdateFrequency
 import com.mai.nix.maiapp.helpers.UserSettings.setGroup
-import com.mai.nix.maiapp.helpers.UserSettings.setSubjectsUpdateFrequency
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
@@ -60,9 +55,9 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         val about = findPreference<Preference>("about")
         val mai = findPreference<Preference>("go_mai")
 
-        groupPreference.summary = getGroup(requireContext())
-        frequencySubjects?.value = getSubjectsUpdateFrequency(requireContext())
-        frequencyExams?.value = getExamsUpdateFrequency(requireContext())
+        groupPreference.summary = UserSettings.getGroup(requireContext())
+        frequencySubjects?.value = UserSettings.getSubjectsUpdateFrequency(requireContext())
+        frequencyExams?.value = UserSettings.getExamsUpdateFrequency(requireContext())
 
         groupPreference.onPreferenceClickListener = this
         clearSubjectsCache?.onPreferenceClickListener = this
@@ -147,8 +142,12 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
         when (preference.key) {
-            "frequency_update_subjects" -> setSubjectsUpdateFrequency(requireContext(), newValue as String)
-            "frequency_update_exams" -> setExamsUpdateFrequency(requireContext(), newValue as String)
+            "frequency_update_subjects" -> {
+                UserSettings.setSubjectsUpdateFrequency(requireContext(), newValue as String)
+            }
+            "frequency_update_exams" -> {
+                UserSettings.setExamsUpdateFrequency(requireContext(), newValue as String)
+            }
             "pref_theme" -> {
                 val value = convertThemeValue(newValue)
                 UserSettings.setTheme(requireContext(), value)
