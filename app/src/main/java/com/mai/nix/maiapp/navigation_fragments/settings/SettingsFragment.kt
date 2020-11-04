@@ -103,7 +103,15 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             "clear_cache_ex" -> {
                 clearExamsCache(showMessage = true)
             }
-            "about" -> Toast.makeText(activity, R.string.author, Toast.LENGTH_SHORT).show()
+            "about" -> {
+                val intent = Intent(Intent.ACTION_SENDTO)
+                intent.data = Uri.parse("mailto:novembernix@gmail.com?subject=Приложение МАИ")
+                if (intent.resolveActivity(requireActivity().packageManager) != null) {
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(requireContext(), R.string.mail_error, Toast.LENGTH_SHORT).show()
+                }
+            }
             "go_mai" -> {
                 val builder = CustomTabsIntent.Builder()
                 builder.setShowTitle(true)
