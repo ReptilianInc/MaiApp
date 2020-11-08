@@ -5,26 +5,31 @@
         android:id="@+id/menu_sch"
         android:checkable="true"
         android:checked="true"
-        android:icon="@drawable/ic_schedule"
+        android:icon="@drawable/ic_round_view_list_24"
         android:title="@string/menu_schedule" />
     <item
         android:id="@+id/menu_sch_ex"
         android:checkable="true"
-        android:icon="@drawable/ic_exam_schedule"
+        android:icon="@drawable/ic_round_local_fire_24"
         android:title="@string/exam_schedule" />
     <item
         android:id="@+id/menu_campus"
         android:checkable="true"
-        android:icon="@drawable/ic_campus"
+        android:icon="@drawable/ic_round_apartment_24"
         android:title="@string/menu_campus" />
+    <item
+        android:id="@+id/menu_map"
+        android:checkable="true"
+        android:icon="@drawable/ic_round_map_24"
+        android:title="@string/menu_map" />
     <item
         android:id="@+id/life"
         android:checkable="true"
-        android:icon="@drawable/ic_life"
+        android:icon="@drawable/ic_round_people_24"
         android:title="@string/menu_life" />
     <item
         android:id="@+id/menu_settings"
-        android:icon="@drawable/ic_settings"
         android:checkable="true"
+        android:icon="@drawable/ic_round_settings_24"
         android:title="@string/menu_settings" />
 </menu>

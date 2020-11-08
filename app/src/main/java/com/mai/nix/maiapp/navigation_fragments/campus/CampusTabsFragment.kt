@@ -21,7 +21,6 @@ class CampusTabsFragment : TabsFragment() {
         adapter.addFragment(BarracksFragment(), "Общежития")
         adapter.addFragment(LibrariesFragment(), "Библиотека")
         adapter.addFragment(CafesFragment(), "Столовые и кафе")
-        adapter.addFragment(MapFragment(), "Карта")
         viewPager.adapter = adapter
     }
 
