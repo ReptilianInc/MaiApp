@@ -25,9 +25,7 @@
 
     <style name="Splash" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="windowNoTitle">true</item>
-        <item name="android:navigationBarColor">@color/colorPrimarySec</item>
-        <item name="android:colorBackground">@color/colorText</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:colorBackground">@color/activityColor</item>
     </style>
 
     <style name="TransparentActivity" parent="@style/Theme.AppCompat.Light.NoActionBar">

@@ -45,7 +45,7 @@
         android:gravity="center"
         android:text="@string/app_name"
         android:alpha="0.0"
-        android:textColor="@color/colorPrimarySec"
+        android:textColor="@color/splashItemsColor"
         android:textSize="56sp"
         android:textStyle="bold" />
 

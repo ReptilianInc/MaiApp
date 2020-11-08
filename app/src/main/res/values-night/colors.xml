@@ -10,5 +10,7 @@
     <color name="colorPrimaryDarkSec">#000000</color>
     <color name="colorAccentSec">#1E88E5</color>
     <color name="backgroundColorLightBlue">#2D3032</color>
+    <color name="activityColor">#252525</color>
+    <color name="splashItemsColor">#FFFFFF</color>
 
 </resources>
