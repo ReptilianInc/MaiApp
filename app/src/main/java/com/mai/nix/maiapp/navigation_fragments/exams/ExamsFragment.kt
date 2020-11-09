@@ -86,6 +86,9 @@ class ExamsFragment : Fragment(), MVIEntity {
                 if (!it.error.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
                 }
+                if (it.cacheUpdated && it.exams.isNotEmpty()) {
+                    Toast.makeText(requireContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

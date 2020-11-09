@@ -18,7 +18,7 @@ import java.lang.Exception
 class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app: Application) : AndroidViewModel(app) {
     val subjectsIntent = Channel<SubjectsIntent>(Channel.UNLIMITED)
 
-    private val _state = MutableStateFlow(SubjectsState(false, "", 0, emptyList(), null))
+    private val _state = MutableStateFlow(SubjectsState(false, false,"", 0, emptyList(), null))
     val state: StateFlow<SubjectsState> get() = _state
 
     init {
@@ -32,7 +32,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                     is SubjectsIntent.SetWeek -> setWeek(it.week, it.useDb)
                     is SubjectsIntent.LoadSubjects -> fetchSubjects(it.group, it.useDb)
                     is SubjectsIntent.SetGroup -> setGroup(it.group, it.useDb)
-                    is SubjectsIntent.UpdateSubjects -> fetchSubjects(it.group, it.updateDb)
+                    is SubjectsIntent.UpdateSubjects -> updateSubjects(it.group, it.updateDb)
                 }
             }
         }
@@ -42,6 +42,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
         viewModelScope.launch {
             _state.value = SubjectsState(
                     _state.value.loading,
+                    _state.value.cacheUpdated,
                     _state.value.group,
                     week,
                     _state.value.schedules,
@@ -55,6 +56,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
         viewModelScope.launch {
             _state.value = SubjectsState(
                     _state.value.loading,
+                    _state.value.cacheUpdated,
                     group,
                     state.value.week,
                     _state.value.schedules,
@@ -64,17 +66,52 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
         }
     }
 
+    private fun updateSubjects(group: String, useDb: Boolean) {
+        viewModelScope.launch {
+            _state.value = SubjectsState(
+                    true,
+                    false,
+                    group,
+                    _state.value.week,
+                    emptyList(),
+                    null
+            )
+            try {
+                val dataWeb = subjectsRepository.getSubjectsWeb(group, "")
+                _state.value = SubjectsState(
+                        false,
+                        true,
+                        group,
+                        _state.value.week,
+                        dataWeb,
+                        null
+                )
+                if (dataWeb.isNotEmpty() && useDb) getApplication<MaiApp>().getDatabase().scheduleDao.updateAll(dataWeb)
+            } catch (e: Exception) {
+                _state.value = SubjectsState(false,
+                        false,
+                        group,
+                        _state.value.week,
+                        emptyList(),
+                        e.localizedMessage
+                )
+            }
+
+        }
+    }
+
     private fun fetchSubjects(group: String, useDb: Boolean) {
         if (_state.value.week == 0 && useDb) {
             viewModelScope.launch {
                 val data = subjectsRepository.getSubjectsDb(getApplication())
                 if (data.isNotEmpty()) {
                     Log.d("fetchSubjects($group)", "db is not empty")
-                    _state.value = SubjectsState(false, group, _state.value.week, data, null)
+                    _state.value = SubjectsState(false, false, group, _state.value.week, data, null)
                 } else {
                     Log.d("fetchSubjects($group)", "db is empty")
                     _state.value = SubjectsState(
                             true,
+                            false,
                             group,
                             _state.value.week,
                             emptyList(),
@@ -84,6 +121,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                         val dataWeb = subjectsRepository.getSubjectsWeb(group, "")
                         _state.value = SubjectsState(
                                 false,
+                                true,
                                 group,
                                 _state.value.week,
                                 dataWeb,
@@ -92,6 +130,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                         getApplication<MaiApp>().getDatabase().scheduleDao.updateAll(dataWeb)
                     } catch (e: Exception) {
                         _state.value = SubjectsState(false,
+                                false,
                                 group,
                                 _state.value.week,
                                 emptyList(),
@@ -104,6 +143,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
             viewModelScope.launch {
                 _state.value = SubjectsState(
                         true,
+                        false,
                         group,
                         _state.value.week,
                         emptyList(),
@@ -112,6 +152,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                 _state.value = try {
                     SubjectsState(
                             false,
+                            false,
                             group,
                             _state.value.week,
                             subjectsRepository.getSubjectsWeb(group, if (_state.value.week != 0) _state.value.week.toString() else ""),
@@ -119,6 +160,7 @@ class SubjectsViewModel(private val subjectsRepository: SubjectsRepository, app:
                     )
                 } catch (e: Exception) {
                     SubjectsState(false,
+                            false,
                             group,
                             _state.value.week,
                             emptyList(),

@@ -112,6 +112,9 @@ class SubjectsFragment : Fragment(), MVIEntity {
                 if (!it.error.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
                 }
+                if (it.week == 0 && it.cacheUpdated && it.schedules.isNotEmpty()) {
+                    Toast.makeText(requireContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

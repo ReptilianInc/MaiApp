@@ -18,7 +18,7 @@ import java.lang.Exception
 class ExamsViewModel(private val examsRepository: ExamsRepository, application: Application) : AndroidViewModel(application) {
     val examsIntent = Channel<ExamsIntent>(Channel.UNLIMITED)
 
-    private val _state = MutableStateFlow(ExamsState(false, "", emptyList(), null))
+    private val _state = MutableStateFlow(ExamsState(false, false, "", emptyList(), null))
     val state: StateFlow<ExamsState> get() = _state
 
     init {
@@ -42,15 +42,15 @@ class ExamsViewModel(private val examsRepository: ExamsRepository, application: 
 
     private fun updateExams(group: String, updateDb: Boolean) {
         viewModelScope.launch {
-            _state.value = ExamsState(true, group, _state.value.exams, null)
+            _state.value = ExamsState(true, false, group, _state.value.exams, null)
             try {
                 val data = examsRepository.getExamsWeb(group)
-                _state.value = ExamsState(false, group, data, null)
+                _state.value = ExamsState(false, true, group, data, null)
                 if (updateDb && data.isNotEmpty()) {
                     getApplication<MaiApp>().getDatabase().examDao.updateExams(data)
                 }
             } catch (e: Exception) {
-                _state.value = ExamsState(false, group, emptyList(), e.localizedMessage)
+                _state.value = ExamsState(false, false, group, emptyList(), e.localizedMessage)
             }
         }
     }
@@ -60,16 +60,16 @@ class ExamsViewModel(private val examsRepository: ExamsRepository, application: 
             val examsDb = examsRepository.getExamsDb(getApplication())
             if (examsDb.isNotEmpty()) {
                 Log.d("fetchExamsWithDb($group)", "db is not empty")
-                _state.value = ExamsState(false, group, examsDb, null)
+                _state.value = ExamsState(false, false, group, examsDb, null)
             } else {
                 Log.d("fetchExamsWithDb($group)", "db is empty")
-                _state.value = ExamsState(true, group, emptyList(), null)
+                _state.value = ExamsState(true, false, group, emptyList(), null)
                 try {
                     val examsWeb = examsRepository.getExamsWeb(group)
-                    _state.value = ExamsState(false, group, examsWeb, null)
+                    _state.value = ExamsState(false, true, group, examsWeb, null)
                     if (examsWeb.isNotEmpty()) getApplication<MaiApp>().getDatabase().examDao.insertExams(examsWeb)
                 } catch (e: Exception) {
-                    _state.value = ExamsState(false, group, emptyList(), e.localizedMessage)
+                    _state.value = ExamsState(false, false, group, emptyList(), e.localizedMessage)
                 }
             }
         }
@@ -77,11 +77,11 @@ class ExamsViewModel(private val examsRepository: ExamsRepository, application: 
 
     private fun fetchExamsOnlyWeb(group: String) {
         viewModelScope.launch {
-            _state.value = ExamsState(true, group, emptyList(), null)
+            _state.value = ExamsState(true, false, group, emptyList(), null)
             _state.value = try {
-                ExamsState(false, group, examsRepository.getExamsWeb(group), null)
+                ExamsState(false, false, group, examsRepository.getExamsWeb(group), null)
             } catch (e: Exception) {
-                ExamsState(false, group, emptyList(), e.localizedMessage)
+                ExamsState(false, false, group, emptyList(), e.localizedMessage)
             }
         }
     }
