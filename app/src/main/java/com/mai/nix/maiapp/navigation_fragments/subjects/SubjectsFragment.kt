@@ -114,6 +114,11 @@ class SubjectsFragment : Fragment(), MVIEntity {
                 }
                 if (it.week == 0 && it.cacheUpdated && it.schedules.isNotEmpty()) {
                     Toast.makeText(requireContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show()
+                    if (UserSettings.getSubjectsUpdateFrequency(requireContext()) == UserSettings.EVERY_DAY) {
+                        UserSettings.setDay(requireContext())
+                    } else if (UserSettings.getSubjectsUpdateFrequency(requireContext()) == UserSettings.EVERY_WEEK) {
+                        UserSettings.setWeek(requireContext())
+                    }
                 }
             }
         }

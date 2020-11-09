@@ -41,7 +41,7 @@
             app:entries="@array/freg_array"
             app:entryValues="@array/freg_values"
             app:iconSpaceReserved="false"
-            app:key="freg"
+            app:key="frequency_update_subjects"
             app:summary="%s"
             app:title="@string/freg_cache" />
 
@@ -50,7 +50,7 @@
             app:entries="@array/freg_array"
             app:entryValues="@array/freg_values"
             app:iconSpaceReserved="false"
-            app:key="freg_ex"
+            app:key="frequency_update_exams"
             app:summary="%s"
             app:title="@string/freg_cache_exams" />
 
