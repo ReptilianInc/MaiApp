@@ -103,7 +103,7 @@ object UserSettings {
 
     @JvmStatic
     fun getTheme(context: Context) : Int {
-        return sSharedPreferences!!.getInt(context.getString(R.string.pref_theme), LIGHT)
+        return sSharedPreferences!!.getInt(context.getString(R.string.pref_theme), SYSTEM)
     }
 
     @JvmStatic

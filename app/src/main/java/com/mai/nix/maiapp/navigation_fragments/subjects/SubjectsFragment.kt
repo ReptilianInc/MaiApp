@@ -42,6 +42,8 @@ class SubjectsFragment : Fragment(), MVIEntity {
 
     private var selectedWeek = ""
 
+    private var stateSaved = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -79,6 +81,7 @@ class SubjectsFragment : Fragment(), MVIEntity {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        stateSaved = savedInstanceState != null
         val calendar = GregorianCalendar()
         val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
         val currentWeek = calendar.get(Calendar.WEEK_OF_MONTH)
@@ -92,12 +95,14 @@ class SubjectsFragment : Fragment(), MVIEntity {
             update()
         }
 
-        if (UserSettings.getSubjectsUpdateFrequency(requireContext()) == UserSettings.EVERY_DAY && UserSettings.getDay(requireContext()) != currentDay) {
-            update()
-        } else if (UserSettings.getSubjectsUpdateFrequency(requireContext()) == UserSettings.EVERY_WEEK && UserSettings.getWeek(requireContext()) != currentWeek) {
-            update()
-        } else {
-            load()
+        if (savedInstanceState == null) {
+            if (UserSettings.getSubjectsUpdateFrequency(requireContext()) == UserSettings.EVERY_DAY && UserSettings.getDay(requireContext()) != currentDay) {
+                update()
+            } else if (UserSettings.getSubjectsUpdateFrequency(requireContext()) == UserSettings.EVERY_WEEK && UserSettings.getWeek(requireContext()) != currentWeek) {
+                update()
+            } else {
+                load()
+            }
         }
     }
 
@@ -112,7 +117,7 @@ class SubjectsFragment : Fragment(), MVIEntity {
                 if (!it.error.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show()
                 }
-                if (it.week == 0 && it.cacheUpdated && it.schedules.isNotEmpty()) {
+                if (it.week == 0 && it.cacheUpdated && it.schedules.isNotEmpty() && !stateSaved) {
                     Toast.makeText(requireContext(), R.string.cache_updated_message, Toast.LENGTH_SHORT).show()
                     if (UserSettings.getSubjectsUpdateFrequency(requireContext()) == UserSettings.EVERY_DAY) {
                         UserSettings.setDay(requireContext())

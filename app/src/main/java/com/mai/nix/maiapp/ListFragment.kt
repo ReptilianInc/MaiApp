@@ -30,7 +30,7 @@ abstract class ListFragment: Fragment(), MVIEntity {
         abstractListSwipeRefreshLayout.setOnRefreshListener {
             refresh()
         }
-        refresh()
+        if (savedInstanceState == null) refresh()
     }
 
     private fun prepareRecyclerView() {

@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private var currentTitle = "Расписание пар"
 
     private var selectedItemId = -999
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) currentTitle = savedInstanceState.getString(CURRENT_TOOLBAR_TITLE)?: ""
@@ -59,14 +60,9 @@ class MainActivity : AppCompatActivity() {
         if (retainFragment!!::class == fragment::class) return
         currentTitle = title
         supportActionBar?.title = currentTitle
-
-        supportFragmentManager.beginTransaction()
-                .remove(retainFragment!!)
-                .commit()
-
         retainFragment = fragment
         supportFragmentManager.beginTransaction()
-                .add(R.id.mainFragmentHost, retainFragment!!, CURRENT_FRAGMENT_TAG)
+                .replace(R.id.mainFragmentHost, retainFragment!!, CURRENT_FRAGMENT_TAG)
                 .commit()
     }
 
