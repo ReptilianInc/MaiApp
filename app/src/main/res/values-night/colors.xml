@@ -12,5 +12,5 @@
     <color name="backgroundColorLightBlue">#2D3032</color>
     <color name="activityColor">#252525</color>
     <color name="splashItemsColor">#FFFFFF</color>
-
+    <color name="statusBarColor">#000000</color>
 </resources>

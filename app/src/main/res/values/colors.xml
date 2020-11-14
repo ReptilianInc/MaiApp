@@ -23,4 +23,5 @@
     <color name="headerColor">#616161</color>
     <color name="activityColor">#2196F3</color>
     <color name="splashItemsColor">#2196F3</color>
+    <color name="statusBarColor">#616161</color>
 </resources>
