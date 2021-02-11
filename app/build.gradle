@@ -8,8 +8,8 @@ android {
         applicationId "com.mai.nix.maiapp"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 12
-        versionName "0.9.0"
+        versionCode 13
+        versionName "0.9.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
     }
