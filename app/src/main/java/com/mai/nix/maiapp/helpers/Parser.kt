@@ -245,24 +245,25 @@ object Parser {
         if (primaries.isNullOrEmpty()) {
             return schedules
         }
-        primaries.forEach {
-            var date = it.select("div[class=sc-table-col sc-day-header sc-gray]").text()
+        primaries.forEach { primary ->
+            var date = primary.select("div[class=sc-table-col sc-day-header sc-gray]").text()
             if (date.isEmpty()) {
-                date = it.select("div[class=sc-table-col sc-day-header sc-blue]").text()
+                date = primary.select("div[class=sc-table-col sc-day-header sc-blue]").text()
             }
-            val day = it.select("span[class=sc-day]").text()
+            val day = primary.select("span[class=sc-day]").text()
             val schedule = Schedule()
             schedule.day = Day(date, day)
             val subjects = ArrayList<Subject>()
-            val times = it.select("div[class=sc-table-col sc-item-time]")
-            val types = it.select("div[class=sc-table-col sc-item-type]")
-            val titles = it.select("span[class=sc-title]")
-            val teachers = it.select("div[class=sc-table-col sc-item-title]")
-            val rooms = it.select("div[class=sc-table-col sc-item-location]")
+            val times = primary.select("div[class=sc-table-col sc-item-time]")
+            val types = primary.select("div[class=sc-table-col sc-item-type]")
+            val titles = primary.select("span[class=sc-title]")
+            val teachers = primary.select("div[class=sc-table-col sc-item-title]")
+            val rooms = primary.select("div[class=sc-table-col sc-item-location]")
+            rooms.removeAll { it.text().isNullOrEmpty() }
             for (i in times.indices) {
                 val body = Subject(titles[i].text(),
                         teachers[i].select("span[class=sc-lecturer]").text(),
-                        types[i].text(), times[i].text(), rooms[i].text())
+                        types[i].text(), times[i].text(), if (rooms[i].text() == "LMS") "" else rooms[i].text())
                 subjects.add(body)
             }
             schedule.subjects = subjects
